@@ -1,0 +1,953 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link rel="icon" href="\img\logoPagosImg02.png" type="image/x-icon">
+
+        <title>Liste des Tâches</title>
+
+        <!-- Bootstrap CSS -->
+		<link
+		href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+		
+		<!-- FontAwesome (pour les icônes) -->
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+        <!--Custom CSS -->
+        <style>
+            body {
+				font-family: 'Helvetica', Arial, sans-serif;
+			}
+			
+			/* Style global de la navbar */
+			.navbar-custom {
+				background-color: #818285; /* Couleur de fond principale */
+				padding: 10px 20px; /* Espacement autour de la navbar */
+			}
+
+			/* Logo dans la navbar */
+			.navbar-custom .navbar-brand img {
+				width: auto;
+				height: 80px;
+			}
+
+			/* Boutons et liens de la navbar */
+			.navbar-custom .navbar-nav .nav-link {
+				color: #fff; /* Couleur du texte des liens */
+				font-weight: bold;
+				text-transform: uppercase; /* Mettre en majuscules */
+				padding: 10px 15px;
+				transition: color 0.3s ease; /* Transition pour le changement de couleur */
+			}
+
+			.navbar-custom .navbar-nav .nav-link:hover {
+				color: #000000; /* Couleur au survol */
+			}
+
+			.navbar-custom .navbar-nav .nav-item.active .nav-link {
+				color: #000000; /* Couleur pour l'élément actif */
+			}
+
+			/* Dropdown (menu déroulant) */
+			.navbar-custom .navbar-nav .nav-item.dropdown .nav-link {
+				color: #fff; /* Couleur du lien de la dropdown */
+				border-bottom: 2px solid transparent; /* Ajouter une bordure discrète */
+				padding-bottom: 5px;
+			}
+
+			.navbar-custom .navbar-nav .nav-item.dropdown:hover .nav-link {
+				color: #000000; /* Couleur de la dropdown au survol */
+				border-bottom: 2px solid #000000; /* Bordure colorée au survol */
+			}
+
+			.navbar-custom .navbar-nav .nav-item .dropdown-menu {
+				background-color: #818285; /* Fond de la dropdown */
+				border: none; /* Enlever les bordures */
+				padding: 10px 0; /* Espacement intérieur */
+			}
+
+			.navbar-custom .navbar-nav .nav-item .dropdown-item {
+				color: #fff; /* Couleur des éléments de la dropdown */
+				padding: 10px 20px;
+				transition: background-color 0.3s ease; /* Transition pour la couleur de fond */
+			}
+
+			.navbar-custom .navbar-nav .nav-item .dropdown-item:hover {
+				background-color: #000000; /* Couleur de fond au survol */
+				color: #fff; /* Couleur du texte au survol */
+			}
+
+			/* Style pour le nom de l'utilisateur */
+			.user-name {
+				color: #000;
+				font-size: 1rem;
+				margin-top: 0.4rem;
+			}
+
+			/* Logo client adaptable pour formats carré et rectangulaire */
+			.client-logo {
+				max-height: 40px;
+				max-width: 60px; /* Taille max pour gérer les logos rectangulaires */
+				object-fit: contain;
+				border-radius: 8px;
+				padding: 2px;
+				background-color: #fff;
+				transition: transform 0.2s ease;
+			}
+
+			.client-logo:hover {
+				transform: scale(1.1);
+			}
+
+			/* Icône de déconnexion */
+			.logout-icon {
+				font-size: 1.5rem;
+				color: #000;
+				transition: color 0.3s ease, transform 0.3s ease;
+			}
+
+			.logout-icon:hover {
+				color: #818285;
+				transform: scale(1.1);
+			}
+
+			/* Notifications */
+			.notification-container {
+				position: relative; /* Pour permettre le positionnement de la liste de notifications */
+				margin-right: 15px; /* Espacement à droite pour ne pas être collé aux éléments adjacents */
+				display: flex; /* Utilisation de flex pour aligner les éléments */
+    			align-items: center; /* Alignement vertical centré */
+			}
+
+			#notificationIcon {
+				font-size: 24px; /* Taille de l'icône de notification */
+				color: white; /* Couleur de l'icône */
+				position: relative; /* Pour positionner le compteur */
+				cursor: pointer; /* Change le curseur lors du survol */
+			}
+
+			.notification-count {
+				position: absolute; /* Positionnement absolu par rapport à l'icône */
+				top: 0px; /* Ajuste la position verticale */
+				right: -2px; /* Ajuste la position horizontale */
+				background-color: red; /* Couleur d'arrière-plan pour le compteur */
+				color: white; /* Couleur du texte */
+				border-radius: 50%; /* Arrondi pour un style circulaire */
+				padding: 3px 7px; /* Espacement intérieur */
+				font-size: 12px; /* Taille du texte */
+				font-weight: bold; /* Gras pour le compteur */
+			}
+
+			.notifications {
+				border: 2px solid #000; /* Bordure autour de la liste de notifications */
+				background-color: #fff; /* Couleur d'arrière-plan */
+				position: absolute; /* Positionnement absolu */
+				z-index: 1000; /* S'assurer qu'il est au-dessus des autres éléments */
+				width: 600px;
+				top: -210px; /* Ajustez selon vos besoins */
+				right: 0; /* Aligne le conteneur à droite */
+				margin-top: 250px; /* Espacement au-dessus de la liste */
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre pour le conteneur */
+				padding: 2px; /* Espacement intérieur */
+			}
+
+			.notifications ul {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+			}
+
+			.notifications li {
+				padding: 10px;
+				border-bottom: 1px solid #ccc; /* Bordure en bas */
+				font-size: 12px; /* Taille de police réduite */
+			}
+
+			/* Supprime la bordure du dernier élément */
+			.notifications li:last-child {
+				border-bottom: none; 
+			}
+
+			/* Header de notification */
+			.notification-header {
+				display: flex; /* Utilise flexbox pour aligner les éléments */
+				justify-content: space-between; /* Espace entre le nom et la date */
+				align-items: center; /* Centrage vertical */
+			}
+
+			/* Style de la date de création */
+			.creation-date {
+				font-size: 0.9em; /* Taille de police plus petite pour la date */
+				color: #666; /* Couleur de texte grise pour la date */
+			}
+
+			/* Corps de la notification */
+			.notification-body {
+				margin-bottom: 10px; /* Ajoute un espace entre le corps et les boutons */
+			}
+
+			/* Boutons de notification */
+			.notification-buttons {
+				display: flex; /* Utilise flexbox pour aligner les boutons */
+				justify-content: flex-end; /* Aligne les boutons à droite */
+				gap: 10px; /* Espace entre les boutons */
+			}
+
+			.notification-buttons button {
+				padding: 5px 10px; /* Espacement intérieur des boutons */
+				margin: 0 2px; /* Espacement horizontal entre les boutons */
+				cursor: pointer; /* Curseur pointer pour les boutons */
+				border: none; /* Pas de bordure */
+				border-radius: 5px; /* Coins arrondis */
+				background-color: #007bff; /* Couleur d'arrière-plan des boutons */
+				color: white; /* Couleur du texte des boutons */
+				transition: background-color 0.3s; /* Transition pour l'effet de survol */
+			}
+
+			.notification-buttons button:hover {
+				background-color: #0056b3; /* Couleur au survol des boutons */
+			}
+
+			.d-none {
+				display: none;
+			}
+
+            /* Custom Rectangle */
+            .custom-rectangle {
+                position: relative;
+                border: 2px solid #000;
+                padding: 25px;
+                margin: 20px;
+                width: 100%;
+                max-width: 430px; /* Réduit la largeur maximale */
+                background-color: #fff;
+                box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+                overflow: hidden; /* Empêche le débordement du texte */
+            }
+
+            .custom-rectangle h2 {
+                text-align: center;
+                color: #000000;
+                padding: 10px;
+                border-radius: 5px;
+                background-color: #d7df22;
+                font-size: 18px; /* Réduit la taille de la police du titre */
+                white-space: normal; /* Permet le retour à la ligne */
+                margin-bottom: 20px;
+                overflow: visible; /* Permet d'afficher le texte complet */
+                text-overflow: clip; /* Ne coupe pas le texte avec des points de suspension */
+                display: block; /* Assure que le texte utilise text-overflow */
+            }
+
+            h1 {
+                text-align: center;
+                color: #000000;
+            }
+
+            .container-custom {
+                display: flex;
+                flex-wrap: wrap; /* Permet plusieurs colonnes */
+                justify-content: center; /* Centre le contenu */
+                margin: 20px;
+            }
+
+            /* Button Styles */
+            .container-custom .btn-secondary {
+                background-color: #fff;
+                color: #000;
+                border: 1px solid black;
+                margin-right: 10px;
+                padding: 10px 20px; /* Espacement interne du bouton */
+                font-size: 16px; /* Taille de la police */
+                border-radius: 5px;
+                transition: all 0.3s ease; /* Transition pour les effets de survol */
+            }
+
+            .container-custom .btn-secondary:hover {
+                background-color: #6c757d; /* Couleur de fond au survol */
+                color: #fff; /* Couleur du texte au survol */
+                transform: translateY(-3px); /* Effet de levée au survol */
+                border-color: #6c757d; /* Couleur de bordure au survol */
+            }
+
+            .btn-group {
+                display: flex;
+                justify-content: center; /* Centre les boutons */
+                gap: 15px; /* Espace entre les boutons */
+                margin-top: 20px;
+            }
+
+            /* Container pour la barre de recherche et le bouton de filtrage */
+            .search-filter-container {
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                margin-bottom: 20px; /* Espace sous la barre */
+            }
+
+            /* Barre de recherche personnalisée */
+            .custom-search-bar {
+                display: flex;
+                margin-top: 30px;
+                margin-left: 75px;
+            }
+
+            .custom-search-input {
+                width: 900px; /* Largeur de la barre de recherche */
+                padding: 15px;
+                font-size: 16px;
+                border: 2px solid #000;
+                border-radius: 10px;
+                box-sizing: border-box;
+            }
+
+            /* Dropdown avancement personnalisé */
+            .custom-dropdown .avancement-dropdown {
+                position: relative;
+            }
+
+            .avancement-dropdown .custom-filter-button {
+                margin-top: 30px;
+                margin-left : 40px;
+                padding: 15px;
+                font-size: 16px;
+                border: 2px solid #000;
+                border-radius: 10px;
+                background-color: #fff;
+                cursor: pointer;
+                transition: background-color 0.3s ease, color 0.3s ease;
+            }
+
+            /* Dropdown pilote personnalisé */
+            .custom-dropdown .pilote-dropdown {
+                position: relative;
+            }
+
+            .pilote-dropdown .custom-filter-button {
+                margin-top: 30px;
+                margin-left : 20px;
+                padding: 15px;
+                font-size: 16px;
+                border: 2px solid #000;
+                border-radius: 10px;
+                background-color: #fff;
+                cursor: pointer;
+                transition: background-color 0.3s ease, color 0.3s ease;
+            }
+
+            /* Customisation des listes déroulantes */
+            .custom-filter-button:hover {
+                background-color: #d7df22;
+                color: #fff;
+            }
+
+            .custom-dropdown-menu {
+                border-radius: 10px;
+                border: 2px solid #000;
+                padding: 10px;
+            }
+
+            .custom-dropdown-item {
+                padding: 10px;
+                font-size: 16px;
+                color: #000;
+            }
+
+            .custom-dropdown-item:hover {
+                background-color: #d7df22;
+                color: #fff;
+            }
+
+            /* Style Tag */
+            .tag-minor {
+				background-color: #00B050;
+				font-weight: bold;
+				color: #000000;
+				padding: 5px;
+				border-radius: 3px;
+			}
+			.tag-serious {
+				background-color: #FFC000;
+				font-weight: bold;
+				color: #000000;
+				padding: 5px;
+				border-radius: 3px;
+			}
+			.tag-blocking {
+				background-color: #FF0000;
+				font-weight: bold;
+				color: #000000;
+				padding: 5px;
+				border-radius: 3px;
+			}
+			.tag-unknown {
+				background-color: grey;
+				font-weight: bold;
+				color: #000000;
+				padding: 5px;
+				border-radius: 3px;
+			}
+
+            /* Style Avancement */
+            .text-npc { color: #ff0000; font-weight: bold; }
+            .text-pc { color: #ffc000; font-weight: bold; }
+            .text-t { color: #00b050; font-weight: bold; }
+            .text-a { color: #FF0000; font-weight: bold; background-color: #00C995; }
+            .text-r { color: #ffffff; font-weight: bold; background-color: #000000; }
+            .text-v { color: #04C49E; font-weight: bold; background-color: #000000; }
+            .text-sc { color: #ffffff; font-weight: bold; background-color: #C92093; }
+            .text-gc { color: #000000; font-weight: bold; background-color: #00B050; }
+
+            .hidden {
+                display: none;
+            }
+
+            .page-info {
+                text-align: center;
+                margin: 20px 0;
+            }
+
+            .center-button-container {
+                display: flex;
+                justify-content: center; /* Centre les boutons horizontalement */
+                align-items: center; /* Centre les boutons verticalement */
+                margin: 20px 0;
+            }
+
+            .center-button {
+                background-color: #818285; /* Couleur de fond du bouton */
+                color: #fff; /* Couleur du texte du bouton */
+                border: 2px solid #000; /* Bordure du bouton */
+                padding: 10px 20px; /* Espacement interne du bouton */
+                font-size: 16px; /* Taille de la police */
+                border-radius: 25px; /* Bordures arrondies */
+                transition: all 0.3s ease; /* Transition pour les effets de survol */
+                cursor: pointer; /* Curseur pointer au survol */
+                margin: 0 10px; /* Espacement horizontal entre les boutons */
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .center-button i {
+                margin: 0 5px; /* Espacement autour des icônes */
+            }
+
+            .center-button:hover {
+                background-color: #6c757d; /* Couleur de fond au survol */
+                color: #fff; /* Couleur du texte au survol */
+                border-color: #6c757d; /* Couleur de bordure au survol */
+                transform: translateY(-3px); /* Effet de levée au survol */
+            }
+
+            .center-button:focus {
+                outline: none; /* Enlève le contour de focus */
+                box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); /* Ombre de focus */
+            }
+
+            /* Footer */
+            footer {
+                text-align: center;
+                padding: 20px 0;
+                background-color: #f4f4f4;
+                border-top: 1px solid #ccc;
+            }
+
+            footer p {
+                color: #333;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-custom">
+			<div class="container-fluid">
+				<!-- Logo -->
+				<a class="navbar-brand" href="{{ path('app_logout') }}">
+					<img class="img-navbar" src="/img/logoPagosImg04.png" alt="Logo" height="40">
+				</a>
+
+				<!-- Bouton pour mobiles -->
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+
+				<!-- Liens du menu -->
+				<div class="collapse navbar-collapse" id="navbarColor01">
+					<ul class="navbar-nav me-auto">
+						<li class="nav-item">
+							<a class="nav-link nav-link-custom" href="{{ path('app_homeadmin') }}">
+								<b>Accueil</b>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link nav-link-custom" style="color: #000" href="{{ path('app_tachesadmin') }}">
+								<b>Tâches</b>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link nav-link-custom" href="{{ path('app_clientsdepagosadmin') }}">
+								<b>Clients de Pagos</b>
+							</a>
+						</li>
+
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle nav-link-custom" href="#" id="gestionDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								<b>Administration</b>
+							</a>
+							<ul class="dropdown-menu" aria-labelledby="gestionDropdown">
+								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_gestionuser') }}"><b>Gestion utilisateur</b></a></li>
+								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_importexport') }}"><b>Imports / Exports</b></a></li>
+								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_register') }}"><b>Créer un utilisateur</b></a></li>
+								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_createclientadmin') }}"><b>Créer un Client</b></a></li>
+							</ul>
+						</li>
+					</ul>
+
+					<!-- Liens côté droit -->
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item nav-link nav-link-custom user-name">
+							<b>{{ app.user.nom }} {{ app.user.prenom }}</b>
+						</li>
+
+						<!-- Icône de notification -->
+						{% set allowed_ids = ['e4e080b3758761bd01758f5fcfed03d9'] %}
+						{% if app.user.idclient and app.user.idclient.getId() in allowed_ids %}
+							<li class="nav-item notification-container">
+								<a class="nav-link" href="#" style="color: #ffffff; text-align: center;">
+									<i class="fas fa-bell" style="font-size: 1.5em; color: white;" id="notificationIcon"></i>
+									<span class="notification-count">{{ notifications|filter(notification => notification.visible == 1)|length }}</span>
+								</a>
+								<div id="notificationList" class="notifications" style="display: none;">
+									<ul>
+										{% set visibleNotifications = notifications|filter(notification => notification.visible == 1) %}
+										{% if visibleNotifications is empty %}
+											<li>Aucune notification</li>
+										{% else %}
+											{% set notificationsByClient = {} %}
+											
+											{# Regrouper les notifications par client #}
+											{% for notification in visibleNotifications %}
+												{% set clientName = notification.getClient.getRaisonSociale() %}
+												{% if notificationsByClient[clientName] is not defined %}
+													{% set notificationsByClient = notificationsByClient|merge({(clientName): []}) %}
+												{% endif %}
+												{% set notificationsByClient = notificationsByClient|merge({(clientName): notificationsByClient[clientName] | merge([notification])}) %}
+											{% endfor %}
+
+											{# Affichage des notifications regroupées par client #}
+											{% for client, clientNotifications in notificationsByClient %}
+												{% if clientNotifications|length > 0 %}
+													<li class="client-notification" data-client="{{ client }}">
+														<div class="client-notification-header" style="border-bottom: 2px solid #007bff; margin-bottom: 10px; padding-bottom: 5px;">
+															<b>{{ client }}</b>
+														</div>
+														<ul style="list-style: none; padding-left: 0; border-left: 2px dashed #ccc; padding-left: 10px;">
+															{% for notification in clientNotifications %}
+																<li id="notification-{{ notification.id }}" style="margin-bottom: 15px; padding: 10px; border: 1px solid #e0e0e0; border-radius: 5px; background-color: #f9f9f9;">
+																	<div class="notification-header">
+																		<span class="creation-date">{{ notification.getDateCreation() | date('d/m/y H:i:s') }}</span>
+																	</div>
+																	<div class="notification-body">
+																		{{ notification.getTitreWebtask() }} ({{ notification.getLibelleWebtask() }})<br>
+																		{{ notification.getMessage() }}
+																	</div>
+																	<div class="notification-buttons">
+																		<button class="mark-as-read" data-id="{{ notification.id }}">Lu</button>
+																		{% set idWebtask = idWebtaskMap[notification.codeWebtask] %}
+																		<button onclick="window.location.href='{{ path('app_consultertachesadmin', { 'id': notification.codeWebtask }) }}'">Consulter</button>
+																	</div>
+																</li>
+															{% endfor %}
+														</ul>
+													</li>
+													<hr style="border-top: 2px solid #007bff; margin: 10px 0;"> {# Séparation entre clients #}
+												{% endif %}
+											{% endfor %}
+										{% endif %}
+									</ul>
+								</div>
+							</li>
+						{% endif %}
+
+						<!-- Logo client et déconnexion -->
+						<li class="nav-item d-flex align-items-center">
+							<img src="data:image/png;base64,{{ logo }}" alt="Logo du client" class="client-logo me-2" />
+							<a class="nav-link logout-icon" href="{{ path('app_logout') }}" title="Se déconnecter">
+								<i class="fas fa-sign-out-alt"></i>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+        <div class="search-filter-container">
+            <div class="custom-search-bar">
+                <input type="text" class="custom-search-input" placeholder="Rechercher une WebTask 🔎" value="{{ query }}">
+            </div>
+            <div class="custom-dropdown avancement-dropdown">
+                <button class="custom-filter-button dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ selectedAvancement|default('-- Tous les avancements --') }}
+                </button>
+                <ul class="custom-dropdown-menu dropdown-menu" aria-labelledby="filterDropdown">
+                    <li>
+                        <a class="custom-dropdown-item dropdown-item" href="" onclick="filterByAvancement('all')">
+                            <b>-- Tous les avancements --</b>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="custom-dropdown-item dropdown-item" href="" onclick="filterByAvancement('nonPriseEnCompte')">
+                            Non Prise en Compte
+                        </a>
+                    </li>
+                    <li>
+                        <a class="custom-dropdown-item dropdown-item" href="" onclick="filterByAvancement('priseEnCompte')">
+                            Prise en Compte
+                        </a>
+                    </li>
+                    <li>
+                        <a class="custom-dropdown-item dropdown-item" href="" onclick="filterByAvancement('terminee')">
+                            Terminée
+                        </a>
+                    </li>
+                    <li>
+                        <a class="custom-dropdown-item dropdown-item" href="" onclick="filterByAvancement('amelioration')">
+                            ❇️ Amélioration ❇️
+                        </a>
+                    </li>
+                    <li>
+                        <a class="custom-dropdown-item dropdown-item" href="" onclick="filterByAvancement('refusee')">
+                            ⛔️ Refusée ⛔️
+                        </a>
+                    </li>
+                    <li>
+                        <a class="custom-dropdown-item dropdown-item" href="" onclick="filterByAvancement('validee')">
+                            ✅ Validée
+                        </a>
+                    </li>
+                    <li>
+                        <a class="custom-dropdown-item dropdown-item" href="" onclick="filterByAvancement('stopClient')">
+                            ❌ Stop Client ❌
+                        </a>
+                    </li>
+                    <li>
+                        <a class="custom-dropdown-item dropdown-item" href="" onclick="filterByAvancement('goClient')">
+                            😃 Go Client 😃
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="custom-dropdown pilote-dropdown">
+                <button class="custom-filter-button dropdown-toggle" type="button" id="filterPiloteDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span id="selectedPiloteText">-- Tous les pilotes --</span>
+                </button>
+                <ul class="custom-dropdown-menu dropdown-menu" aria-labelledby="filterPiloteDropdown">
+                    <li>
+                        <a class="custom-dropdown-item dropdown-item" href="" onclick="filterByPilote('')"><b>-- Tous les pilotes --</b></a>
+                    </li>
+                    {% for piloteId, pilote in pilotes %}
+                    <li>
+                        <a class="custom-dropdown-item dropdown-item" style="text-transform: uppercase;" href="" onclick="filterByPilote('{{ piloteId }}', '{{ pilote.initiale }} {{ pilote.nom }}')">
+                            {{ pilote.initiale }} {{ pilote.nom }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="container-custom" id="taskContainer">
+            {% if webtasks is not empty %}
+                {% for webtask in webtasks %}
+                    {% if webtask.etatdelawebtask == 'ON' and (webtask.avancementdelatache != '5' or selectedAvancement == 'validee') %}
+                        <div class="custom-rectangle hidden" 
+                            data-code="{{ webtask.webtask }}" 
+                            data-titre="{{ webtask.titre }}" 
+                            data-avancement="{{ webtask.avancementdelatache }}" 
+                            data-pilote-id="{{ webtask.piloteid.id }}">
+                            <h2><b>{{ webtask.titre }}</b></h2>
+                            <ul>
+                                <li><b><u>WebTask :</u></b> {{ webtask.webtask }}</li>
+                                <li><b><u>Description :</u></b> {{ webtask.description|nl2br }}</li>
+                                <li><b><u>Date de fin demandée :</u></b> {{ webtask.datefinDemandee }}</li>
+                                <li><b><u>Avancement de la tâche :</u></b> <span class="{{ webtask.mappedAvancement.class }}">{{ webtask.mappedAvancement.label }}</span></li>
+                                <li><b><u>Pilote :</u></b>
+                                    {% if webtask.piloteid %}
+                                        {{ (webtask.piloteid.prenom[:1] ~ '. ' ~ webtask.piloteid.nom)|upper }}
+                                    {% else %}
+                                        Pilote non assigné
+                                    {% endif %}
+                                </li>
+                                <li><b><u>Version :</u></b> {{ webtask.versionLibelle }}</li>
+                            </ul>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-secondary consulter rounded" onclick="window.location.href='{{ path('app_consultertachesadmin', { 'id': webtask.code }) }}'">CONSULTER</button>
+                                {# <button type="button" class="btn btn-secondary consulter rounded" onclick="window.location.href='{{ path('app_suivitachesadmin', { 'id': webtask.id }) }}'">VOIR LE SUIVI</button> #}
+                                {% if app.user.roleWx == 'createur' %}
+                                {% set allowed_ids = ['e4e080b3758761bd01758f5fcfed03d9'] %}
+                                {% if app.user.idclient and app.user.idclient.getId() not in allowed_ids %}
+                                    <button type="button" class="btn btn-secondary repondre consulter rounded" onclick="window.location.href='{{ path('app_reponsetaches', { 'id': webtask.id }) }}'">RÉPONDRE</button>
+                                {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <p>Aucune tâche disponible.</p>
+            {% endif %}
+        </div>
+
+        <!-- Boutons pages suivantes/précédentes -->
+        {# <div class="center-button-container">
+            <button id="prevPageBtn" class="center-button">
+                <i class="fas fa-chevron-left"></i> Page précédente
+            </button>
+            <button id="nextPageBtn" class="center-button">
+                Page suivante <i class="fas fa-chevron-right"></i>
+            </button>
+        </div> #}
+
+        <!-- Affichage de l'information sur la page -->
+        <div class="page-info">
+            <span id="pageInfoText"></span>
+        </div>
+
+        <!-- Footer -->
+		<footer>
+			<p><b>© Copyright @ 2024 par <span style="color: #d7df22;">Cabinet PAGOS</span> | tous droits réservés.</b></p>
+		</footer>
+
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                const $tasks = $('.custom-rectangle');
+                const $searchInput = $('.custom-search-input');
+                const $avancementButton = $('#filterDropdown'); // Bouton de filtre d'avancement
+                const $piloteButton = $('#filterPiloteDropdown'); // Bouton de filtre de pilote
+                const $selectedPiloteText = $('#selectedPiloteText'); // Texte du bouton de filtre pilote
+
+                // Variables pour conserver les filtres
+                let currentAvancement = getUrlParam('filter') || ''; // Filtre d'avancement
+                let currentPiloteId = getUrlParam('filterByPilote') || ''; // Filtre de pilote
+                let currentPiloteName = getUrlParam('piloteName') || '-- Tous les pilotes --'; // Nom du pilote
+
+                // Fonction pour récupérer les paramètres d'URL
+                function getUrlParam(param) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    return urlParams.get(param) || ''; // Retourne la valeur du paramètre ou une chaîne vide
+                }
+
+                // Fonction pour afficher toutes les tâches
+                function showAllTasks() {
+                    $tasks.removeClass('hidden');
+                    updateTaskInfoText();
+                }
+
+                // Fonction pour mettre à jour le texte d'information
+                function updateTaskInfoText() {
+                    const visibleTasks = $tasks.filter(':not(.hidden)');
+                    if (visibleTasks.length === 0) {
+                        $('#pageInfoText').text('Aucune tâche trouvée');
+                    } else {
+                        $('#pageInfoText').text(`${visibleTasks.length} tâche(s) trouvée(s)`);
+                    }
+                }
+
+                // Fonction pour filtrer les tâches
+                function filterTasks(query = '') {
+                    const lowerCaseQuery = query.toLowerCase();
+
+                    $tasks.each(function () {
+                        const $task = $(this);
+                        const taskCode = ($task.data('code') || '').toString().toLowerCase();
+                        const taskTitre = ($task.data('titre') || '').toString().toLowerCase();
+                        const taskAvancement = $task.data('avancement') || '';
+                        const taskPiloteId = $task.data('pilote-id') || '';
+
+                        // Vérification des filtres
+                        const matchesQuery = taskCode.includes(lowerCaseQuery) || taskTitre.includes(lowerCaseQuery);
+                        const matchesAvancement = currentAvancement === '' || taskAvancement === currentAvancement;
+                        const matchesPilote = currentPiloteId === '' || taskPiloteId === currentPiloteId;
+
+                        // Affiche ou masque la tâche en fonction des filtres
+                        if (matchesQuery && matchesAvancement && matchesPilote) {
+                            $task.removeClass('hidden');
+                        } else {
+                            $task.addClass('hidden');
+                        }
+                    });
+
+                    // Mise à jour du texte d'information
+                    updateTaskInfoText();
+                }
+
+                // Fonction pour mettre à jour le texte du bouton d'avancement
+                function updateAvancementButtonText() {
+                    const avancementText = currentAvancement ? getAvancementDisplayText(currentAvancement) : 'Filtrer par avancement';
+                    $avancementButton.text(avancementText);
+                }
+
+                // Fonction pour mettre à jour le texte du bouton de filtre pilote
+                function updatePiloteButtonText() {
+                    $selectedPiloteText.text(currentPiloteName || 'Filtrer par pilote');
+                }
+
+                // Fonction pour récupérer le texte d'affichage de l'avancement
+                function getAvancementDisplayText(avancement) {
+                    switch (avancement) {
+                        case 'nonPriseEnCompte': return 'Non Prise en Compte';
+                        case 'priseEnCompte': return 'Prise en Compte';
+                        case 'terminee': return 'Terminée';
+                        case 'amelioration': return '❇️ Amélioration ❇️';
+                        case 'refusee': return '⛔️ Refusée ⛔️';
+                        case 'validee': return '✅ Validée';
+                        case 'stopClient': return '❌ Stop Client ❌';
+                        case 'goClient': return '😃 Go Client 😃';
+                        default: return '-- Tous les avancements --';
+                    }
+                }
+
+                // Affiche toutes les tâches au chargement de la page
+                showAllTasks();
+
+                // Met à jour les filtres et l'URL
+                function updateUrlAndFilter(piloteId, piloteName, avancement) {
+                    const currentUrl = new URL(window.location.href);
+                    if (piloteId) {
+                        currentUrl.searchParams.set('filterByPilote', piloteId); // Met à jour le filtre de pilote
+                        currentUrl.searchParams.set('piloteName', piloteName); // Met à jour le nom du pilote
+                    } else {
+                        currentUrl.searchParams.delete('filterByPilote'); // Supprime le filtre de pilote si aucun ID
+                        currentUrl.searchParams.delete('piloteName'); // Supprime le nom du pilote
+                    }
+
+                    if (avancement) {
+                        currentUrl.searchParams.set('filter', avancement); // Met à jour le filtre d'avancement
+                    } else {
+                        currentUrl.searchParams.delete('filter'); // Supprime le filtre d'avancement si aucune valeur
+                    }
+
+                    // Mise à jour de l'URL et des boutons
+                    window.history.pushState({}, '', currentUrl); // Met à jour l'URL sans recharger la page
+                    updateAvancementButtonText(); // Met à jour le texte du bouton d'avancement
+                    updatePiloteButtonText(); // Met à jour le texte du bouton de filtre pilote
+                }
+
+                // Réinitialiser la recherche avec "Entrée"
+                $searchInput.on('keypress', function (e) {
+                    if (e.which === 13) { // Appuie sur la touche Entrée
+                        const query = $(this).val().trim();
+                        filterTasks(query); // Appelle le filtrage en tenant compte des autres filtres
+                    }
+                });
+
+                // Fonction pour filtrer par pilote
+                window.filterByPilote = function(piloteId, piloteName = '-- Tous les pilotes --') {
+                    currentPiloteId = piloteId; // Met à jour le filtre de pilote
+                    currentPiloteName = piloteName; // Met à jour le nom du pilote
+                    const query = $searchInput.val().trim(); // Récupère la requête de recherche
+                    updateUrlAndFilter(currentPiloteId, currentPiloteName, currentAvancement); // Met à jour l'URL
+                    filterTasks(query); // Filtre les tâches avec le filtre de pilote
+                };
+
+                // Fonction pour filtrer par avancement
+                window.filterByAvancement = function(avancement) {
+                    currentAvancement = avancement; // Met à jour le filtre d'avancement
+                    const query = $searchInput.val().trim(); // Récupère la requête de recherche
+                    updateUrlAndFilter(currentPiloteId, currentPiloteName, currentAvancement); // Met à jour l'URL
+                    filterTasks(query); // Filtre les tâches avec le filtre de pilote et d'avancement
+                };
+
+                // Initialisation du texte des boutons
+                updateAvancementButtonText();
+                updatePiloteButtonText();
+            });
+        </script>
+        <script>
+			document.addEventListener('DOMContentLoaded', function () {
+				// Code de gestion des notifications ici
+
+				// Gestion de l'affichage des notifications
+				document.getElementById('notificationIcon').addEventListener('click', function() {
+					var notificationList = document.getElementById('notificationList');
+					notificationList.style.display = notificationList.style.display === 'none' || notificationList.style.display === '' ? 'block' : 'none'; // Toggle
+				});
+			});
+
+			function consulterNotification(notificationId) {
+				// Rediriger vers la page de consultation de la notification
+				window.location.href = `/notification/${notificationId}`; // Remplacez par l'URL réelle
+			}
+		</script>
+		<script>
+			document.querySelectorAll('.mark-as-read').forEach(button => {
+				button.addEventListener('click', function() {
+					const notificationId = this.getAttribute('data-id');
+
+					fetch(`/mark-as-read/${notificationId}`, {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+							'X-Requested-With': 'XMLHttpRequest'
+						}
+					})
+					.then(response => {
+						if (!response.ok) {
+							throw new Error('Erreur lors de la mise à jour de la notification');
+						}
+						return response.json();
+					})
+					.then(data => {
+						if (data.status === 'success') {
+							// Masquer la notification
+							const notificationElement = document.getElementById(`notification-${notificationId}`);
+							if (notificationElement) {
+								notificationElement.style.display = 'none'; // Masque la notification
+							}
+
+							// Mettre à jour le compteur de notifications
+							const countElement = document.querySelector('.notification-count');
+							const currentCount = parseInt(countElement.textContent, 10);
+							countElement.textContent = currentCount - 1; // Décrementer le compteur
+
+							// Vérifiez les notifications du client
+							checkClientNotifications();
+						} else {
+							console.error(data);
+						}
+					})
+					.catch(error => console.error('Erreur:', error));
+				});
+			});
+
+			function checkClientNotifications() {
+				const clients = document.querySelectorAll('.client-notification');
+				let hasVisibleNotifications = false;
+
+				clients.forEach(client => {
+					const notifications = client.querySelectorAll('li[id^="notification-"]'); // Sélectionner les notifications
+					const visibleNotifications = Array.from(notifications).filter(notification => notification.style.display !== 'none');
+
+					if (visibleNotifications.length === 0) {
+						client.style.display = 'none'; // Masquer le client si aucune notification n'est visible
+					} else {
+						hasVisibleNotifications = true; // Il y a encore des notifications visibles
+					}
+				});
+
+				// Afficher le message si aucune notification visible
+				const notificationList = document.getElementById('notificationList');
+				if (!hasVisibleNotifications) {
+					notificationList.innerHTML = '<li>Aucune notification disponible</li>'; // Afficher le message
+				}
+			}
+		</script>
+    </body>
+</html>

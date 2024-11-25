@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="icon" href="\img\logoPagosImg02.png" type="image/x-icon">
+
+		<title>Forum</title>
+
+		<!-- Bootstrap CSS -->
+		<link
+		href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+		<!-- FontAwesome (pour les icônes) -->
+		<link
+		href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+		<!-- Custom CSS -->
+		<style>
+			body {
+				font-family: 'Helvetica', Arial, sans-serif;
+			}
+			/* Navbar */
+			.navbar-custom {
+				background-color: #818285;
+				border-style: none;
+			}
+
+			.navbar-custom .nav-link {
+				color: #ffffff;
+				font-size: 19px;
+			}
+
+			.navbar-custom .nav-link:hover {
+				color: #000000;
+			}
+
+			.img-navbar {
+				width: 100%;
+				height: 80px;
+			}
+
+			.navbar-toggler-icon {
+				color: white;
+			}
+
+			.dropdown-menu {
+				background-color: #818285;
+			}
+
+			.dropdown-menu .dropdown-header {
+				color: #ffffff;
+				font-size: 16px;
+			}
+
+			.dropdown-menu .dropdown-item {
+				color: #ff0000;
+			}
+
+			.dropdown-menu .dropdown-item:hover {
+				background-color: #818285;
+				color: #ffffff;
+			}
+			/* Assurer que le dropdown est bien aligné à droite et ne dépasse pas */
+			.navbar-nav .dropdown-menu {
+				position: absolute;
+				right: 0; /* Alignement à droite */
+				left: auto; /* Désactiver l'alignement automatique à gauche */
+			}
+
+			/* Style de la date de création */
+			.creation-date {
+				font-size: 0.9em; /* Taille de police plus petite pour la date */
+				color: #666; /* Couleur de texte grise pour la date */
+			}
+
+			.d-none {
+				display: none;
+			}
+
+			.container-custom {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin: 20px auto;
+				max-width: 1400px;
+			}
+
+			hr {
+				margin: 20px 0;
+				opacity: 1;
+				border: 2px solid #000;
+			}
+
+			.bottom-rectangle {
+				border-radius: 0;
+			}
+			.client-logo {
+				max-width: 70%; /* Limiter la largeur du logo */
+				max-height: 70%; /* Limiter la hauteur du logo */
+				object-fit: contain; /* Garder le ratio du logo */
+			}
+
+			/* Task Container */
+			.task-container {
+				max-height: 300px;
+				overflow-y: auto;
+				padding: 10px 0;
+				width: 100%;
+			}
+
+			.task {
+				margin-bottom: 20px;
+				position: relative;
+			}
+
+			.total-taches {
+				position: absolute;
+				bottom: 10px;
+				right: 20px;
+			}
+
+			/* Button Styles */
+			.btn-secondary {
+				background-color: #818285; /* Couleur de fond du bouton */
+				color: #fff; /* Couleur du texte du bouton */
+				border: 2px solid #000; /* Bordure du bouton */
+				padding: 10px 20px; /* Espacement interne du bouton */
+				font-size: 16px; /* Taille de la police */
+				border-radius: 50px; /* Bordures arrondies */
+				transition: all 0.3s ease; /* Transition pour les effets de survol */
+			}
+
+			.btn-secondary:hover {
+				background-color: #6c757d; /* Couleur de fond au survol */
+				color: #fff; /* Couleur du texte au survol */
+				transform: translateY(-3px); /* Effet de levée au survol */
+				border-color: #6c757d; /* Couleur de bordure au survol */
+			}
+
+			/* Center Button */
+			.center-button {
+				display: flex;
+				justify-content: center; /* Centre les boutons */
+				gap: 15px; /* Espace entre les boutons */
+				margin: 20px;
+			}
+
+			.center-button .btn-secondary {
+				background-color: #fff;
+				color: #000;
+				border: 1px solid black;
+				margin-right: 10px;
+				padding: 10px 20px; /* Espacement interne du bouton */
+				font-size: 16px; /* Taille de la police */
+				border-radius: 5px;
+				transition: all 0.3s ease; /* Transition pour les effets de survol */
+			}
+
+			.center-button .btn-secondary:hover {
+				background-color: #6c757d; /* Couleur de fond au survol */
+				color: #fff; /* Couleur du texte au survol */
+				transform: translateY(-3px); /* Effet de levée au survol */
+				border-color: #6c757d; /* Couleur de bordure au survol */
+			}
+
+			/* Info Icon Hover */
+			.info-icon {
+				cursor: pointer;
+				color: #007bff;
+				margin-left: 5px;
+				font-size: 14px;
+				position: relative;
+			}
+
+			.description {
+				display: none;
+				background-color: rgba(255, 255, 255, 0.9);
+				color: #000;
+				border: 1px solid #000;
+				padding: 10px;
+				border-radius: 8px;
+				z-index: 10;
+				max-width: 500px;
+				width: auto;
+				word-wrap: break-word;
+				position: absolute;
+				left: 50%; /* Centrer la description */
+				transform: translateX(-50%); /* Assurer que la description reste bien centrée */
+				top: 100%;
+				white-space: normal;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+				transition: opacity 0.3s ease;
+				opacity: 0;
+				pointer-events: none;
+				overflow-wrap: break-word;
+			}
+
+			.info-icon:hover .description {
+				display: block;
+				opacity: 1;
+				pointer-events: auto;
+			}
+
+			/* BLOC STATISTIQUE */
+			.custom-rectangle-statistic {
+				position: relative;
+				border: 2px solid #000;
+				padding: 25px;
+				margin: 20px;
+				width: 100%;
+				max-width: 515px;
+				background-color: #fff;
+				border-radius: 50px;
+				box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+			}
+
+			.icon-grid {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr); /* Deux colonnes */
+				gap: 10px; /* Espacement entre les icônes */
+			}
+
+			.icon-container {
+				display: flex;
+				flex-direction: column; /* Affiche le contenu en colonne */
+				align-items: center; /* Centre horizontalement */
+			}
+
+			.icon-container a {
+				text-decoration: none; /* Enlève la ligne soulignée */
+				color: inherit; /* Maintient la couleur originale du texte ou de l'icône */
+			}
+
+			.black-block {
+				background-color: black;
+				padding: 15px;
+				border-radius: 10px;
+				display: flex;
+				flex-direction: column; /* Affiche le contenu en colonne */
+				justify-content: center;
+				align-items: center;
+				width: 80px; /* Largeur des icônes */
+			}
+
+			.green-block {
+				background-color: green;
+				padding: 15px;
+				border-radius: 10px;
+				display: flex;
+				flex-direction: column; /* Affiche le contenu en colonne */
+				justify-content: center;
+				align-items: center;
+				width: 80px; /* Largeur des icônes */
+			}
+
+			.red-block {
+				background-color: red;
+				padding: 15px;
+				border-radius: 10px;
+				display: flex;
+				flex-direction: column; /* Affiche le contenu en colonne */
+				justify-content: center;
+				align-items: center;
+				width: 80px; /* Largeur des icônes */
+			}
+
+			.iconeTheme {
+				font-size: 60px;
+				color: #FF0000;
+			}
+
+			.light-circle-npc {
+				position: absolute;
+				top: 20px; /* Ajustez cette valeur en fonction de la position de la lumière supérieure */
+				width: 15px;
+				height: 15px;
+				background-color: #FF0000;
+				border-radius: 50%;
+				box-shadow: inset 0 0 0 2px #000000;
+			}
+
+			.light-circle-pc {
+				position: absolute;
+				top: 36px; /* Ajustez cette valeur en fonction de la position de la lumière supérieure */
+				width: 15px;
+				height: 15px;
+				background-color: #FFA500;
+				border-radius: 50%;
+				box-shadow: inset 0 0 0 2px #000000;
+			}
+
+			.light-circle-t {
+				position: absolute;
+				top: 52px; /* Ajustez cette valeur en fonction de la position de la lumière supérieure */
+				width: 15px;
+				height: 15px;
+				background-color: #008000;
+				border-radius: 50%;
+				box-shadow: inset 0 0 0 2px #000000;
+			}
+
+			.status-text h5 {
+				margin-top: 10px;
+				font-weight: bold;
+				text-align: center;
+				color: black;
+				font-size: 15px;
+			}
+
+			.statistic-value {
+				background-color: red;
+				color: white;
+				font-size: 13px;
+				padding: 2px;
+				position: absolute;
+				top: -5px;
+				right: -20px;
+				height: 25px;
+				width: 40px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				border-radius: 5px;
+				border: 2px solid #FFF;
+			}
+
+			/* WEBTASK STYLE */
+			.container-task {
+				display: flex;
+				flex-wrap: wrap; /* Permet plusieurs colonnes */
+				justify-content: center; /* Centre le contenu */
+				margin: 20px;
+			}
+
+			/* Custom Rectangle */
+			.custom-task {
+				position: relative;
+				border: 2px solid #000;
+				padding: 25px;
+				margin: 20px;
+				width: 100%;
+				max-width: 430px; /* Réduit la largeur maximale */
+				background-color: #fff;
+				box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+				overflow: hidden; /* Empêche le débordement du texte */
+			}
+
+			.custom-task h2 {
+				text-align: center;
+				color: #000000;
+				padding: 10px;
+				border-radius: 5px;
+				background-color: #d7df22;
+				font-size: 18px; /* Réduit la taille de la police du titre */
+				white-space: normal; /* Permet le retour à la ligne */
+				margin-bottom: 20px;
+				overflow: visible; /* Permet d'afficher le texte complet */
+				text-overflow: clip; /* Ne coupe pas le texte avec des points de suspension */
+				display: block; /* Assure que le texte utilise text-overflow */
+			}
+
+			/* Button Styles */
+			.container-task .btn-secondary {
+				background-color: #fff;
+				color: #000;
+				border: 1px solid black;
+				margin-right: 10px;
+				padding: 10px 20px; /* Espacement interne du bouton */
+				font-size: 16px; /* Taille de la police */
+				border-radius: 5px;
+				transition: all 0.3s ease; /* Transition pour les effets de survol */
+			}
+
+			.container-task .btn-secondary:hover {
+				background-color: #6c757d; /* Couleur de fond au survol */
+				color: #fff; /* Couleur du texte au survol */
+				transform: translateY(-3px); /* Effet de levée au survol */
+				border-color: #6c757d; /* Couleur de bordure au survol */
+			}
+
+			.container-task .btn-group {
+				display: flex;
+				justify-content: center; /* Centre les boutons */
+				gap: 15px; /* Espace entre les boutons */
+				margin-top: 20px;
+			}
+
+			/* Footer */
+			footer {
+				text-align: center;
+				padding: 20px 0;
+				background-color: #f4f4f4;
+				border-top: 1px solid #ccc;
+			}
+
+			footer p {
+				color: #333;
+			}
+			.navbar .nav-item .dropdown-menu {
+				min-width: 200px; /* Ajustez la largeur du menu déroulant */
+			}
+
+			.navbar .badge {
+				position: absolute;
+				top: -5px;
+				right: -10px;
+				font-size: 0.75rem; /* Taille du texte du badge */
+			}
+			/* Hero Section */
+			.hero-section {
+				background: linear-gradient(to right, #6c757d, #343a40);
+				padding: 60px 0;
+				color: #fff;
+			}
+
+			.hero-section h2 {
+				font-size: 2.5rem;
+				font-weight: 700;
+				margin-bottom: 20px;
+			}
+
+			.hero-section p {
+				font-size: 1.1rem;
+				font-weight: 400;
+				color: #f1f1f1;
+				margin-top: 10px;
+			}
+
+			/* Forum Entries */
+			.container.mt-5 {
+				margin-top: 50px;
+			}
+
+			.forum-entry {
+				background-color: #fff;
+				padding: 20px;
+				border-radius: 10px;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+				margin-bottom: 20px;
+			}
+
+			.forum-entry p {
+				font-size: 1rem;
+				color: #555;
+				margin-bottom: 10px;
+			}
+
+			.forum-entry pre {
+				font-family: 'Poppins', sans-serif;
+				white-space: pre-wrap;
+				word-wrap: break-word;
+				font-size: 1rem;
+				color: #333;
+			}
+
+			.forum-entry hr {
+				border: 1px solid #e0e0e0;
+				margin-top: 20px;
+			}
+
+			.no-content {
+				color: #888;
+				font-style: italic;
+				text-align: center;
+				font-size: 1.2rem;
+			}
+		</style>
+		<body>
+
+			<!-- Navbar -->
+			<nav class="navbar navbar-expand-lg navbar-custom">
+				<div class="container-fluid">
+					<a class="navbar-brand" href="{{ path('app_homeclient') }}">
+						<img class="img-navbar" src="/img/logoPagosImg04.png" alt="Logo" height="40">
+					</a>
+					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon">
+							<i class="fas fa-bars"></i>
+						</span>
+					</button>
+					<div class="collapse navbar-collapse" id="navbarColor01">
+						<ul class="navbar-nav me-auto">
+							<li class="nav-item">
+								<a class="nav-link" href="{{ path('app_homeclient') }}">
+									<b>Accueil</b>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="{{ path('app_taches') }}">
+									<b>Tâches</b>
+								</a>
+							</li>
+							{% if app.user.roleWx == 'createur' %}
+								<li class="nav-item">
+									<a class="nav-link" href="{{ path('app_creertaches') }}">
+										<b>Créer une tâche</b>
+									</a>
+								</li>
+							{% endif %}
+
+							<li class="nav-item">
+								<a class="nav-link" style="color: #000" href="{{ path('app_forum', { 'id': client.id }) }}">
+									<b>Forum</b>
+								</a>
+							</li>
+
+
+							{% set allowed_ids = ['e4e080b3758761bd01758f5fcfed03d9'] %}
+							{% if app.user.idclient and app.user.idclient.getId() in allowed_ids %}
+								<li class="nav-item">
+									<a class="nav-link" href="{{ path('app_clientsdepagos') }}">
+										<b>Clients de Pagos</b>
+									</a>
+								</li>
+							{% endif %}
+						</ul>
+
+						<ul class="navbar-nav ms-auto">
+							<li class="nav-item">
+								<a class="nav-link" href="#" style="color: #ffffff; text-align: center;">
+									<b>{{ app.user.nom }}
+										{{ app.user.prenom }}</b>
+								</a>
+							</li>
+
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle" href="#" id="navbarUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+
+									<img
+									src="data:image/png;base64,{{ logo }}" alt="Logo du client" class="client-logo" style="width: 30px; height: 30px; border-radius: 50%;"/>
+
+								<!-- Ajout du logo client -->
+								</a>
+								<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown">
+									<li><hr class="dropdown-divider"></li>
+									<li>
+										<a class="dropdown-item" href="{{ path('app_logout') }}">
+											<b>
+												<i class="fas fa-sign-out-alt"></i>
+												Se déconnecter
+											</b>
+										</a>
+									</li>
+								</ul>
+							</li>
+
+						</ul>
+					</div>
+				</div>
+			</nav>
+
+
+			<!-- Hero Section -->
+			<div class="hero-section text-center">
+				<h2>Forum du Client :
+					{{ client.raisonSociale }}</h2>
+			</div>
+
+			<!-- Main Content -->
+			<div class="container mt-5">
+				<div id="forum-contents">
+					{% if forums is empty %}
+						<p class="no-content">Aucun Chat disponible pour ce client.</p>
+					{% else %}
+						{% for forum in forums %}
+							<div class="forum-entry">
+								<p>
+									<strong>Date :</strong>
+									{{ forum.date|date('d/m/Y H:i') }}</p>
+
+								<pre style="white-space: pre-wrap; font-family: 'Poppins', sans-serif;">{{ forum.content }}</pre>
+								<hr>
+							</div>
+						{% endfor %}
+					{% endif %}
+				</div>
+			</div>
+
+			<!-- Footer -->
+			<footer>
+				<p>&copy; 2024 Pagos - Tous droits réservés.</p>
+			</footer>
+
+			<!-- Bootstrap JS -->
+			<link
+			href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+
+			<!-- JS Bootstrap -->
+			<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+			<script>
+
+				// Exemple d'initialisation manuelle pour le dropdown
+document.querySelectorAll('.dropdown-toggle').forEach(function (dropdownToggle) {
+dropdownToggle.addEventListener('click', function () {
+const dropdownMenu = dropdownToggle.nextElementSibling;
+dropdownMenu.classList.toggle('show');
+});
+});
+			</script>
+		</body>
+	</head>
+</html>

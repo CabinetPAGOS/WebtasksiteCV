@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="icon" href="\img\logoPagosImg02.png" type="image/x-icon">
+		<title>Suivi de la Tâche</title>
+		<!-- Bootstrap CSS -->
+		<link
+		href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+		<!-- FontAwesome (pour les icônes) -->
+		<link
+		href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+		<!-- Custom CSS -->
+		<style>
+			body {
+				font-family: 'Helvetica', Arial, sans-serif;
+			}
+			/* Navbar */
+			.navbar-custom {
+				background-color: #818285;
+				border-style: none;
+			}
+
+			.navbar-custom .nav-link {
+				color: #ffffff;
+				font-size: 19px;
+			}
+
+			.navbar-custom .nav-link:hover {
+				color: #000000;
+			}
+
+			.img-navbar {
+				width: 100%;
+				height: 80px;
+			}
+
+			.navbar-toggler-icon {
+				color: white;
+			}
+
+			.dropdown-menu {
+				background-color: #818285;
+			}
+
+			.dropdown-menu .dropdown-header {
+				color: #ffffff;
+				font-size: 16px;
+			}
+
+			.dropdown-menu .dropdown-item {
+				color: #ff0000;
+			}
+
+			.dropdown-menu .dropdown-item:hover {
+				background-color: #818285;
+				color: #ffffff;
+			}
+
+			/* Styles spécifiques pour le formulaire */
+            .form {
+                background: white;
+                padding: 1rem;
+                border-radius: 5px;
+                max-width: 82%;
+                margin: 0 auto;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .form-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .form-row .form-group {
+                flex: 1 1 calc(33.33% - 1rem);
+            }
+
+            .form-group {
+                margin-bottom: 1rem;
+            }
+
+            .form-group label {
+                font-weight: bold;
+                text-decoration: underline;
+            }
+
+            .form-group div {
+                width: 100%;
+                padding: 0.5rem;
+                border: 1px solid #000;
+                border-radius: 5px;
+                box-sizing: border-box;
+                font-size: 16px;
+                margin-bottom: 0.5rem;
+            }
+
+            /* Button Styles */
+            .form .btn-secondary {
+                background-color: #fff;
+                color: #000;
+                border: 1px solid black;
+                margin-right: 10px;
+                padding: 10px 20px; /* Espacement interne du bouton */
+                font-size: 16px; /* Taille de la police */
+                border-radius: 5px;
+                transition: all 0.3s ease; /* Transition pour les effets de survol */
+            }
+
+            .form .btn-secondary:hover {
+                background-color: #6c757d; /* Couleur de fond au survol */
+                color: #fff; /* Couleur du texte au survol */
+                transform: translateY(-3px); /* Effet de levée au survol */
+                border-color: #6c757d; /* Couleur de bordure au survol */
+            }
+
+            .btn-group {
+                display: flex;
+                justify-content: center; /* Centre les boutons */
+                gap: 15px; /* Espace entre les boutons */
+                margin-top: 20px;
+            }
+
+			/* Styles pour les titres avec fond coloré séparé */
+            .title-container {
+                display: flex;
+                justify-content: center;
+                margin-bottom: 1rem;
+            }
+
+            .title01 {
+                background-color: #d7df22;
+                padding: 1rem;
+                border-radius: 5px;
+                margin: 0 0.5rem;
+                text-align: center;
+                position: relative;
+                z-index: 1;
+                font-size: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .title02 {
+                background-color: #d7df22;
+                padding: 1rem;
+                border-radius: 5px;
+                margin: 0 0.5rem;
+                text-align: center;
+                position: relative;
+                z-index: 1;
+                font-size: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .title:nth-child(1)::after {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 100%;
+                width: 1rem;
+                height: 100%;
+                background: white;
+                z-index: -1;
+            }
+
+            .title:nth-child(2)::before {
+                content: "";
+                position: absolute;
+                top: 50%;
+                right: 100%;
+                width: 1rem;
+                height: 100%;
+                background: white;
+                z-index: -1;
+            }
+
+            .description-text {
+                color: #1AC2DD; /* Couleur bleu ciel */
+            }
+
+            .tag-minor {
+                background-color: green;
+                font-weight: bold;
+                color: white;
+                padding: 5px;
+                border-radius: 3px;
+            }
+
+            .tag-serious {
+                background-color: yellow;
+                font-weight: bold;
+                color: black;
+                padding: 5px;
+                border-radius: 3px;
+            }
+
+            .tag-blocking {
+                background-color: red;
+                font-weight: bold;
+                color: white;
+                padding: 5px;
+                border-radius: 3px;
+            }
+
+            .tag-unknown {
+                background-color: grey;
+                font-weight: bold;
+                color: white;
+                padding: 5px;
+                border-radius: 3px;
+            }
+
+            .text-danger { color: #ff0000; font-weight: bold; }
+            .text-warning { color: #ffc000; font-weight: bold; }
+            .text-success { color: #00b050; font-weight: bold; }
+            .text-teal { color: #04c49e; font-weight: bold; }
+            .text-white { color: #ffffff; font-weight: bold; }
+            .text-black { color: #000000; font-weight: bold; }
+
+            .bg-cyan { background-color: #00c995; }
+            .bg-black { background-color: #000000; }
+            .bg-pink { background-color: #c92093; }
+            .bg-success { background-color: #00b050; }
+
+            /* Style général pour la section des commentaires */
+            .comments-section div {
+                width: 100%;
+                border: 1px solid #000;
+                border-radius: 5px;
+                box-sizing: border-box;
+                font-size: 16px;
+            }
+
+            .comment-card {
+                margin-bottom: 20px; /* Espace entre chaque bloc de commentaire */
+                padding: 10px; /* Espacement interne dans chaque bloc */
+                border: 1px solid #ccc; /* Bordure légère autour des blocs (facultatif) */
+                border-radius: 8px; /* Coins arrondis pour un aspect plus doux */
+                background-color: #f9f9f9; /* Couleur de fond pour chaque bloc */
+            }
+
+            .task-info {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                background-color: #e9ecef;
+                padding: 10px 15px;
+                border-radius: 5px;
+                font-size: 14px;
+                font-weight: bold; /* Rend tout le texte en gras */
+                gap: 5px; /* Espace entre les éléments */
+            }
+
+            .task-info b {
+                white-space: nowrap;
+                font-size: 13px;
+            }
+
+            .avancement {
+                font-weight: bold;
+                color: #c92093; /* Ajoute une couleur à l'avancement spécifique si nécessaire */
+            }
+
+            .separator {
+                border: 0;
+                border-top: 2px solid #000;
+                margin: 15px 0;
+            }
+
+            .comment-client,
+            .comment-internal {
+                background-color: #fff;
+                padding: 10px;
+                border-left: 4px solid #4caf50;
+                border-radius: 5px;
+                margin-bottom: 10px;
+                font-size: 14px;
+            }
+
+            .no-comments,
+            .no-client-comment,
+            .no-internal-comment {
+                color: #999;
+                font-style: italic;
+                font-size: 14px;
+            }
+
+            .comment-client b, 
+            .comment-internal b {
+                font-size: 16px;
+                color: #333;
+                margin-bottom: 8px;
+                display: inline-block;
+            }
+
+            .comment-card p {
+                margin: 0;
+            }
+
+            .no-comments, .no-client-comment, .no-internal-comment b {
+                font-weight: normal;
+            }
+
+            /* Footer */
+            footer {
+                text-align: center;
+                padding: 20px 0;
+                background-color: #f4f4f4;
+                border-top: 1px solid #ccc;
+            }
+
+            footer p {
+                color: #333;
+            }
+            /* Conteneur principal pour les documents */
+            #documents {
+                    background-color: #f9f9f9; /* Fond gris clair pour un aspect doux */
+                    border-radius: 12px; /* Coins arrondis pour un look moderne */
+                    padding: 25px; /* Espacement interne accru pour un look aéré */
+                    margin-top: 10px; /* Marges supérieures */
+                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Ombre plus marquée pour profondeur */
+            }
+            /* Éléments de chaque document */
+            .document-item {
+                    display: flex; /* Utilisation de flexbox pour l'alignement */
+                    align-items: center; /* Alignement vertical centré */
+                    padding: 12px 15px; /* Espacement interne */
+                    transition: background-color 0.3s ease, transform 0.2s ease; /* Transition douce pour l'effet de survol */
+                    border-radius: 8px; /* Coins arrondis */
+                    border: 1px solid transparent; /* Bordure transparente par défaut */
+                    margin-bottom: 10px; /* Marges entre les éléments */
+            }
+            /* Couleur de fond au survol */
+            .document-item:hover {
+                    background-color: #e7f3ff; /* Fond bleu clair au survol */
+                    transform: translateY(-2px); /* Légère élévation au survol */
+                    border: 1px solid #007bff; /* Bordure bleue au survol */
+            }
+            /* Styles pour les titres */
+            .document-item span {
+                    flex-grow: 1; /* Prendre l'espace disponible */
+                    color: #333; /* Couleur de texte sombre */
+                    margin-left: 15px; /* Espace entre l'icône et le titre */
+                    font-weight: 400; /* Poids de la police normal pour supprimer le gras */
+            }
+            /* Styles pour l'icône */
+            .document-item a {
+                    color: #007bff; /* Couleur du lien (bleu) */
+                    text-decoration: none; /* Supprime le soulignement */
+                    display: flex; /* Aligner l'icône */
+                    align-items: center; /* Centrer verticalement */
+            }
+            /* Effet de survol sur l'icône */
+            .document-item a:hover {
+                    color: #0056b3; /* Couleur plus foncée au survol */
+            }
+            /* Styles pour l'icône */
+            .document-item i {
+                    font-size: 28px; /* Taille de l'icône plus grande pour plus d'impact */
+                    margin-right: 15px; /* Espace à droite de l'icône */
+                    transition: transform 0.3s; /* Transition douce pour l'effet de survol */
+            }
+            /* Effet de zoom sur l'icône au survol */
+            .document-item a:hover i {
+                    transform: scale(1.2); /* Légère augmentation de la taille de l'icône */
+            }
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-lg navbar-custom">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="{{ path('app_homeclient') }}">
+					<img class="img-navbar" src="/img/logoPagosImg04.png" alt="Logo" height="40">
+				</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon">
+						<i class="fas fa-bars"></i>
+					</span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarColor01">
+					<ul class="navbar-nav me-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_homeclient') }}">
+								<b>Accueil</b>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_taches') }}">
+								<b>Tâches</b>
+							</a>
+						</li>
+                        {% if app.user.roleWx == 'createur' %}
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_creertaches') }}">
+								<b>Créer une tâche</b>
+							</a>
+						</li>
+                        {% endif %}
+
+						{% set allowed_ids = ['e4e080b3758761bd01758f5fcfed03d9'] %}
+						{% if app.user.idclient and app.user.idclient.getId() in allowed_ids %}
+							<li class="nav-item">
+								<a class="nav-link" href="{{ path('app_clientsdepagos') }}">
+									<b>Clients de Pagos</b>
+								</a>
+
+							</li>
+							
+
+						{% endif %}
+
+
+					</ul>
+                  <ul class="navbar-nav ms-auto">
+    <li class="nav-item">
+        <a class="nav-link" href="#" style="color: #ffffff; text-align: center;">
+            <b>{{ app.user.nom }} {{ app.user.prenom }}</b>
+        </a>
+    </li>
+
+						<!-- Dropdown for Notifications -->
+						{# <li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="navbarNotificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								<i class="fas fa-bell" style="font-size: 1.5em; color: white;"></i>
+								<!-- Notification Count -->
+								<span class="badge bg-danger" style="position: absolute; top: 0; right: 0; transform: translate(50%, -50%);">4</span>
+							</a>
+							<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarNotificationsDropdown">
+								<li>
+									<h6 class="dropdown-header">Notifications</h6>
+								</li>
+								<li><hr class="dropdown-divider"></li>
+								<li>
+									<a class="dropdown-item" href="#">Notification 1</a>
+								</li>
+								<li>
+									<a class="dropdown-item" href="#">Notification 2</a>
+								</li>
+								<li>
+									<a class="dropdown-item" href="#">Notification 3</a>
+								</li>
+								<li>
+									<a class="dropdown-item" href="#">Notification 4</a>
+								</li>
+								<li><hr class="dropdown-divider"></li>
+								<!-- Button to mark all notifications as read -->
+								<li>
+									<a class="dropdown-item text-center" href="#" id="markAllAsRead">Lire toutes les notifications</a>
+								</li>
+							</ul>
+						</li> #}
+
+
+						
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="navbarUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								<i class="fas fa-user-circle" style="font-size: 1.5em; color: white;"></i>
+							</a>
+
+							<ul
+								class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown">
+								<!-- User's Name -->
+
+
+								<li><hr class="dropdown-divider"></li>
+								<!-- Logout Button -->
+								<li>
+									<a class="dropdown-item" href="{{ path('app_logout') }}">
+										<b>
+											<i class="fas fa-sign-out-alt"></i>
+											Se déconnecter</b>
+									</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</body>
+
+		<br>
+
+		<div class="container">
+			<div class="title-container">
+				<h4 class="title01">
+					<b>{{ webtask.titre }}</b>
+				</h4>
+				<h4 class="title02">
+					<b>{{ webtask.webtask }}</b>
+				</h4>
+			</div>
+		</div>
+
+		<div class="form" id="taskForm">
+			<div class="form-group">
+				<label for="description">
+					<b>
+						<u>Description :</u>
+					</b>
+				</label>
+				<div id="description" class="description-text">
+					<b>{{ webtask.description|nl2br }}</b>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="documents">
+					<b><u>Documents :</u></b>
+				</label>
+				<div id="documents">
+					{% if documentsLiensNonExtraits is not empty %}
+						{% for lien in documentsLiensNonExtraits %}
+							{% set titre = lien|split('?')|last %} <!-- Récupérer la partie après le dernier '?' -->
+							<div class="document-item">
+								<!-- Lien cliquable avec icône -->
+								<a href="{{ lien }}" target="_blank" aria-label="Ouvrir {{ titre }}">
+									<i class="fas fa-file-alt"></i> <!-- Icône de fichier -->
+									<span>{{ titre }}</span>
+								</a>
+							</div>
+						{% endfor %}
+					{% else %}
+						<p>Aucun document disponible.</p>
+					{% endif %}
+				</div>
+			</div>
+
+			<div class="comments-section">
+                <label for="old_comments"><b><u>Anciens commentaires :</u></b></label>
+                {% if anciennesWebtasksDetails is empty %}
+                    <div class="no-comments">Aucun commentaire disponible.</div>
+                {% else %}
+                    {% set allowed_ids = ['e4e080b3758761bd01758f5fcfed03d9'] %}
+                    {% for task in anciennesWebtasksDetails %}
+                        {% if app.user.idclient and app.user.idclient.getId() in allowed_ids %}
+                            <!-- Utilisateur autorisé à voir tous les commentaires -->
+                            <div class="comment-card">
+                                <!-- Affichage des informations de la tâche -->
+                                <div class="task-info">
+                                    <b>{{ task.creeLe }} ({{ task.creePar }})</b> | 
+                                    <b>Responsable : {{ responsableNomPrenom }}</b> | 
+                                    <b>Pilote : {{ piloteNomPrenom }}</b> | 
+                                    <b>Avancement : <span class="avancement {{ task.avancement.class }}">{{ task.avancement.label }}</span></b> | 
+                                    <b>Date de fin : {{ task.dateFinDemandee }}</b> | 
+                                    <b>Version : {{ task.versionLibelle }}</b> | 
+                                    <b>📀 : {{ task.baseDeDonnees }}</b>
+                                </div>
+
+                                <!-- Affichage du commentaire client s'il est présent -->
+                                {% if task.commentaire_webtask_client is not empty %}
+                                    <hr class="separator">
+                                    <div class="comment-client">
+                                        <b><u>Commentaire client :</u></b>
+                                        <p>{{ task.commentaire_webtask_client|nl2br }}</p>
+                                    </div>
+                                {% endif %}
+
+                                <!-- Affichage du commentaire interne PAGOS s'il est présent -->
+                                {% if task.commentaire_interne_pagos is not empty %}
+                                    <hr class="separator">
+                                    <div class="comment-internal">
+                                        <b><u>Commentaire Interne PAGOS :</u></b>
+                                        <p>{{ task.commentaire_interne_pagos|nl2br }}</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            <!-- Autre client : ne voir que les infos et le commentaire client -->
+                            {% if task.commentaire_webtask_client is not empty %}
+                                <div class="comment-card">
+                                    <!-- Affichage des informations de la tâche -->
+                                    <div class="task-info">
+                                        <b>{{ task.creeLe }} ({{ task.creePar }})</b> | 
+                                        <b>Responsable : {{ responsableNomPrenom }}</b> | 
+                                        <b>Pilote : {{ piloteNomPrenom }}</b> | 
+                                        <b>Avancement : <span class="avancement {{ task.avancement.class }}">{{ task.avancement.label }}</span></b> | 
+                                        <b>Date de fin : {{ task.dateFinDemandee }}</b> | 
+                                        <b>Version : {{ task.versionLibelle }}</b> | 
+                                        <b>📀 : {{ task.baseDeDonnees }}</b>
+                                    </div>
+
+                                    <hr class="separator">
+
+                                    <div class="comment-client">
+                                        <p>{{ task.commentaire_webtask_client|nl2br }}</p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+            {% if app.user.roleWx == 'createur' %}
+            {% set allowed_ids = ['e4e080b3758761bd01758f5fcfed03d9'] %}
+			{% if app.user.idclient and app.user.idclient.getId() not in allowed_ids %}
+                <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-secondary repondre consulter rounded" onclick="window.location.href='{{ path('app_reponsetaches', { 'id': webtask.id }) }}'">RÉPONDRE</button>
+                </div>
+            {% endif %}
+            {% endif %}
+		</div>
+
+		<hr>
+
+		<!-- Footer -->
+		<footer>
+			<p><b>© Copyright @ 2024 par <span style="color: #d7df22;">Cabinet PAGOS</span> | tous droits réservés.</b></p>
+		</footer>
+
+        <!-- Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>

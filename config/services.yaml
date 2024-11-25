@@ -1,0 +1,33 @@
+# config/services.yaml
+
+parameters:
+    # Définissez ici vos paramètres si nécessaire
+
+services:
+    # Configuration par défaut pour les services dans ce fichier
+    _defaults:
+        autowire: true      # Injecte automatiquement les dépendances dans vos services
+        autoconfigure: true # Enregistre automatiquement vos services en tant que commandes, abonnés aux événements, etc.
+    # App\EventListener\NullToEmptyStringSubscriber:
+    #     tags:
+    #         - { name: doctrine.event_listener, event: prePersist }
+    #         - { name: doctrine.event_listener, event: preUpdate }
+
+    # Définissez les services explicitement si nécessaire
+    App\Repository\WebTaskRepository: ~
+    App\Services\VersionService:
+        arguments:
+            $versionRepository: '@App\Repository\VersionRepository'
+    App\Services\TextTransformer:
+    App\EventListener\LoginListener:
+        tags:
+            - { name: kernel.event_subscriber }
+
+    # Définit un service pour chaque classe dans src/
+    App\:
+        resource: '../src/'
+        tags: ['controller.service_arguments']
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'

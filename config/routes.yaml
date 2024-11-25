@@ -1,0 +1,30 @@
+# config/routes.yaml
+
+controllers:
+    resource: ../src/Controller/
+    type: attribute
+
+app_login:
+    path: /
+    controller: App\Controller\SecurityController::login
+
+app_redirect:
+    path: /redirect
+    controller: App\Controller\SecurityController::redirectAfterLogin
+
+app_homeclient:
+    path: /homeclient
+    controller: App\Controller\HomeController::base
+
+app_homeadmin:
+    path: /admin/home
+    controller: App\Controller\HomeAdminController::homeadmin
+
+toggle_maintenance:
+    path: /toggle-maintenance
+    controller: App\Controller\GestionUserController::toggleMaintenance
+
+logout_all_users:
+    path: /logout-all-users
+    controller: App\Controller\GestionUserController::logoutAllUsers
+    methods: POST

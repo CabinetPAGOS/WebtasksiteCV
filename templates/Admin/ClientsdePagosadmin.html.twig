@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="icon" href="\img\logoPagosImg02.png" type="image/x-icon">
+		<title>Clients de Pagos</title>
+
+		<!-- Bootstrap CSS -->
+		<link
+		href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+		<!-- FontAwesome (pour les icônes) -->
+		<link
+		href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+		<!-- Custom CSS -->
+		<style>
+			body {
+				font-family: 'Helvetica', Arial, sans-serif;
+			}
+			
+			/* Style global de la navbar */
+			.navbar-custom {
+				background-color: #818285; /* Couleur de fond principale */
+				padding: 10px 20px; /* Espacement autour de la navbar */
+			}
+
+			/* Logo dans la navbar */
+			.navbar-custom .navbar-brand img {
+				width: auto;
+				height: 80px;
+			}
+
+			/* Boutons et liens de la navbar */
+			.navbar-custom .navbar-nav .nav-link {
+				color: #fff; /* Couleur du texte des liens */
+				font-weight: bold;
+				text-transform: uppercase; /* Mettre en majuscules */
+				padding: 10px 15px;
+				transition: color 0.3s ease; /* Transition pour le changement de couleur */
+			}
+
+			.navbar-custom .navbar-nav .nav-link:hover {
+				color: #000000; /* Couleur au survol */
+			}
+
+			.navbar-custom .navbar-nav .nav-item.active .nav-link {
+				color: #000000; /* Couleur pour l'élément actif */
+			}
+
+			/* Dropdown (menu déroulant) */
+			.navbar-custom .navbar-nav .nav-item.dropdown .nav-link {
+				color: #fff; /* Couleur du lien de la dropdown */
+				border-bottom: 2px solid transparent; /* Ajouter une bordure discrète */
+				padding-bottom: 5px;
+			}
+
+			.navbar-custom .navbar-nav .nav-item.dropdown:hover .nav-link {
+				color: #000000; /* Couleur de la dropdown au survol */
+				border-bottom: 2px solid #000000; /* Bordure colorée au survol */
+			}
+
+			.navbar-custom .navbar-nav .nav-item .dropdown-menu {
+				background-color: #818285; /* Fond de la dropdown */
+				border: none; /* Enlever les bordures */
+				padding: 10px 0; /* Espacement intérieur */
+			}
+
+			.navbar-custom .navbar-nav .nav-item .dropdown-item {
+				color: #fff; /* Couleur des éléments de la dropdown */
+				padding: 10px 20px;
+				transition: background-color 0.3s ease; /* Transition pour la couleur de fond */
+			}
+
+			.navbar-custom .navbar-nav .nav-item .dropdown-item:hover {
+				background-color: #000000; /* Couleur de fond au survol */
+				color: #fff; /* Couleur du texte au survol */
+			}
+
+			/* Style pour le nom de l'utilisateur */
+			.user-name {
+				color: #000;
+				font-size: 1rem;
+				margin-top: 0.4rem;
+			}
+
+			/* Logo client adaptable pour formats carré et rectangulaire */
+			.client-logo {
+				max-height: 40px;
+				max-width: 60px; /* Taille max pour gérer les logos rectangulaires */
+				object-fit: contain;
+				border-radius: 8px;
+				padding: 2px;
+				background-color: #fff;
+				transition: transform 0.2s ease;
+			}
+
+			.client-logo:hover {
+				transform: scale(1.1);
+			}
+
+			/* Icône de déconnexion */
+			.logout-icon {
+				font-size: 1.5rem;
+				color: #000;
+				transition: color 0.3s ease, transform 0.3s ease;
+			}
+
+			.logout-icon:hover {
+				color: #818285;
+				transform: scale(1.1);
+			}
+
+			/* Notifications */
+			.notification-container {
+				position: relative; /* Pour permettre le positionnement de la liste de notifications */
+				margin-right: 15px; /* Espacement à droite pour ne pas être collé aux éléments adjacents */
+				display: flex; /* Utilisation de flex pour aligner les éléments */
+    			align-items: center; /* Alignement vertical centré */
+			}
+
+			#notificationIcon {
+				font-size: 24px; /* Taille de l'icône de notification */
+				color: white; /* Couleur de l'icône */
+				position: relative; /* Pour positionner le compteur */
+				cursor: pointer; /* Change le curseur lors du survol */
+			}
+
+			.notification-count {
+				position: absolute; /* Positionnement absolu par rapport à l'icône */
+				top: 0px; /* Ajuste la position verticale */
+				right: -2px; /* Ajuste la position horizontale */
+				background-color: red; /* Couleur d'arrière-plan pour le compteur */
+				color: white; /* Couleur du texte */
+				border-radius: 50%; /* Arrondi pour un style circulaire */
+				padding: 3px 7px; /* Espacement intérieur */
+				font-size: 12px; /* Taille du texte */
+				font-weight: bold; /* Gras pour le compteur */
+			}
+
+			.notifications {
+				border: 2px solid #000; /* Bordure autour de la liste de notifications */
+				background-color: #fff; /* Couleur d'arrière-plan */
+				position: absolute; /* Positionnement absolu */
+				z-index: 1000; /* S'assurer qu'il est au-dessus des autres éléments */
+				width: 600px;
+				top: -210px; /* Ajustez selon vos besoins */
+				right: 0; /* Aligne le conteneur à droite */
+				margin-top: 250px; /* Espacement au-dessus de la liste */
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre pour le conteneur */
+				padding: 2px; /* Espacement intérieur */
+			}
+
+			.notifications ul {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+			}
+
+			.notifications li {
+				padding: 10px;
+				border-bottom: 1px solid #ccc; /* Bordure en bas */
+				font-size: 12px; /* Taille de police réduite */
+			}
+
+			/* Supprime la bordure du dernier élément */
+			.notifications li:last-child {
+				border-bottom: none; 
+			}
+
+			/* Header de notification */
+			.notification-header {
+				display: flex; /* Utilise flexbox pour aligner les éléments */
+				justify-content: space-between; /* Espace entre le nom et la date */
+				align-items: center; /* Centrage vertical */
+			}
+
+			/* Style de la date de création */
+			.creation-date {
+				font-size: 0.9em; /* Taille de police plus petite pour la date */
+				color: #666; /* Couleur de texte grise pour la date */
+			}
+
+			/* Corps de la notification */
+			.notification-body {
+				margin-bottom: 10px; /* Ajoute un espace entre le corps et les boutons */
+			}
+
+			/* Boutons de notification */
+			.notification-buttons {
+				display: flex; /* Utilise flexbox pour aligner les boutons */
+				justify-content: flex-end; /* Aligne les boutons à droite */
+				gap: 10px; /* Espace entre les boutons */
+			}
+
+			.notification-buttons button {
+				padding: 5px 10px; /* Espacement intérieur des boutons */
+				margin: 0 2px; /* Espacement horizontal entre les boutons */
+				cursor: pointer; /* Curseur pointer pour les boutons */
+				border: none; /* Pas de bordure */
+				border-radius: 5px; /* Coins arrondis */
+				background-color: #007bff; /* Couleur d'arrière-plan des boutons */
+				color: white; /* Couleur du texte des boutons */
+				transition: background-color 0.3s; /* Transition pour l'effet de survol */
+			}
+
+			.notification-buttons button:hover {
+				background-color: #0056b3; /* Couleur au survol des boutons */
+			}
+
+			.d-none {
+				display: none;
+			}
+
+			/* Centrage du titre principal */
+            .title {
+                text-align: center;
+                font-size: 2rem;
+                color: #000;
+                margin-bottom: 20px;
+                font-weight: bold;
+            }
+
+			/* Container pour les clients */
+			.client-container {
+				position: relative;
+				border: 2px solid #000;
+				padding: 30px;
+				margin: 20px auto;
+				width: 95%;
+				max-width: 1200px;
+				background-color: #fff;
+				border-radius: 50px;
+				box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+			}
+
+			.client-card {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+				gap: 20px;
+			}
+
+			/* Bloc client */
+			.client-rectangle {
+				display: flex;
+				flex-direction: column;
+				justify-content: flex-start;
+				width: 30%;
+				background-color: #fff;
+				border: 2px solid #000;
+				border-radius: 15px;
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+				transition: transform 0.2s ease;
+			}
+
+			.client-rectangle:hover {
+				transform: translateY(-5px);
+			}
+
+			/* Header du client avec logo et nom */
+			.client-header {
+				display: flex;
+				align-items: center;
+				background-color: #d7df22;
+				padding: 10px;
+				height: 100px; /* Hauteur fixe pour toutes les bandes */
+				border-radius: 15px 15px 0 0;
+			}
+
+			.client-img {
+				max-width: 65px;
+				height: auto;
+				margin-right: 10px;
+				border-radius: 5px;
+			}
+
+			.client-header h3 {
+				margin: 0;
+				font-size: 18px;
+				color: #000;
+				font-weight: bold;
+				flex: 1;
+			}
+
+			.client-content {
+				display: flex;
+				flex-direction: column;
+				justify-content: center; /* Centre verticalement le contenu */
+				align-items: center; /* Centre horizontalement le contenu */
+				padding: 20px;
+				background-color: #fff;
+				border-radius: 0 0 15px 15px;
+				text-align: center;
+			}
+
+			/* Titre des utilisateurs associés */
+			.client-content h4 {
+				font-size: 18px;
+				font-weight: bold;
+				text-align: center;
+				margin-bottom: 15px;
+				color: #333;
+			}
+
+			/* Liste des utilisateurs */
+			.client-content ul {
+				list-style: none;
+				padding-left: 0;
+				margin-bottom: 0;
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start; /* Centrer la liste des utilisateurs */
+			}
+
+			.client-content li {
+				display: flex;
+				align-items: center; /* Pour aligner les icônes et le texte sur une ligne */
+				margin-bottom: 10px;
+				font-size: 16px;
+				font-weight: 500;
+				color: #555;
+			}
+
+			/* Icône utilisateur */
+			.user-icon {
+				margin-right: 10px;
+				font-size: 18px;
+				color: #6c757d;
+			}
+
+			.client-content li:hover .user-icon {
+				color: #333; /* Changement de couleur sur hover */
+			}
+
+			/* Style des noms d'utilisateurs */
+			.client-content li:hover {
+				color: #000; /* Nom plus visible au hover */
+				font-weight: bold;
+			}
+
+			/* Style du bouton 'VISUALISER' */
+			.client-content .btn-secondary {
+				background-color: #fff;
+				color: #000;
+				border: 1px solid black;
+				margin-top: 15px;
+				padding: 10px 20px;
+				font-size: 16px;
+				border-radius: 5px;
+				transition: all 0.3s ease;
+			}
+
+			/* Effet au survol pour le bouton */
+			.client-content .btn-secondary:hover {
+				background-color: #6c757d;
+				color: #fff;
+				transform: translateY(-3px);
+				border-color: #6c757d;
+			}
+
+			/* Icônes de pouces et cloche */
+			.client-actions {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				gap: 10px; /* Espacement entre les icônes */
+				margin-top: 10px;
+			}
+
+			.thumb-icon {
+				color: #000;
+				cursor: pointer;
+				font-size: 24px;
+				transition: color 0.3s ease, transform 0.3s ease;
+			}
+
+			.thumb-icon:hover {
+				transform: scale(1.2);
+			}
+
+			.approve {
+				color: green;
+			}
+
+			.disapprove {
+				color: red;
+			}
+
+			.notify-icon {
+				color: blue;
+				cursor: pointer;
+				font-size: 24px;
+			}
+
+			.notify-icon:hover {
+				transform: scale(1.2);
+				color: darkblue;
+			}
+
+			p {
+				text-align: center;
+			}
+
+			hr {
+				margin: 20px 0;
+				opacity: 1;
+				border: 2px solid #000;
+			}
+
+			#filter-container {
+				margin-bottom: 20px;
+			}
+
+			.form-check {
+				margin-right: 20px;
+			}
+
+			/* Style pour la barre de recherche */
+			.search-bar {
+				display: flex;
+				margin-top: 30px;
+				margin-left: 75px;
+			}
+
+			.search-input {
+				width: 62.2%; /* Largeur de la barre de recherche */
+				padding: 15px;
+				font-size: 16px;
+				border: 2px solid #000; /* Bordure solide noire */
+				border-radius: 10px; /* Bordures arrondies */
+				box-sizing: border-box; /* Inclut le padding dans la largeur totale */
+			}
+
+			/* Footer */
+			footer {
+				text-align: center;
+				padding: 20px 0;
+				background-color: #f4f4f4;
+				border-top: 1px solid #ccc;
+			}
+
+			footer p {
+				color: #333;
+			}
+
+			/* Style pour les webtasks */
+			.webtask-container {
+				display: flex;
+				flex-wrap: wrap; /* Permet plusieurs colonnes */
+				justify-content: center; /* Centre le contenu */
+				margin: 20px;
+			}
+
+			.webtask-card {
+				position: relative;
+				border: 2px solid #000;
+				padding: 25px;
+				margin: 20px;
+				width: 100%;
+				max-width: 430px; /* Réduit la largeur maximale */
+				background-color: #fff;
+				box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+				overflow: hidden; /* Empêche le débordement du texte */
+			}
+
+			.webtask-card h2 {
+				text-align: center;
+				color: #000000;
+				padding: 10px;
+				border-radius: 5px;
+				background-color: #d7df22;
+				font-size: 18px; /* Réduit la taille de la police du titre */
+				white-space: normal; /* Permet le retour à la ligne */
+				margin-bottom: 20px;
+				overflow: visible; /* Permet d'afficher le texte complet */
+				text-overflow: clip; /* Ne coupe pas le texte avec des points de suspension */
+				display: block; /* Assure que le texte utilise text-overflow */
+			}
+
+			.webtask-card ul {
+				list-style-type: none;
+				padding: 0;
+			}
+
+			.webtask-card ul li {
+				margin-bottom: 10px;
+			}
+
+			.btn-group {
+				display: flex;
+				justify-content: center; /* Centre les boutons */
+				gap: 15px; /* Espace entre les boutons */
+				margin-top: 20px;
+			}
+
+			.btn-group .btn {
+				margin-right: 10px;
+			}
+
+			.btn-group .btn:last-child {
+				margin-right: 0;
+			}
+
+			.webtask-card .btn-secondary {
+				background-color: #fff;
+				color: #000;
+				border: 1px solid black;
+				margin-right: 10px;
+				padding: 10px 20px; /* Espacement interne du bouton */
+				font-size: 16px; /* Taille de la police */
+				border-radius: 5px;
+				transition: all 0.3s ease; /* Transition pour les effets de survol */
+			}
+
+			.webtask-card .btn-secondary:hover {
+				background-color: #6c757d; /* Couleur de fond au survol */
+				color: #fff; /* Couleur du texte au survol */
+				transform: translateY(-3px); /* Effet de levée au survol */
+				border-color: #6c757d; /* Couleur de bordure au survol */
+			}
+
+			.webtask-card .btn-secondary:last-child {
+				margin-right: 0;
+			}
+
+			/* Style de base pour la fenêtre modale */
+			.modal {
+				display: none;
+				position: fixed;
+				z-index: 1;
+				left: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0, 0, 0, 0.4);
+			}
+			.modal-content {
+				background-color: #fefefe;
+				margin: 10% auto;
+				padding: 20px;
+				border: 1px solid #888;
+				width: 80%;
+			}
+			.close {
+				color: #aaa;
+				float: right;
+				font-size: 28px;
+				font-weight: bold;
+				cursor: pointer;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-lg navbar-custom">
+			<div class="container-fluid">
+				<!-- Logo -->
+				<a class="navbar-brand" href="{{ path('app_logout') }}">
+					<img class="img-navbar" src="/img/logoPagosImg04.png" alt="Logo" height="40">
+				</a>
+
+				<!-- Bouton pour mobiles -->
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+
+				<!-- Liens du menu -->
+				<div class="collapse navbar-collapse" id="navbarColor01">
+					<ul class="navbar-nav me-auto">
+						<li class="nav-item">
+							<a class="nav-link nav-link-custom" href="{{ path('app_homeadmin') }}">
+								<b>Accueil</b>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link nav-link-custom" href="{{ path('app_tachesadmin') }}">
+								<b>Tâches</b>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link nav-link-custom" style="color: #000" href="{{ path('app_clientsdepagosadmin') }}">
+								<b>Clients de Pagos</b>
+							</a>
+						</li>
+
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle nav-link-custom" href="#" id="gestionDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								<b>Administration</b>
+							</a>
+							<ul class="dropdown-menu" aria-labelledby="gestionDropdown">
+								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_gestionuser') }}"><b>Gestion utilisateur</b></a></li>
+								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_importexport') }}"><b>Imports / Exports</b></a></li>
+								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_register') }}"><b>Créer un utilisateur</b></a></li>
+								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_createclientadmin') }}"><b>Créer un Client</b></a></li>
+							</ul>
+						</li>
+					</ul>
+
+					<!-- Liens côté droit -->
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item nav-link nav-link-custom user-name">
+							<b>{{ app.user.nom }} {{ app.user.prenom }}</b>
+						</li>
+
+						<!-- Icône de notification -->
+						{% set allowed_ids = ['e4e080b3758761bd01758f5fcfed03d9'] %}
+						{% if app.user.idclient and app.user.idclient.getId() in allowed_ids %}
+							<li class="nav-item notification-container">
+								<a class="nav-link" href="#" style="color: #ffffff; text-align: center;">
+									<i class="fas fa-bell" style="font-size: 1.5em; color: white;" id="notificationIcon"></i>
+									<span class="notification-count">{{ notifications|filter(notification => notification.visible == 1)|length }}</span>
+								</a>
+								<div id="notificationList" class="notifications" style="display: none;">
+									<ul>
+										{% set visibleNotifications = notifications|filter(notification => notification.visible == 1) %}
+										{% if visibleNotifications is empty %}
+											<li>Aucune notification</li>
+										{% else %}
+											{% set notificationsByClient = {} %}
+											
+											{# Regrouper les notifications par client #}
+											{% for notification in visibleNotifications %}
+												{% set clientName = notification.getClient.getRaisonSociale() %}
+												{% if notificationsByClient[clientName] is not defined %}
+													{% set notificationsByClient = notificationsByClient|merge({(clientName): []}) %}
+												{% endif %}
+												{% set notificationsByClient = notificationsByClient|merge({(clientName): notificationsByClient[clientName] | merge([notification])}) %}
+											{% endfor %}
+
+											{# Affichage des notifications regroupées par client #}
+											{% for client, clientNotifications in notificationsByClient %}
+												{% if clientNotifications|length > 0 %}
+													<li class="client-notification" data-client="{{ client }}">
+														<div class="client-notification-header" style="border-bottom: 2px solid #007bff; margin-bottom: 10px; padding-bottom: 5px;">
+															<b>{{ client }}</b>
+														</div>
+														<ul style="list-style: none; padding-left: 0; border-left: 2px dashed #ccc; padding-left: 10px;">
+															{% for notification in clientNotifications %}
+																<li id="notification-{{ notification.id }}" style="margin-bottom: 15px; padding: 10px; border: 1px solid #e0e0e0; border-radius: 5px; background-color: #f9f9f9;">
+																	<div class="notification-header">
+																		<span class="creation-date">{{ notification.getDateCreation() | date('d/m/y H:i:s') }}</span>
+																	</div>
+																	<div class="notification-body">
+																		{{ notification.getTitreWebtask() }} ({{ notification.getLibelleWebtask() }})<br>
+																		{{ notification.getMessage() }}
+																	</div>
+																	<div class="notification-buttons">
+																		<button class="mark-as-read" data-id="{{ notification.id }}">Lu</button>
+																		<button onclick="window.location.href='{{ path('app_consultertachesadmin', { 'id': notification.codeWebtask }) }}'">Consulter</button>
+																	</div>
+																</li>
+															{% endfor %}
+														</ul>
+													</li>
+													<hr style="border-top: 2px solid #007bff; margin: 10px 0;"> {# Séparation entre clients #}
+												{% endif %}
+											{% endfor %}
+										{% endif %}
+									</ul>
+								</div>
+							</li>
+						{% endif %}
+
+						<!-- Logo client et déconnexion -->
+						<li class="nav-item d-flex align-items-center">
+							<img src="data:image/png;base64,{{ logo }}" alt="Logo du client" class="client-logo me-2" />
+							<a class="nav-link logout-icon" href="{{ path('app_logout') }}" title="Se déconnecter">
+								<i class="fas fa-sign-out-alt"></i>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<div class="client-container">
+			<h2 class="title">CLIENTS DU CABINET PAGOS</h2>
+			<br>
+			<div class="client-card">
+				{% for client in clients %}
+					<div class="client-rectangle">
+						<div class="client-header">
+							{% if client.logoBase64 %}
+								<img src="data:image/png;base64,{{ client.logoBase64 }}" alt="Logo de {{ client.raisonSociale }}" class="client-img"/>
+							{% endif %}
+							<h3>{{ client.raisonSociale }}</h3>
+						</div>
+						<div class="client-content">
+							<ul>
+								{% set hasUsers = false %}
+								{% for user in users %}
+									{% if user.idclient is not null and user.idclient.getid() == client.id %}
+										{% set hasUsers = true %}
+										<li>
+											<span class="user-icon">👤</span>
+											{{ user.nom }}
+											{{ user.prenom }}
+										</li>
+									{% endif %}
+								{% endfor %}
+								{% if not hasUsers %}
+									<li>Aucun utilisateur associé.</li>
+								{% endif %}
+							</ul>
+							<div class="client-actions">
+								<i class="fas fa-thumbs-up thumb-icon approve" title="Approuver"></i>
+								<i class="fas fa-thumbs-down thumb-icon disapprove" title="Désapprouver"></i>
+								<i class="fas fa-bell notify-icon" title="Notifier"></i>
+							</div>
+							<button type="button" class="btn btn-secondary consulter" data-client-id="{{ client.id }}">VISUALISER</button>
+
+                            <button type="button" class="btn btn-secondary consulter rounded" onclick="window.location.href='{{ path('app_adminforum', { 'id': client.id }) }}'">FORUM</button>
+							<div class="summary-container" id="summary-container-{{ client.id }}" style="display: none;">
+								<h4>Résumé de la réunion :</h4>
+								<div class="summary-content" id="summary-content-{{ client.id }}"></div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+
+		<div id="modal-forums" class="modal" style="display:none;">
+			<div class="modal-content">
+				<span class="close">&times;</span>
+				<h2>Résumés du client</h2>
+				<div id="forum-contents"></div>
+			</div>
+		</div>
+
+		<!-- Conteneur pour la barre de recherche et les webtasks -->
+		<div
+			id="webtasks-container"><!-- La barre de recherche sera ajoutée ici -->
+		</div>
+
+		<!-- Footer -->
+		<footer>
+			<p><b>© Copyright @ 2024 par <span style="color: #d7df22;">Cabinet PAGOS</span> | tous droits réservés.</b></p>
+		</footer>
+
+		<!-- SCRIPT JS -->
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+
+				// Fonction d'ajout de résumé
+				document.querySelectorAll('.btn-primary.add-summary').forEach(function (button) {
+					button.addEventListener('click', function () {
+						const clientId = this.getAttribute('data-client-id');
+						const summaryText = prompt("Veuillez entrer le résumé de la réunion :");
+
+						if (summaryText) {
+							fetch(`/client/${clientId}/forum`, {
+								method: 'POST',
+								headers: { 'Content-Type': 'application/json' },
+								body: JSON.stringify({ content: summaryText })
+							}).then(response => {
+								if (response.ok) {
+									alert("Résumé ajouté avec succès !");
+								} else {
+									alert("Erreur lors de l'ajout du résumé.");
+								}
+							}).catch(error => console.error('Erreur lors de l\'ajout du résumé:', error));
+						}
+					});
+				});
+
+				// Afficher le résumé d'un client
+				document.querySelectorAll('.btn-info.show-summary').forEach(function (button) {
+					button.addEventListener('click', function () {
+						const clientId = this.getAttribute('data-client-id');
+						const summaryContainer = document.getElementById('summary-container-' + clientId);
+						const summaryContent = document.getElementById('summary-content-' + clientId);
+
+						fetch(`/client/${clientId}/forum`).then(response => response.json()).then(summaryData => {
+							if (summaryData.length > 0) {
+								summaryContent.innerHTML = summaryData.map(summary => `<p>${summary.content}</p>`).join('');
+							} else {
+								summaryContent.innerHTML = '<p>Aucun résumé trouvé.</p>';
+							}
+							summaryContainer.style.display = 'block';
+						}).catch(error => {
+							console.error('Erreur lors de la récupération des résumés:', error);
+							summaryContent.innerHTML = '<p>Erreur lors de la récupération des résumés.</p>';
+							summaryContainer.style.display = 'block';
+						});
+					});
+				});
+
+				// Gestion de la modale pour les forums
+				document.querySelector('.close').onclick = function () {
+					document.getElementById('modal-forums').style.display = "none";
+				};
+				window.onclick = function (event) {
+					if (event.target === document.getElementById('modal-forums')) {
+						document.getElementById('modal-forums').style.display = "none";
+					}
+				};
+
+				// Fonction pour charger les WebTasks
+				function loadWebTasks(clientId, query = '') {
+					fetch(`/client/${clientId}/webtasks?query=${encodeURIComponent(query)}`)
+						.then(response => response.json())
+						.then(webtasksData => {
+							const container = document.getElementById('webtasks-list');
+							container.innerHTML = ''; // Vider le container
+
+							if (webtasksData.length === 0) {
+								container.innerHTML = '<p><b>Aucune Webtask ne correspond à votre recherche.</b></p>';
+								return;
+							}
+
+							const webtasksContainer = document.getElementById('webtasks-container');
+							if (!document.getElementById('separator-hr')) {
+								const hr = document.createElement('hr');
+								hr.id = 'separator-hr';
+								webtasksContainer.insertAdjacentElement('beforebegin', hr);
+							}
+
+							container.innerHTML = webtasksData.filter(webtask => webtask.etatdelawebtask === 'ON').map(webtask => `
+								<div class="webtask-card hidden" data-code="${webtask.code}" data-title="${webtask.title}">
+									<h2><b>${webtask.title}</b></h2>
+									<ul>
+										<li><b><u>WebTask :</u></b> ${webtask.webtask}</li>
+										<li><b><u>Description :</u></b> ${webtask.description.replace(/\n/g, '<br>')}</li>
+										<li><b><u>Version :</u></b> ${webtask.versionLibelle}</li>
+										<li><b><u>Date de fin demandée :</u></b> ${webtask.datefinDemandee}</li>
+									</ul>
+									<div class="btn-group" role="group">
+										<button type="button" class="btn btn-secondary consulter rounded" onclick="window.location.href='/admin/consultertaches?id=${webtask.code}'">CONSULTER</button>
+									</div>
+								</div>
+							`).join('');
+						})
+						.catch(error => {
+							console.error('Erreur lors de la récupération des Webtasks:', error);
+							container.innerHTML = `<p><b>Aucune Webtask pour ce client</b></p>`;
+						});
+				}
+
+				// Initialisation de la recherche
+				function initSearch(clientId, clientName) {
+					const container = document.getElementById('webtasks-container');
+					container.innerHTML = `
+						<h3 style="text-align: center;">Liste des WebTask pour le client : <span class="client-name">${clientName}</span></h3>
+						<div class="search-bar">
+							<input type="text" id="searchInput" class="search-input" placeholder="Rechercher une WebTask 🔎" value="">
+						</div>
+						<div class="webtask-container" id="webtasks-list"></div>
+					`;
+
+					loadWebTasks(clientId);
+
+					document.getElementById('searchInput').addEventListener('input', function () {
+						const query = this.value.trim();
+						loadWebTasks(clientId, query);
+					});
+
+					document.getElementById('searchInput').addEventListener('keypress', function (e) {
+						if (e.which === 13) {
+							e.preventDefault();
+							const query = this.value.trim();
+							loadWebTasks(clientId, query);
+						}
+					});
+				}
+
+				// Écoute pour afficher les WebTasks du client
+				document.querySelectorAll('.btn-secondary.consulter').forEach(function (button) {
+					button.addEventListener('click', function () {
+						const clientId = this.getAttribute('data-client-id');
+						fetch(`/client/${clientId}/name`).then(response => response.json()).then(clientData => {
+							const clientName = clientData.name;
+							document.getElementById('webtasks-container').innerHTML = `
+								<h3 style="text-align: center;">Liste des WebTask pour le client : <span class="client-name">${clientName}</span></h3>
+							`;
+							initSearch(clientId, clientName);
+						}).catch(error => {
+							console.error('Erreur lors de la récupération des informations du client:', error);
+							document.getElementById('webtasks-container').innerHTML = `<p><b>Erreur lors de la récupération des informations du client</b></p>`;
+						});
+					});
+				});
+			});
+		</script>
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				// Code de gestion des notifications ici
+
+				// Gestion de l'affichage des notifications
+				document.getElementById('notificationIcon').addEventListener('click', function() {
+					var notificationList = document.getElementById('notificationList');
+					notificationList.style.display = notificationList.style.display === 'none' || notificationList.style.display === '' ? 'block' : 'none'; // Toggle
+				});
+			});
+
+			function consulterNotification(notificationId) {
+				// Rediriger vers la page de consultation de la notification
+				window.location.href = `/notification/${notificationId}`; // Remplacez par l'URL réelle
+			}
+		</script>
+		<script>
+			document.querySelectorAll('.mark-as-read').forEach(button => {
+				button.addEventListener('click', function() {
+					const notificationId = this.getAttribute('data-id');
+
+					fetch(`/mark-as-read/${notificationId}`, {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+							'X-Requested-With': 'XMLHttpRequest'
+						}
+					})
+					.then(response => {
+						if (!response.ok) {
+							throw new Error('Erreur lors de la mise à jour de la notification');
+						}
+						return response.json();
+					})
+					.then(data => {
+						if (data.status === 'success') {
+							// Masquer la notification
+							const notificationElement = document.getElementById(`notification-${notificationId}`);
+							if (notificationElement) {
+								notificationElement.style.display = 'none'; // Masque la notification
+							}
+
+							// Mettre à jour le compteur de notifications
+							const countElement = document.querySelector('.notification-count');
+							const currentCount = parseInt(countElement.textContent, 10);
+							countElement.textContent = currentCount - 1; // Décrementer le compteur
+
+							// Vérifiez les notifications du client
+							checkClientNotifications();
+						} else {
+							console.error(data);
+						}
+					})
+					.catch(error => console.error('Erreur:', error));
+				});
+			});
+
+			function checkClientNotifications() {
+				const clients = document.querySelectorAll('.client-notification');
+				let hasVisibleNotifications = false;
+
+				clients.forEach(client => {
+					const notifications = client.querySelectorAll('li[id^="notification-"]'); // Sélectionner les notifications
+					const visibleNotifications = Array.from(notifications).filter(notification => notification.style.display !== 'none');
+
+					if (visibleNotifications.length === 0) {
+						client.style.display = 'none'; // Masquer le client si aucune notification n'est visible
+					} else {
+						hasVisibleNotifications = true; // Il y a encore des notifications visibles
+					}
+				});
+
+				// Afficher le message si aucune notification visible
+				const notificationList = document.getElementById('notificationList');
+				if (!hasVisibleNotifications) {
+					notificationList.innerHTML = '<li>Aucune notification disponible</li>'; // Afficher le message
+				}
+			}
+		</script>
+	</body>
+</html>

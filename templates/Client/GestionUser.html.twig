@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="icon" href="\img\logoPagosImg02.png" type="image/x-icon">
+
+		<title>Liste des utilisateurs</title>
+		
+		<!-- Bootstrap CSS -->
+		<link
+		href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+		<!-- FontAwesome (pour les icônes) -->
+		<link
+		href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+		<!-- Custom CSS -->
+		<style>
+			body {
+				font-family: 'Helvetica', Arial, sans-serif;
+			}
+			/* Navbar */
+			.navbar-custom {
+				background-color: #818285;
+				border-style: none;
+			}
+
+			.navbar-custom .nav-link {
+				color: #ffffff;
+				font-size: 19px;
+			}
+
+			.navbar-custom .nav-link:hover {
+				color: #000000;
+			}
+
+			.img-navbar {
+				width: 100%;
+				height: 80px;
+			}
+
+			.navbar-toggler-icon {
+				color: white;
+			}
+
+			.dropdown-menu {
+				background-color: #818285;
+			}
+
+			.dropdown-menu .dropdown-header {
+				color: #ffffff;
+				font-size: 16px;
+			}
+
+			.dropdown-menu .dropdown-item {
+				color: #ff0000;
+			}
+
+			.dropdown-menu .dropdown-item:hover {
+				background-color: #818285;
+				color: #ffffff;
+			}
+
+			/* Container pour les utilisateurs */
+			.user-list-container {
+				position: relative;
+				border: 2px solid #000;
+				padding: 30px;
+				margin: 20px auto;
+				width: 95%;
+				max-width: 1200px;
+				background-color: #fff;
+				border-radius: 50px;
+				box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+			}
+
+			/* Centrage du titre principal */
+			.user-list-title {
+				text-align: center;
+				font-size: 2rem;
+				color: #000;
+				margin-bottom: 30px;
+				font-weight: bold;
+			}
+
+			/* Table de la liste des utilisateurs */
+			.user-table {
+				width: 100%;
+				border-collapse: collapse;
+				margin: 20px 0;
+				font-size: 16px;
+				text-align: left;
+				background-color: #fff;
+				box-shadow: 0 0 10px 1px #000;
+				border-radius: 10px;
+				overflow: hidden;
+			}
+
+			/* En-tête de la table */
+			.user-table thead {
+				background-color: #d7df22; /* Couleur d'en-tête */
+				border-bottom: 1px solid #000; /* Bordure plus épaisse sous l'en-tête */
+				padding: 15px; /* Épaisseur de la bande d'en-tête */
+			}
+
+			.user-table thead th {
+				font-size: 1.3rem; /* Légèrement plus grand que le texte des valeurs */
+				color: #fff;
+				font-weight: bold;
+				text-align: center;
+				padding: 15px; /* Espacement interne pour plus d'épaisseur */
+			}
+
+			/* Corps de la table */
+			.user-table th, 
+			.user-table td {
+				padding: 12px 15px;
+				text-align: center;
+			}
+
+			.user-table tbody tr {
+				border-bottom: 1px solid #000;
+				transition: background-color 0.3s;
+			}
+
+			.user-table tbody tr:nth-of-type(even) {
+				background-color: #f3f3f3;
+			}
+
+			.user-table tbody tr:hover {
+				background-color: #f1f1f1;
+			}
+
+			/* Actions (réinitialisation du mot de passe) */
+			.reset-password-form {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+			}
+
+			.new-password-input {
+				padding: 5px;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+				width: 200px;
+			}
+
+			/* Message lorsqu'aucun utilisateur n'est trouvé */
+			.no-users-message {
+				text-align: center;
+				color: #999;
+				padding: 20px;
+				font-size: 16px;
+			}
+
+			/* Button Styles */
+			tbody .btn-secondary {
+				background-color: #fff;
+				color: #000;
+				border: 1px solid black;
+				padding: 10px 20px; /* Espacement interne du bouton */
+				font-size: 16px; /* Taille de la police */
+				border-radius: 5px;
+				transition: all 0.3s ease; /* Transition pour les effets de survol */
+			}
+
+			tbody .btn-secondary:hover {
+				background-color: #6c757d; /* Couleur de fond au survol */
+				color: #fff; /* Couleur du texte au survol */
+				transform: translateY(-3px); /* Effet de levée au survol */
+				border-color: #6c757d; /* Couleur de bordure au survol */
+			}
+
+			/* Footer */
+			footer {
+				text-align: center;
+				padding: 20px 0;
+				background-color: #f4f4f4;
+				border-top: 1px solid #ccc;
+			}
+
+			footer p {
+				color: #333;
+			}
+
+			/* Responsive pour la table */
+			@media (max-width: 768px) {
+				.user-table thead {
+					display: none;
+				}
+
+				.user-table, .user-table tbody, .user-table tr, .user-table td {
+					display: block;
+					width: 100%;
+				}
+
+				.user-table tr {
+					margin-bottom: 15px;
+					box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+				}
+
+				.user-table td {
+					padding: 10px;
+					text-align: right;
+					position: relative;
+				}
+
+				.user-table td::before {
+					content: attr(data-label);
+					position: absolute;
+					left: 10px;
+					font-weight: bold;
+					text-transform: uppercase;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-lg navbar-custom">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="{{ path('app_homeclient') }}">
+					<img class="img-navbar" src="img/logoPagosImg04.png" alt="Logo" height="40">
+				</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon">
+						<i class="fas fa-bars"></i>
+					</span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarColor01">
+					<ul class="navbar-nav me-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_homeclient') }}">
+								<b>Accueil</b>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_taches') }}">
+								<b>Tâches</b>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_creertaches') }}">
+								<b>Créer une tâche</b>
+							</a>
+						</li>
+
+						{% set allowed_ids = ['e4e080b3758761bd01758f5fcfed03d9'] %}
+						{% if app.user.idclient and app.user.idclient.getId() in allowed_ids %}
+							<li class="nav-item">
+								<a class="nav-link" href="{{ path('app_clientsdepagos') }}">
+									<b>Clients de Pagos</b>
+								</a>
+								
+							</li>
+							
+							
+						{% endif %}
+
+
+					</ul>
+					<ul class="navbar-nav ms-auto">
+    <li class="nav-item">
+        <a class="nav-link" href="#" style="color: #ffffff; text-align: center;">
+            <b>{{ app.user.nom }} {{ app.user.prenom }}</b>
+        </a>
+    </li>
+
+					<ul
+						class="navbar-nav ms-auto">
+						<!-- Dropdown for User Icon -->
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="navbarUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								<i class="fas fa-user-circle" style="font-size: 1.5em; color: white;"></i>
+							</a>
+							<ul
+								class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown">
+								<!-- User's Name -->
+								<li>
+									
+								</li>
+								<li><hr class="dropdown-divider"></li>
+								<!-- Logout Button -->
+								<li>
+									<a class="dropdown-item" href="{{ path('app_logout') }}">
+										<b>
+											<i class="fas fa-sign-out-alt"></i>
+											Se déconnecter</b>
+									</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<div class="user-list-container">
+			<h1 class="user-list-title">LISTE DES UTILISATEURS</h1>
+
+			{% if users is empty %}
+				<p class="no-users-message">Aucun utilisateur trouvé.</p>
+			{% else %}
+				<table class="user-table">
+					<thead>
+						<tr>
+							<th>CLIENT</th>
+							<th>NOM</th>
+							<th>PRÉNOM</th>
+							<th>EMAIL</th>
+							<th>ACTION</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for user in users %}
+							<tr>
+								<td style="background-color: {{ user.color }}; color: #000000;">
+									<b>{{ user.idclient ? user.idclient.raisonSociale : 'Aucun client associé' }}</b>
+								</td>
+								<td>{{ user.nom }}</td>
+								<td>{{ user.prenom }}</td>
+								<td>{{ user.email }}</td>
+								<td>
+									<!-- Bouton pour ouvrir le modal de réinitialisation -->
+									<button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#resetPasswordModal{{ user.id }}">RÉINITIALISER</button>
+								</td>
+							</tr>
+
+							<!-- Modal for Password Reset -->
+							<div class="modal fade" id="resetPasswordModal{{ user.id }}" tabindex="-1" aria-labelledby="resetPasswordModalLabel{{ user.id }}" aria-hidden="true">
+								<div class="modal-dialog modal-lg"> <!-- Utilisation de modal-lg pour une taille plus grande -->
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title" id="resetPasswordModalLabel{{ user.id }}">Réinitialiser le mot de passe pour l'utilisateur {{ user.nom }} {{ user.prenom }}</h5>
+											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+										</div>
+										<div class="modal-body">
+											<form action="{{ path('app_reset_password', { id: user.id }) }}" method="POST">
+												<div class="mb-3">
+													<label for="new_password" class="form-label">Nouveau mot de passe</label>
+													<input type="password" name="new_password" class="form-control" id="new_password_{{ user.id }}" required placeholder="Renseigner le nouveau mot de passe">
+												</div>
+												<button type="submit" class="btn btn-secondary">RÉINITIALISER</button>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+					</tbody>
+				</table>
+			{% endif %}
+		</div>
+
+		<!-- Footer -->
+		<footer>
+			<p><b>© Copyright @ 2024 par <span style="color: #d7df22;">Cabinet PAGOS</span> | tous droits réservés.</b></p>
+		</footer>
+
+		<!-- Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+	</body>
+</html>

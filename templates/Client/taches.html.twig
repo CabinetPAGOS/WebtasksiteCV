@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link rel="icon" href="\img\logoPagosImg02.png" type="image/x-icon">
+
+        <title>Liste des Tâches</title>
+
+        <!-- Bootstrap CSS -->
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+		
+		<!-- FontAwesome (pour les icônes) -->
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+        <!--Custom CSS -->
+       <style>
+            body {
+                font-family: 'Helvetica', Arial, sans-serif;
+            }
+
+            /* Navbar */
+            .navbar-custom {
+                background-color: #818285;
+                border-style: none;
+            }
+
+            .navbar-custom .nav-link {
+                color: #ffffff;
+                font-size: 19px;
+            }
+
+            .navbar-custom .nav-link:hover {
+                color: #000000;
+            }
+
+            .img-navbar {
+                width: 100%;
+                height: 80px;
+            }
+
+            .navbar-toggler-icon {
+                color: white;
+            }
+
+            nav .dropdown-menu {
+                background-color: #818285;
+            }
+
+            nav .dropdown-menu .dropdown-header {
+                color: #ffffff;
+                font-size: 16px;
+            }
+
+            nav .dropdown-menu .dropdown-item {
+                color: #ff0000;
+            }
+
+            nav .dropdown-menu .dropdown-item:hover {
+                background-color: #818285;
+                color: #ffffff;
+            }
+
+            /* Custom Rectangle */
+            .custom-rectangle {
+                position: relative;
+                border: 2px solid #000;
+                padding: 25px;
+                margin: 20px;
+                width: 100%;
+                max-width: 430px; /* Réduit la largeur maximale */
+                background-color: #fff;
+                box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+                overflow: hidden; /* Empêche le débordement du texte */
+            }
+
+            .custom-rectangle h2 {
+                text-align: center;
+                color: #000000;
+                padding: 10px;
+                border-radius: 5px;
+                background-color: #d7df22;
+                font-size: 18px; /* Réduit la taille de la police du titre */
+                white-space: normal; /* Permet le retour à la ligne */
+                margin-bottom: 20px;
+                overflow: visible; /* Permet d'afficher le texte complet */
+                text-overflow: clip; /* Ne coupe pas le texte avec des points de suspension */
+                display: block; /* Assure que le texte utilise text-overflow */
+            }
+
+            h1 {
+                text-align: center;
+                color: #000000;
+            }
+
+            .container-custom {
+                display: flex;
+                flex-wrap: wrap; /* Permet plusieurs colonnes */
+                justify-content: center; /* Centre le contenu */
+                margin: 20px;
+            }
+
+            /* Button Styles */
+            .container-custom .btn-secondary {
+                background-color: #fff;
+                color: #000;
+                border: 1px solid black;
+                margin-right: 10px;
+                padding: 10px 20px; /* Espacement interne du bouton */
+                font-size: 16px; /* Taille de la police */
+                border-radius: 5px;
+                transition: all 0.3s ease; /* Transition pour les effets de survol */
+            }
+
+            .container-custom .btn-secondary:hover {
+                background-color: #6c757d; /* Couleur de fond au survol */
+                color: #fff; /* Couleur du texte au survol */
+                transform: translateY(-3px); /* Effet de levée au survol */
+                border-color: #6c757d; /* Couleur de bordure au survol */
+            }
+
+            .btn-group {
+                display: flex;
+                justify-content: center; /* Centre les boutons */
+                gap: 15px; /* Espace entre les boutons */
+                margin-top: 20px;
+            }
+
+            /* Container pour la barre de recherche et le bouton de filtrage */
+            .search-filter-container {
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                margin-bottom: 20px; /* Espace sous la barre */
+            }
+
+            /* Barre de recherche personnalisée */
+            .custom-search-bar {
+                display: flex;
+                margin-top: 30px;
+                margin-left: 75px;
+            }
+
+            .custom-search-input {
+                width: 900px; /* Largeur de la barre de recherche */
+                padding: 15px;
+                font-size: 16px;
+                border: 2px solid #000;
+                border-radius: 10px;
+                box-sizing: border-box;
+            }
+
+            /* Dropdown avancement personnalisé */
+            .custom-dropdown .avancement-dropdown {
+                position: relative;
+            }
+
+            .avancement-dropdown .custom-filter-button {
+                margin-top: 30px;
+                margin-left : 40px;
+                padding: 15px;
+                font-size: 16px;
+                border: 2px solid #000;
+                border-radius: 10px;
+                background-color: #fff;
+                cursor: pointer;
+                transition: background-color 0.3s ease, color 0.3s ease;
+            }
+
+            /* Dropdown pilote personnalisé */
+            .custom-dropdown .pilote-dropdown {
+                position: relative;
+            }
+
+            .pilote-dropdown .custom-filter-button {
+                margin-top: 30px;
+                margin-left : 20px;
+                padding: 15px;
+                font-size: 16px;
+                border: 2px solid #000;
+                border-radius: 10px;
+                background-color: #fff;
+                cursor: pointer;
+                transition: background-color 0.3s ease, color 0.3s ease;
+            }
+
+            /* Customisation des listes déroulantes */
+            .custom-filter-button:hover {
+                background-color: #d7df22;
+                color: #fff;
+            }
+
+            .custom-dropdown-menu {
+                border-radius: 10px;
+                border: 2px solid #000;
+                padding: 10px;
+            }
+
+            .custom-dropdown-item {
+                padding: 10px;
+                font-size: 16px;
+                color: #000;
+            }
+
+            .custom-dropdown-item:hover {
+                background-color: #d7df22;
+                color: #fff;
+            }
+
+            /* Style Tag */
+            .tag-minor {
+                background-color: green;
+                font-weight: bold;
+                color: white;
+                padding: 5px;
+                border-radius: 3px;
+            }
+
+            .tag-serious {
+                background-color: yellow;
+                font-weight: bold;
+                color: black;
+                padding: 5px;
+                border-radius: 3px;
+            }
+
+            .tag-blocking {
+                background-color: red;
+                font-weight: bold;
+                color: white;
+                padding: 5px;
+                border-radius: 3px;
+            }
+
+            .tag-unknown {
+                background-color: grey;
+                font-weight: bold;
+                color: white;
+                padding: 5px;
+                border-radius: 3px;
+            }
+
+            /* Style Avancement */
+            .text-npc { color: #ff0000; font-weight: bold; }
+            .text-pc { color: #ffc000; font-weight: bold; }
+            .text-t { color: #00b050; font-weight: bold; }
+            .text-a { color: #FF0000; font-weight: bold; background-color: #00C995; }
+            .text-r { color: #ffffff; font-weight: bold; background-color: #000000; }
+            .text-v { color: #04C49E; font-weight: bold; background-color: #000000; }
+            .text-sc { color: #ffffff; font-weight: bold; background-color: #C92093; }
+            .text-gc { color: #000000; font-weight: bold; background-color: #00B050; }
+
+            .hidden {
+                display: none;
+            }
+
+            .page-info {
+                text-align: center;
+                margin: 20px 0;
+            }
+
+            .center-button-container {
+                display: flex;
+                justify-content: center; /* Centre les boutons horizontalement */
+                align-items: center; /* Centre les boutons verticalement */
+                margin: 20px 0;
+            }
+
+            .center-button {
+                background-color: #818285; /* Couleur de fond du bouton */
+                color: #fff; /* Couleur du texte du bouton */
+                border: 2px solid #000; /* Bordure du bouton */
+                padding: 10px 20px; /* Espacement interne du bouton */
+                font-size: 16px; /* Taille de la police */
+                border-radius: 25px; /* Bordures arrondies */
+                transition: all 0.3s ease; /* Transition pour les effets de survol */
+                cursor: pointer; /* Curseur pointer au survol */
+                margin: 0 10px; /* Espacement horizontal entre les boutons */
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .center-button i {
+                margin: 0 5px; /* Espacement autour des icônes */
+            }
+
+            .center-button:hover {
+                background-color: #6c757d; /* Couleur de fond au survol */
+                color: #fff; /* Couleur du texte au survol */
+                border-color: #6c757d; /* Couleur de bordure au survol */
+                transform: translateY(-3px); /* Effet de levée au survol */
+            }
+
+            .center-button:focus {
+                outline: none; /* Enlève le contour de focus */
+                box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); /* Ombre de focus */
+            }
+
+            /* Footer */
+            footer {
+                text-align: center;
+                padding: 20px 0;
+                background-color: #f4f4f4;
+                border-top: 1px solid #ccc;
+            }
+
+            footer p {
+                color: #333;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-custom">
+            <div class="container-fluid">
+                <!-- Logo -->
+                <a class="navbar-brand" href="{{ path('app_homeclient') }}">
+                    <img class="img-navbar" src="img/logoPagosImg04.png" alt="Logo" height="40">
+                </a>
+
+                <!-- Toggler for mobile view -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon">
+                        <i class="fas fa-bars"></i>
+                    </span>
+                </button>
+
+                <!-- Navbar links -->
+                <div class="collapse navbar-collapse" id="navbarColor01">
+                    <!-- Left-aligned links -->
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_homeclient') }}">
+                                <b>Accueil</b>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" style="color: #000" href="{{ path('app_taches') }}">
+                                <b>Tâches</b>
+                            </a>
+                        </li>
+                        {% if app.user.roleWx == 'createur' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_creertaches') }}">
+                                <b>Créer une tâche</b>
+                            </a>
+                        </li>
+                        
+                        {% endif %}
+
+                        {% set allowed_ids = ['e4e080b3758761bd01758f5fcfed03d9'] %}
+						{% if app.user.idclient and app.user.idclient.getId() in allowed_ids %}
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_clientsdepagos') }}">
+								<b>Clients de Pagos</b>
+							</a>
+						</li>
+						{% endif %}
+                    </ul>
+
+                    <!-- Right-aligned links (user profile and logout) -->
+                     <ul class="navbar-nav ms-auto">
+    <li class="nav-item">
+        <a class="nav-link" href="#" style="color: #ffffff; text-align: center;">
+            <b>{{ app.user.nom }} {{ app.user.prenom }}</b>
+        </a>
+    </li>
+
+						<!-- Dropdown for Notifications -->
+						{# <li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="navbarNotificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								<i class="fas fa-bell" style="font-size: 1.5em; color: white;"></i>
+								<!-- Notification Count -->
+								<span class="badge bg-danger" style="position: absolute; top: 0; right: 0; transform: translate(50%, -50%);">4</span>
+							</a>
+							<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarNotificationsDropdown">
+								<li>
+									<h6 class="dropdown-header">Notifications</h6>
+								</li>
+								<li><hr class="dropdown-divider"></li>
+								<li>
+									<a class="dropdown-item" href="#">Notification 1</a>
+								</li>
+								<li>
+									<a class="dropdown-item" href="#">Notification 2</a>
+								</li>
+								<li>
+									<a class="dropdown-item" href="#">Notification 3</a>
+								</li>
+								<li>
+									<a class="dropdown-item" href="#">Notification 4</a>
+								</li>
+								<li><hr class="dropdown-divider"></li>
+								<!-- Button to mark all notifications as read -->
+								<li>
+									<a class="dropdown-item text-center" href="#" id="markAllAsRead">Lire toutes les notifications</a>
+								</li>
+							</ul>
+						</li> #}
+
+
+						
+						<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+						<img src="data:image/png;base64,{{ logo }}" alt="Logo du client" class="client-logo" style="width: 30px; height: 30px; border-radius: 50%;"/> <!-- Ajout du logo client -->
+					</a>
+					<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown">
+						<li><hr class="dropdown-divider"></li>
+						<li>
+							<a class="dropdown-item" href="{{ path('app_logout') }}">
+								<b>
+									<i class="fas fa-sign-out-alt"></i>
+									Se déconnecter
+								</b>
+									</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</body>
+
+       <div class="search-filter-container">
+    <div class="custom-search-bar">
+        <input type="text" class="custom-search-input" placeholder="Rechercher une WebTask 🔎" value="{{ query }}">
+    </div>
+    <div class="custom-dropdown avancement-dropdown">
+        <button class="custom-filter-button dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            {{ selectedAvancement|default('-- Tous les avancements --') }}
+        </button>
+        <ul class="custom-dropdown-menu dropdown-menu" aria-labelledby="filterDropdown">
+            <li>
+                <a class="custom-dropdown-item dropdown-item" href="" onclick="filterByAvancement('all')">
+                    <b>-- Tous les avancements --</b>
+                </a>
+            </li>
+                    <li>
+                        <a class="custom-dropdown-item dropdown-item" href="" onclick="filterByAvancement('nonPriseEnCompte')">
+                            Non Prise en Compte
+                        </a>
+                    </li>
+                    <li>
+                        <a class="custom-dropdown-item dropdown-item" href="" onclick="filterByAvancement('priseEnCompte')">
+                            Prise en Compte
+                        </a>
+                    </li>
+                    <li>
+                        <a class="custom-dropdown-item dropdown-item" href="" onclick="filterByAvancement('terminee')">
+                            Terminée
+                        </a>
+                    </li>
+                    <li>
+                        <a class="custom-dropdown-item dropdown-item" href="" onclick="filterByAvancement('amelioration')">
+                            ❇️ Amélioration ❇️
+                        </a>
+                    </li>
+                    <li>
+                        <a class="custom-dropdown-item dropdown-item" href="" onclick="filterByAvancement('refusee')">
+                            ⛔️ Refusée ⛔️
+                        </a>
+                    </li>
+                    <li>
+                <a class="custom-dropdown-item dropdown-item" href="" onclick="filterByAvancement('validee')">
+                    ✅ Validée
+                </a>
+            </li>
+                    <li>
+                        <a class="custom-dropdown-item dropdown-item" href="" onclick="filterByAvancement('stopClient')">
+                            ❌ Stop Client ❌
+                        </a>
+                    </li>
+                    <li>
+                        <a class="custom-dropdown-item dropdown-item" href="" onclick="filterByAvancement('goClient')">
+                            😃 Go Client 😃
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="custom-dropdown pilote-dropdown">
+                <button class="custom-filter-button dropdown-toggle" type="button" id="filterPiloteDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span id="selectedPiloteText">-- Tous les pilotes --</span>
+                </button>
+                <ul class="custom-dropdown-menu dropdown-menu" aria-labelledby="filterPiloteDropdown">
+                    <li>
+                        <a class="custom-dropdown-item dropdown-item" href="" onclick="filterByPilote('')"><b>-- Tous les pilotes --</b></a>
+                    </li>
+                    {% for piloteId, pilote in pilotes %}
+                    <li>
+                        <a class="custom-dropdown-item dropdown-item" style="text-transform: uppercase;" href="" onclick="filterByPilote('{{ piloteId }}', '{{ pilote.initiale }} {{ pilote.nom }}')">
+                            {{ pilote.initiale }} {{ pilote.nom }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="container-custom" id="taskContainer">
+            {% if webtasks is not empty %}
+                {% for webtask in webtasks %}
+                    {% if webtask.etatdelawebtask == 'ON' and (webtask.avancementdelatache != '5' or selectedAvancement == 'validee') %}
+                        <div class="custom-rectangle hidden" 
+                            data-code="{{ webtask.webtask }}" 
+                            data-titre="{{ webtask.titre }}" 
+                            data-avancement="{{ webtask.avancementdelatache }}" 
+                            data-pilote-id="{{ webtask.piloteid.id }}">
+                            <h2><b>{{ webtask.titre }}</b></h2>
+                            <ul>
+                                <li><b><u>WebTask :</u></b> {{ webtask.webtask }}</li>
+                                <li><b><u>Description :</u></b> {{ webtask.description|nl2br }}</li>    
+                                <li><b><u>Date de fin demandée :</u></b> {{ webtask.datefinDemandee }}</li>
+                                <li><b><u>Avancement de la tâche :</u></b> <span class="{{ webtask.mappedAvancement.class }}">{{ webtask.mappedAvancement.label }}</span></li>
+                                <li><b><u>Pilote :</u></b>
+                                    {% if webtask.piloteid %}
+                                        {{ (webtask.piloteid.prenom[:1] ~ '. ' ~ webtask.piloteid.nom)|upper }}
+                                    {% else %}
+                                        Pilote non assigné
+                                    {% endif %}
+                                </li>
+                                <li><b><u>Version :</u></b> {{ webtask.versionLibelle }}</li>
+                            </ul>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-secondary consulter rounded" onclick="window.location.href='{{ path('app_consultertaches', { 'id': webtask.code }) }}'">CONSULTER</button>
+                                <!--<button type="button" class="btn btn-secondary consulter rounded" onclick="window.location.href='{{ path('app_suivitaches', { 'id': webtask.id }) }}'">VOIR LE SUIVI</button>-->
+                                {% if app.user.roleWx == 'createur' %}
+                                {% set allowed_ids = ['e4e080b3758761bd01758f5fcfed03d9'] %}
+                                {% if app.user.idclient and app.user.idclient.getId() not in allowed_ids %}
+                                    <!--<button type="button" class="btn btn-secondary repondre consulter rounded" onclick="window.location.href='{{ path('app_reponsetaches', { 'id': webtask.id }) }}'">RÉPONDRE</button>-->
+                                {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <p>Aucune tâche disponible.</p>
+            {% endif %}
+        </div>
+
+        {# <!-- Boutons pages suivantes/précédentes -->
+        <div class="center-button-container">
+            <button id="prevPageBtn" class="center-button">
+                <i class="fas fa-chevron-left"></i> Page précédente
+            </button>
+            <button id="nextPageBtn" class="center-button">
+                Page suivante <i class="fas fa-chevron-right"></i>
+            </button>
+        </div> #}
+
+        <!-- Affichage de l'information sur la page -->
+        <div class="page-info">
+            <span id="pageInfoText"></span>
+        </div>
+
+        <!-- Footer -->
+		<footer>
+			<p><b>© Copyright @ 2024 par <span style="color: #d7df22;">Cabinet PAGOS</span> | tous droits réservés.</b></p>
+		</footer>
+
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                const $tasks = $('.custom-rectangle');
+                const $searchInput = $('.custom-search-input');
+                const $avancementButton = $('#filterDropdown'); // Bouton de filtre d'avancement
+                const $piloteButton = $('#filterPiloteDropdown'); // Bouton de filtre de pilote
+                const $selectedPiloteText = $('#selectedPiloteText'); // Texte du bouton de filtre pilote
+
+                // Variables pour conserver les filtres
+                let currentAvancement = getUrlParam('filter') || ''; // Filtre d'avancement
+                let currentPiloteId = getUrlParam('filterByPilote') || ''; // Filtre de pilote
+                let currentPiloteName = getUrlParam('piloteName') || '-- Tous les pilotes --'; // Nom du pilote
+
+                // Fonction pour récupérer les paramètres d'URL
+                function getUrlParam(param) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    return urlParams.get(param) || ''; // Retourne la valeur du paramètre ou une chaîne vide
+                }
+
+                // Fonction pour afficher toutes les tâches
+                function showAllTasks() {
+                    $tasks.removeClass('hidden');
+                    updateTaskInfoText();
+                }
+
+                // Fonction pour mettre à jour le texte d'information
+                function updateTaskInfoText() {
+                    const visibleTasks = $tasks.filter(':not(.hidden)');
+                    if (visibleTasks.length === 0) {
+                        $('#pageInfoText').text('Aucune tâche trouvée');
+                    } else {
+                        $('#pageInfoText').text(`${visibleTasks.length} tâche(s) trouvée(s)`);
+                    }
+                }
+
+                // Fonction pour filtrer les tâches
+                function filterTasks(query = '') {
+                    const lowerCaseQuery = query.toLowerCase();
+
+                    $tasks.each(function () {
+                        const $task = $(this);
+                        const taskCode = ($task.data('code') || '').toString().toLowerCase();
+                        const taskTitre = ($task.data('titre') || '').toString().toLowerCase();
+                        const taskAvancement = $task.data('avancement') || '';
+                        const taskPiloteId = $task.data('pilote-id') || '';
+
+                        // Vérification des filtres
+                        const matchesQuery = taskCode.includes(lowerCaseQuery) || taskTitre.includes(lowerCaseQuery);
+                        const matchesAvancement = currentAvancement === '' || taskAvancement === currentAvancement;
+                        const matchesPilote = currentPiloteId === '' || taskPiloteId === currentPiloteId;
+
+                        // Affiche ou masque la tâche en fonction des filtres
+                        if (matchesQuery && matchesAvancement && matchesPilote) {
+                            $task.removeClass('hidden');
+                        } else {
+                            $task.addClass('hidden');
+                        }
+                    });
+
+                    // Mise à jour du texte d'information
+                    updateTaskInfoText();
+                }
+
+                // Fonction pour mettre à jour le texte du bouton d'avancement
+                function updateAvancementButtonText() {
+                    const avancementText = currentAvancement ? getAvancementDisplayText(currentAvancement) : 'Filtrer par avancement';
+                    $avancementButton.text(avancementText);
+                }
+
+                // Fonction pour mettre à jour le texte du bouton de filtre pilote
+                function updatePiloteButtonText() {
+                    $selectedPiloteText.text(currentPiloteName || 'Filtrer par pilote');
+                }
+
+                // Fonction pour récupérer le texte d'affichage de l'avancement
+                function getAvancementDisplayText(avancement) {
+                    switch (avancement) {
+                        case 'nonPriseEnCompte': return 'Non Prise en Compte';
+                        case 'priseEnCompte': return 'Prise en Compte';
+                        case 'terminee': return 'Terminée';
+                        case 'amelioration': return '❇️ Amélioration ❇️';
+                        case 'refusee': return '⛔️ Refusée ⛔️';
+                        case 'validee': return '✅ Validée';
+                        case 'stopClient': return '❌ Stop Client ❌';
+                        case 'goClient': return '😃 Go Client 😃';
+                        default: return '-- Tous les avancements --';
+                    }
+                }
+
+                // Affiche toutes les tâches au chargement de la page
+                showAllTasks();
+
+                // Met à jour les filtres et l'URL
+                function updateUrlAndFilter(piloteId, piloteName, avancement) {
+                    const currentUrl = new URL(window.location.href);
+                    if (piloteId) {
+                        currentUrl.searchParams.set('filterByPilote', piloteId); // Met à jour le filtre de pilote
+                        currentUrl.searchParams.set('piloteName', piloteName); // Met à jour le nom du pilote
+                    } else {
+                        currentUrl.searchParams.delete('filterByPilote'); // Supprime le filtre de pilote si aucun ID
+                        currentUrl.searchParams.delete('piloteName'); // Supprime le nom du pilote
+                    }
+
+                    if (avancement) {
+                        currentUrl.searchParams.set('filter', avancement); // Met à jour le filtre d'avancement
+                    } else {
+                        currentUrl.searchParams.delete('filter'); // Supprime le filtre d'avancement si aucune valeur
+                    }
+
+                    // Mise à jour de l'URL et des boutons
+                    window.history.pushState({}, '', currentUrl); // Met à jour l'URL sans recharger la page
+                    updateAvancementButtonText(); // Met à jour le texte du bouton d'avancement
+                    updatePiloteButtonText(); // Met à jour le texte du bouton de filtre pilote
+                }
+
+                // Réinitialiser la recherche avec "Entrée"
+                $searchInput.on('keypress', function (e) {
+                    if (e.which === 13) { // Appuie sur la touche Entrée
+                        const query = $(this).val().trim();
+                        filterTasks(query); // Appelle le filtrage en tenant compte des autres filtres
+                    }
+                });
+
+                // Fonction pour filtrer par pilote
+                window.filterByPilote = function(piloteId, piloteName = '-- Tous les pilotes --') {
+                    currentPiloteId = piloteId; // Met à jour le filtre de pilote
+                    currentPiloteName = piloteName; // Met à jour le nom du pilote
+                    const query = $searchInput.val().trim(); // Récupère la requête de recherche
+                    updateUrlAndFilter(currentPiloteId, currentPiloteName, currentAvancement); // Met à jour l'URL
+                    filterTasks(query); // Filtre les tâches avec le filtre de pilote
+                };
+
+                // Fonction pour filtrer par avancement
+                window.filterByAvancement = function(avancement) {
+                    currentAvancement = avancement; // Met à jour le filtre d'avancement
+                    const query = $searchInput.val().trim(); // Récupère la requête de recherche
+                    updateUrlAndFilter(currentPiloteId, currentPiloteName, currentAvancement); // Met à jour l'URL
+                    filterTasks(query); // Filtre les tâches avec le filtre de pilote et d'avancement
+                };
+
+                // Initialisation du texte des boutons
+                updateAvancementButtonText();
+                updatePiloteButtonText();
+            });
+        </script>
+    </body>
+</html>

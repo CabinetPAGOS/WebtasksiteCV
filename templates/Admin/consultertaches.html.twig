@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="icon" href="\img\logoPagosImg02.png" type="image/x-icon">
+
+		<title>Consulter Tâches</title>
+
+		<!-- Bootstrap CSS -->
+		<link
+		href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+		<!-- FontAwesome (pour les icônes) -->
+		<link
+		href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+		<!-- Custom CSS -->
+		<style>
+			body {
+				font-family: 'Helvetica', Arial, sans-serif;
+			}
+
+			/* Style global de la navbar */
+			.navbar-custom {
+				background-color: #818285; /* Couleur de fond principale */
+				padding: 10px 20px; /* Espacement autour de la navbar */
+			}
+
+			/* Logo dans la navbar */
+			.navbar-custom .navbar-brand img {
+				width: auto;
+				height: 80px;
+			}
+
+			/* Boutons et liens de la navbar */
+			.navbar-custom .navbar-nav .nav-link {
+				color: #fff; /* Couleur du texte des liens */
+				font-weight: bold;
+				text-transform: uppercase; /* Mettre en majuscules */
+				padding: 10px 15px;
+				transition: color 0.3s ease; /* Transition pour le changement de couleur */
+			}
+
+			.navbar-custom .navbar-nav .nav-link:hover {
+				color: #000000; /* Couleur au survol */
+			}
+
+			.navbar-custom .navbar-nav .nav-item.active .nav-link {
+				color: #000000; /* Couleur pour l'élément actif */
+			}
+
+			/* Dropdown (menu déroulant) */
+			.navbar-custom .navbar-nav .nav-item.dropdown .nav-link {
+				color: #fff; /* Couleur du lien de la dropdown */
+				border-bottom: 2px solid transparent; /* Ajouter une bordure discrète */
+				padding-bottom: 5px;
+			}
+
+			.navbar-custom .navbar-nav .nav-item.dropdown:hover .nav-link {
+				color: #000000; /* Couleur de la dropdown au survol */
+				border-bottom: 2px solid #000000; /* Bordure colorée au survol */
+			}
+
+			.navbar-custom .navbar-nav .nav-item .dropdown-menu {
+				background-color: #818285; /* Fond de la dropdown */
+				border: none; /* Enlever les bordures */
+				padding: 10px 0; /* Espacement intérieur */
+			}
+
+			.navbar-custom .navbar-nav .nav-item .dropdown-item {
+				color: #fff; /* Couleur des éléments de la dropdown */
+				padding: 10px 20px;
+				transition: background-color 0.3s ease; /* Transition pour la couleur de fond */
+			}
+
+			.navbar-custom .navbar-nav .nav-item .dropdown-item:hover {
+				background-color: #000000; /* Couleur de fond au survol */
+				color: #fff; /* Couleur du texte au survol */
+			}
+
+			/* Style pour le nom de l'utilisateur */
+			.user-name {
+				color: #000;
+				font-size: 1rem;
+				margin-top: 0.4rem;
+			}
+
+			/* Logo client adaptable pour formats carré et rectangulaire */
+			.client-logo {
+				max-height: 40px;
+				max-width: 60px; /* Taille max pour gérer les logos rectangulaires */
+				object-fit: contain;
+				border-radius: 8px;
+				padding: 2px;
+				background-color: #fff;
+				transition: transform 0.2s ease;
+			}
+
+			.client-logo:hover {
+				transform: scale(1.1);
+			}
+
+			/* Icône de déconnexion */
+			.logout-icon {
+				font-size: 1.5rem;
+				color: #000;
+				transition: color 0.3s ease, transform 0.3s ease;
+			}
+
+			.logout-icon:hover {
+				color: #818285;
+				transform: scale(1.1);
+			}
+
+			/* Notifications */
+			.notification-container {
+				position: relative; /* Pour permettre le positionnement de la liste de notifications */
+				margin-right: 15px; /* Espacement à droite pour ne pas être collé aux éléments adjacents */
+				display: flex; /* Utilisation de flex pour aligner les éléments */
+				align-items: center; /* Alignement vertical centré */
+			}
+
+			#notificationIcon {
+				font-size: 24px; /* Taille de l'icône de notification */
+				color: white; /* Couleur de l'icône */
+				position: relative; /* Pour positionner le compteur */
+				cursor: pointer; /* Change le curseur lors du survol */
+			}
+
+			.notification-count {
+				position: absolute; /* Positionnement absolu par rapport à l'icône */
+				top: 0; /* Ajuste la position verticale */
+				right: -2px; /* Ajuste la position horizontale */
+				background-color: red; /* Couleur d'arrière-plan pour le compteur */
+				color: white; /* Couleur du texte */
+				border-radius: 50%; /* Arrondi pour un style circulaire */
+				padding: 3px 7px; /* Espacement intérieur */
+				font-size: 12px; /* Taille du texte */
+				font-weight: bold; /* Gras pour le compteur */
+			}
+
+			.notifications {
+				border: 2px solid #000; /* Bordure autour de la liste de notifications */
+				background-color: #fff; /* Couleur d'arrière-plan */
+				position: absolute; /* Positionnement absolu */
+				z-index: 1000; /* S'assurer qu'il est au-dessus des autres éléments */
+				width: 600px;
+				top: -210px; /* Ajustez selon vos besoins */
+				right: 0; /* Aligne le conteneur à droite */
+				margin-top: 250px; /* Espacement au-dessus de la liste */
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre pour le conteneur */
+				padding: 2px; /* Espacement intérieur */
+			}
+
+			.notifications ul {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+			}
+
+			.notifications li {
+				padding: 10px;
+				border-bottom: 1px solid #ccc; /* Bordure en bas */
+				font-size: 12px; /* Taille de police réduite */
+			}
+
+			/* Supprime la bordure du dernier élément */
+			.notifications li:last-child {
+				border-bottom: none;
+			}
+
+			/* Header de notification */
+			.notification-header {
+				display: flex; /* Utilise flexbox pour aligner les éléments */
+				justify-content: space-between; /* Espace entre le nom et la date */
+				align-items: center; /* Centrage vertical */
+			}
+
+			/* Style de la date de création */
+			.creation-date {
+				font-size: 0.9em; /* Taille de police plus petite pour la date */
+				color: #666; /* Couleur de texte grise pour la date */
+			}
+
+			/* Corps de la notification */
+			.notification-body {
+				margin-bottom: 10px; /* Ajoute un espace entre le corps et les boutons */
+			}
+
+			/* Boutons de notification */
+			.notification-buttons {
+				display: flex; /* Utilise flexbox pour aligner les boutons */
+				justify-content: flex-end; /* Aligne les boutons à droite */
+				gap: 10px; /* Espace entre les boutons */
+			}
+
+			.notification-buttons button {
+				padding: 5px 10px; /* Espacement intérieur des boutons */
+				margin: 0 2px; /* Espacement horizontal entre les boutons */
+				cursor: pointer; /* Curseur pointer pour les boutons */
+				border: none; /* Pas de bordure */
+				border-radius: 5px; /* Coins arrondis */
+				background-color: #007bff; /* Couleur d'arrière-plan des boutons */
+				color: white; /* Couleur du texte des boutons */
+				transition: background-color 0.3s; /* Transition pour l'effet de survol */
+			}
+
+			.notification-buttons button:hover {
+				background-color: #0056b3; /* Couleur au survol des boutons */
+			}
+
+			.d-none {
+				display: none;
+			}
+
+			/* Styles spécifiques pour le formulaire */
+			.form {
+				background: white;
+				padding: 1rem;
+				border-radius: 5px;
+				max-width: 82%;
+				margin: 0 auto;
+				display: flex;
+				flex-direction: column;
+			}
+
+			.form-row {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 1rem;
+				margin-bottom: 1rem;
+			}
+
+			.form-row .form-group {
+				flex: 1 1 calc(33.33% - 1rem);
+			}
+
+			.form-group {
+				margin-bottom: 1rem;
+			}
+
+			.form-group label {
+				font-weight: bold;
+				text-decoration: underline;
+			}
+
+			.form-group div {
+				width: 100%;
+				padding: 0.5rem;
+				border: 1px solid #000;
+				border-radius: 5px;
+				box-sizing: border-box;
+				font-size: 16px;
+				margin-bottom: 0.5rem;
+			}
+
+			/* Button Styles */
+			.form .btn-secondary {
+				background-color: #fff;
+				color: #000;
+				border: 1px solid black;
+				margin-right: 10px;
+				padding: 10px 20px; /* Espacement interne du bouton */
+				font-size: 16px; /* Taille de la police */
+				border-radius: 5px;
+				transition: all 0.3s ease; /* Transition pour les effets de survol */
+			}
+
+			.form .btn-secondary:hover {
+				background-color: #6c757d; /* Couleur de fond au survol */
+				color: #fff; /* Couleur du texte au survol */
+				transform: translateY(-3px); /* Effet de levée au survol */
+				border-color: #6c757d; /* Couleur de bordure au survol */
+			}
+
+			.btn-group {
+				display: flex;
+				justify-content: center; /* Centre les boutons */
+				gap: 15px; /* Espace entre les boutons */
+				margin-top: 20px;
+			}
+
+			/* Styles pour les titres avec fond coloré séparé */
+			.title-container {
+				display: flex;
+				justify-content: center;
+				margin-bottom: 1rem;
+			}
+
+			.title01 {
+				background-color: #d7df22;
+				padding: 1rem;
+				border-radius: 5px;
+				margin: 0 0.5rem;
+				text-align: center;
+				position: relative;
+				z-index: 1;
+				font-size: 20px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+
+			.title02 {
+				background-color: #d7df22;
+				padding: 1rem;
+				border-radius: 5px;
+				margin: 0 0.5rem;
+				text-align: center;
+				position: relative;
+				z-index: 1;
+				font-size: 20px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+
+			.title03 {
+				background-color: #d7df22;
+				padding: 1rem;
+				border-radius: 5px;
+				margin: 0 0.5rem;
+				text-align: center;
+				position: relative;
+				z-index: 1;
+				font-size: 20px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+
+			.title:nth-child(1)::after {
+				content: "";
+				position: absolute;
+				top: 50%;
+				left: 100%;
+				width: 1rem;
+				height: 100%;
+				background: white;
+				z-index: -1;
+			}
+
+			.title:nth-child(2)::before {
+				content: "";
+				position: absolute;
+				top: 50%;
+				right: 100%;
+				width: 1rem;
+				height: 100%;
+				background: white;
+				z-index: -1;
+			}
+
+			.title:nth-child(3)::before {
+				content: "";
+				position: absolute;
+				top: 50%;
+				right: 100%;
+				width: 1rem;
+				height: 100%;
+				background: white;
+				z-index: -1;
+			}
+
+			.description-text {
+				color: #1AC2DD; /* Couleur bleu ciel */
+			}
+
+			/* Style Tag */
+            .tag-minor {
+				background-color: #00B050;
+				font-weight: bold;
+				color: #000000;
+				padding: 5px;
+				border-radius: 3px;
+			}
+			.tag-serious {
+				background-color: #FFC000;
+				font-weight: bold;
+				color: #000000;
+				padding: 5px;
+				border-radius: 3px;
+			}
+			.tag-blocking {
+				background-color: #FF0000;
+				font-weight: bold;
+				color: #000000;
+				padding: 5px;
+				border-radius: 3px;
+			}
+			.tag-unknown {
+				background-color: grey;
+				font-weight: bold;
+				color: #000000;
+				padding: 5px;
+				border-radius: 3px;
+			}
+
+            /* Style Avancement */
+            .text-npc { color: #ff0000; font-weight: bold; }
+            .text-pc { color: #ffc000; font-weight: bold; }
+            .text-t { color: #00b050; font-weight: bold; }
+            .text-a { color: #FF0000; font-weight: bold; background-color: #00C995; }
+            .text-r { color: #ffffff; font-weight: bold; background-color: #000000; }
+            .text-v { color: #04C49E; font-weight: bold; background-color: #000000; }
+            .text-sc { color: #ffffff; font-weight: bold; background-color: #C92093; }
+            .text-gc { color: #000000; font-weight: bold; background-color: #00B050; }
+
+			/* Style général pour la section des commentaires */
+			.comments-section div {
+				width: 100%;
+				border: 1px solid #000;
+				border-radius: 5px;
+				box-sizing: border-box;
+				font-size: 16px;
+			}
+
+			.comment-card {
+				margin-bottom: 20px; /* Espace entre chaque bloc de commentaire */
+				padding: 10px; /* Espacement interne dans chaque bloc */
+				border: 1px solid #ccc; /* Bordure légère autour des blocs (facultatif) */
+				border-radius: 8px; /* Coins arrondis pour un aspect plus doux */
+				background-color: #f9f9f9; /* Couleur de fond pour chaque bloc */
+			}
+
+			.task-info {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				background-color: #e9ecef;
+				padding: 10px 15px;
+				border-radius: 5px;
+				font-size: 14px;
+				font-weight: bold; /* Rend tout le texte en gras */
+				gap: 5px; /* Espace entre les éléments */
+			}
+
+			.task-info b {
+				white-space: nowrap;
+				font-size: 13px;
+			}
+
+			/* Conteneur principal pour les documents */
+			#documents {
+				background-color: #f9f9f9; /* Fond gris clair pour un aspect doux */
+				border-radius: 12px; /* Coins arrondis pour un look moderne */
+				padding: 25px; /* Espacement interne accru pour un look aéré */
+				margin-top: 10px; /* Marges supérieures */
+				box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Ombre plus marquée pour profondeur */
+			}
+
+			/* Éléments de chaque document */
+			.document-item {
+				display: flex; /* Utilisation de flexbox pour l'alignement */
+				align-items: center; /* Alignement vertical centré */
+				padding: 12px 15px; /* Espacement interne */
+				transition: background-color 0.3s ease, transform 0.2s ease; /* Transition douce pour l'effet de survol */
+				border-radius: 8px; /* Coins arrondis */
+				border: 1px solid transparent; /* Bordure transparente par défaut */
+				margin-bottom: 10px; /* Marges entre les éléments */
+			}
+
+			/* Couleur de fond au survol */
+			.document-item:hover {
+				background-color: #e7f3ff; /* Fond bleu clair au survol */
+				transform: translateY(-2px); /* Légère élévation au survol */
+				border: 1px solid #007bff; /* Bordure bleue au survol */
+			}
+
+			/* Styles pour les titres */
+			.document-item span {
+				flex-grow: 1; /* Prendre l'espace disponible */
+				color: #333; /* Couleur de texte sombre */
+				margin-left: 15px; /* Espace entre l'icône et le titre */
+				font-weight: 400; /* Poids de la police normal pour supprimer le gras */
+			}
+
+			/* Styles pour l'icône */
+			.document-item a {
+				color: #007bff; /* Couleur du lien (bleu) */
+				text-decoration: none; /* Supprime le soulignement */
+				display: flex; /* Aligner l'icône */
+				align-items: center; /* Centrer verticalement */
+			}
+
+			/* Effet de survol sur l'icône */
+			.document-item a:hover {
+				color: #0056b3; /* Couleur plus foncée au survol */
+			}
+
+			/* Styles pour l'icône */
+			.document-item i {
+				font-size: 28px; /* Taille de l'icône plus grande pour plus d'impact */
+				margin-right: 15px; /* Espace à droite de l'icône */
+				transition: transform 0.3s; /* Transition douce pour l'effet de survol */
+			}
+
+			/* Effet de zoom sur l'icône au survol */
+			.document-item a:hover i {
+				transform: scale(1.2); /* Légère augmentation de la taille de l'icône */
+			}
+
+			.separator {
+				border: 0;
+				border-top: 2px solid #000;
+				margin: 15px 0;
+			}
+
+			.comment-client,
+			.comment-internal {
+				background-color: #fff;
+				padding: 10px;
+				border-left: 4px solid #4caf50;
+				border-radius: 5px;
+				margin-bottom: 10px;
+				font-size: 14px;
+			}
+
+			.no-comments,
+			.no-client-comment,
+			.no-internal-comment {
+				color: #999;
+				font-style: italic;
+				font-size: 14px;
+			}
+
+			.comment-client b,
+			.comment-internal b {
+				font-size: 16px;
+				color: #333;
+				margin-bottom: 8px;
+				display: inline-block;
+			}
+
+			.comment-card p {
+				margin: 0;
+			}
+
+			.no-comments,
+			.no-client-comment,
+			.no-internal-comment b {
+				font-weight: normal;
+			}
+
+			.comment-green {
+				color: #00b050;
+			}
+
+			.comment-black {
+				color: #000000;
+			}
+
+			/* Footer */
+			footer {
+				text-align: center;
+				padding: 20px 0;
+				background-color: #f4f4f4;
+				border-top: 1px solid #ccc;
+			}
+
+			footer p {
+				color: #333;
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-lg navbar-custom">
+			<div
+				class="container-fluid">
+				<!-- Logo -->
+				<a class="navbar-brand" href="{{ path('app_logout') }}">
+					<img class="img-navbar" src="/img/logoPagosImg04.png" alt="Logo" height="40">
+				</a>
+
+				<!-- Bouton pour mobiles -->
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+
+				<!-- Liens du menu -->
+				<div class="collapse navbar-collapse" id="navbarColor01">
+					<ul class="navbar-nav me-auto">
+						<li class="nav-item">
+							<a class="nav-link nav-link-custom" href="{{ path('app_homeadmin') }}">
+								<b>Accueil</b>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link nav-link-custom" href="{{ path('app_tachesadmin') }}">
+								<b>Tâches</b>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link nav-link-custom" href="{{ path('app_clientsdepagosadmin') }}">
+								<b>Clients de Pagos</b>
+							</a>
+						</li>
+
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle nav-link-custom" href="#" id="gestionDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								<b>Administration</b>
+							</a>
+							<ul class="dropdown-menu" aria-labelledby="gestionDropdown">
+								<li>
+									<a class="dropdown-item dropdown-item-custom" href="{{ path('app_gestionuser') }}">
+										<b>Gestion utilisateur</b>
+									</a>
+								</li>
+								<li>
+									<a class="dropdown-item dropdown-item-custom" href="{{ path('app_importexport') }}">
+										<b>Imports / Exports</b>
+									</a>
+								</li>
+								<li>
+									<a class="dropdown-item dropdown-item-custom" href="{{ path('app_register') }}">
+										<b>Créer un utilisateur</b>
+									</a>
+								</li>
+								<li>
+									<a class="dropdown-item dropdown-item-custom" href="{{ path('app_createclientadmin') }}">
+										<b>Créer un Client</b>
+									</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+
+					<!-- Liens côté droit -->
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item nav-link nav-link-custom user-name">
+							<b>{{ app.user.nom }}
+								{{ app.user.prenom }}</b>
+						</li>
+
+						<!-- Icône de notification -->
+						{% set allowed_ids = ['e4e080b3758761bd01758f5fcfed03d9'] %}
+						{% if app.user.idclient and app.user.idclient.getId() in allowed_ids %}
+							<li class="nav-item notification-container">
+								<a class="nav-link" href="#" style="color: #ffffff; text-align: center;">
+									<i class="fas fa-bell" style="font-size: 1.5em; color: white;" id="notificationIcon"></i>
+									<span class="notification-count">{{ notifications|filter(notification => notification.visible == 1)|length }}</span>
+								</a>
+								<div id="notificationList" class="notifications" style="display: none;">
+									<ul>
+										{% set visibleNotifications = notifications|filter(notification => notification.visible == 1) %}
+										{% if visibleNotifications is empty %}
+											<li>Aucune notification</li>
+										{% else %}
+											{% set notificationsByClient = {} %}
+
+											{# Regrouper les notifications par client #}
+											{% for notification in visibleNotifications %}
+												{% set clientName = notification.getClient.getRaisonSociale() %}
+												{% if notificationsByClient[clientName] is not defined %}
+													{% set notificationsByClient = notificationsByClient|merge({(clientName): []}) %}
+												{% endif %}
+												{% set notificationsByClient = notificationsByClient|merge({(clientName): notificationsByClient[clientName] | merge([notification])}) %}
+											{% endfor %}
+
+											{# Affichage des notifications regroupées par client #}
+											{% for client, clientNotifications in notificationsByClient %}
+												{% if clientNotifications|length > 0 %}
+													<li class="client-notification" data-client="{{ client }}">
+														<div class="client-notification-header" style="border-bottom: 2px solid #007bff; margin-bottom: 10px; padding-bottom: 5px;">
+															<b>{{ client }}</b>
+														</div>
+														<ul style="list-style: none; padding-left: 0; border-left: 2px dashed #ccc; padding-left: 10px;">
+															{% for notification in clientNotifications %}
+																<li id="notification-{{ notification.id }}" style="margin-bottom: 15px; padding: 10px; border: 1px solid #e0e0e0; border-radius: 5px; background-color: #f9f9f9;">
+																	<div class="notification-header">
+																		<span class="creation-date">{{ notification.getDateCreation() | date('d/m/y H:i:s') }}</span>
+																	</div>
+																	<div class="notification-body">
+																		{{ notification.getTitreWebtask() }}
+																		({{ notification.getLibelleWebtask() }})<br>
+																		{{ notification.getMessage() }}
+																	</div>
+																	<div class="notification-buttons">
+																		<button class="mark-as-read" data-id="{{ notification.id }}">Lu</button>
+																		<button onclick="window.location.href='{{ path('app_consultertachesadmin', { 'id': notification.codeWebtask }) }}'">Consulter</button>
+																	</div>
+																</li>
+															{% endfor %}
+														</ul>
+													</li>
+													<hr
+													style="border-top: 2px solid #007bff; margin: 10px 0;">
+												{# Séparation entre clients #}
+												{% endif %}
+											{% endfor %}
+										{% endif %}
+									</ul>
+								</div>
+							</li>
+						{% endif %}
+
+						<!-- Logo client et déconnexion -->
+						<li class="nav-item d-flex align-items-center">
+							<img src="data:image/png;base64,{{ logo }}" alt="Logo du client" class="client-logo me-2"/>
+							<a class="nav-link logout-icon" href="{{ path('app_logout') }}" title="Se déconnecter">
+								<i class="fas fa-sign-out-alt"></i>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<br>
+
+		<div class="container">
+			<div class="title-container">
+				<h4 class="title01">
+					<b>{{ webtask.titre }}</b>
+				</h4>
+				<h4 class="title02">
+					<b>{{ webtask.webtask }}</b>
+				</h4>
+				<h4 class="title03">
+					<b>{{ raisonSociale }}</b>
+				</h4>
+			</div>
+		</div>
+
+		<div class="form" id="taskForm">
+			<div class="form-group">
+				<label for="description">
+					<b>
+						<u>Description :</u>
+					</b>
+				</label>
+				<div id="description" class="description-text">
+					<b>{{ webtask.description|nl2br }}</b>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="documents">
+					<b>
+						<u>Documents :</u>
+					</b>
+				</label>
+				<div id="documents">
+					{% if documentsLiensNonExtraits is not empty %}
+						{% for lien in documentsLiensNonExtraits %}
+							{% set titre = lien|split('?')|last %}
+							<!-- Récupérer la partie après le dernier '?' -->
+							<div
+								class="document-item">
+								<!-- Lien cliquable avec icône -->
+								<a href="{{ lien }}" target="_blank" aria-label="Ouvrir {{ titre }}">
+									<i class="fas fa-file-alt"></i>
+									<!-- Icône de fichier -->
+									<span>{{ titre }}</span>
+								</a>
+							</div>
+						{% endfor %}
+					{% else %}
+						<p>Aucun document disponible.</p>
+					{% endif %}
+				</div>
+			</div>
+
+			<div class="form-row">
+				<div class="form-group">
+					<label for="due_date">
+						<b>
+							<u>Date de Fin Demandée :</u>
+						</b>
+					</label>
+					<div id="due_date">{{ webtask.DateFinDemandee }}</div>
+				</div>
+				<div class="form-group">
+					<label for="progress">
+						<b>
+							<u>État d'avancement :</u>
+						</b>
+					</label>
+					<div id="progress" class="{{ mappedAvancement.class }}">{{ mappedAvancement.label }}</div>
+				</div>
+				<div class="form-group">
+					<label for="version">
+						<b>
+							<u>Version :</u>
+						</b>
+					</label>
+					<div id="version">{{ webtask.versionLibelle }}</div>
+				</div>
+
+				<div class="form-group">
+					<label for="database">
+						<b>
+							<u>Base de données :</u>
+						</b>
+					</label>
+					{% if webtask.baseclient is empty %}
+						<div id="database">Non renseignée</div>
+					{% else %}
+						<div id="database">{{ webtask.baseclient }}</div>
+					{% endif %}
+				</div>
+
+				<div class="form-group">
+					<label for="tag">
+						<b>
+							<u>Tag :</u>
+						</b>
+					</label>
+					<div id="tag" class="{{ tagClass }}">{{ mappedTag }}</div>
+				</div>
+			</div>
+
+			<div class="comments-section">
+				<label for="old_comments">
+					<b><u>Anciens commentaires :</u></b>
+				</label>
+				{% if anciennesWebtasksDetails is empty %}
+					<div class="no-comments">Aucun commentaire disponible.</div>
+				{% else %}
+					{% set allowed_ids = ['e4e080b3758761bd01758f5fcfed03d9'] %}
+					{% for task in anciennesWebtasksDetails %}
+						{% if app.user.idclient and app.user.idclient.getId() in allowed_ids %}
+							<!-- Utilisateur autorisé à voir tous les commentaires -->
+							<div class="comment-card">
+								<!-- Informations sur la tâche -->
+								<div class="task-info">
+									<b>{{ task.creeLe }} ({{ task.creePar }})</b> |
+									<b>Responsable : {{ responsableNomPrenom }}</b> |
+									<b>Pilote : {{ piloteNomPrenom }}</b> |
+									<b>Avancement : <span class="avancement {{ task.avancement.class }}">{{ task.avancement.label }}</span></b> |
+									<b>Date de fin : {{ task.dateFinDemandee }}</b> |
+									<b>Version : {{ task.versionLibelle }}</b> |
+									<b>📀 : {{ task.baseDeDonnees }}</b>
+								</div>
+
+								<!-- Commentaire client -->
+								{% if task.commentaire_webtask_client is not empty %}
+									<hr class="separator">
+									<div class="comment-client {% if task.isPagosUser %} comment-green {% else %} comment-black {% endif %}">
+										<b><u>Commentaire client :</u></b>
+										<p>{{ task.commentaire_webtask_client|nl2br }}</p>
+									</div>
+								{% endif %}
+
+								<!-- Affichage du commentaire interne PAGOS s'il est présent -->
+								{% if task.commentaire_interne_pagos is not empty %}
+									<hr class="separator">
+									<div class="comment-internal">
+										<b><u>Commentaire Interne PAGOS :</u></b>
+										<p>{{ task.commentaire_interne_pagos|nl2br }}</p>
+									</div>
+								{% endif %}
+							</div>
+						{% else %}
+							<!-- Autre client : ne voir que les infos et le commentaire client -->
+							{% if task.commentaire_webtask_client is not empty %}
+								<div class="comment-card">
+									<!-- Informations sur la tâche -->
+									<div class="task-info">
+										<b>{{ task.creeLe }} ({{ task.creePar }})</b> |
+										<b>Responsable : {{ responsableNomPrenom }}</b> |
+										<b>Pilote : {{ piloteNomPrenom }}</b> |
+										<b>Avancement : <span class="avancement {{ task.avancement.class }}">{{ task.avancement.label }}</span></b> |
+										<b>Date de fin : {{ task.dateFinDemandee }}</b> |
+										<b>Version : {{ task.versionLibelle }}</b> |
+										<b>📀 : {{ task.baseDeDonnees }}</b>
+									</div>
+
+									<!-- Commentaire client -->
+									{% if task.commentaire_webtask_client is not empty %}
+										<hr class="separator">
+										<div class="comment-client {% if task.isPagosUser %} comment-green {% else %} comment-black {% endif %}">
+											<p>{{ task.commentaire_webtask_client|nl2br }}</p>
+										</div>
+									{% endif %}
+								</div>
+							{% endif %}
+						{% endif %}
+					{% endfor %}
+				{% endif %}
+			</div>
+
+			<div class="btn-group" role="group">
+				{% set allowed_ids = ['e4e080b3758761bd01758f5fcfed03d9'] %}
+				{% if app.user.idclient and app.user.idclient.getId() not in allowed_ids %}
+					<button type="button" class="btn btn-secondary repondre consulter rounded" onclick="window.location.href='{{ path('app_reponsetachesadmin', { 'id': webtask.id }) }}'">RÉPONDRE</button>
+				{% endif %}
+			</div>
+		</div>
+
+		<!-- Footer -->
+		<footer>
+			<p><b>© Copyright @ 2024 par <span style="color: #d7df22;">Cabinet PAGOS</span> | tous droits réservés.</b></p>
+		</footer>
+
+		<!-- Scripts -->
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+			// Code de gestion des notifications ici
+
+			// Gestion de l'affichage des notifications
+			document.getElementById('notificationIcon').addEventListener('click', function () {
+			var notificationList = document.getElementById('notificationList');
+			notificationList.style.display = notificationList.style.display === 'none' || notificationList.style.display === '' ? 'block' : 'none'; // Toggle
+			});
+			});
+
+			function consulterNotification(notificationId) { // Rediriger vers la page de consultation de la notification
+			window.location.href = `/notification/${notificationId}`; // Remplacez par l'URL réelle
+			}
+					</script>
+					<script>
+						document.querySelectorAll('.mark-as-read').forEach(button => {
+			button.addEventListener('click', function () {
+			const notificationId = this.getAttribute('data-id');
+
+			fetch(`/mark-as-read/${notificationId}`, {
+			method: 'POST',
+			headers: {
+			'Content-Type': 'application/json',
+			'X-Requested-With': 'XMLHttpRequest'
+			}
+			}).then(response => {
+			if (!response.ok) {
+			throw new Error('Erreur lors de la mise à jour de la notification');
+			}
+			return response.json();
+			}).then(data => {
+			if (data.status === 'success') { // Masquer la notification
+			const notificationElement = document.getElementById(`notification-${notificationId}`);
+			if (notificationElement) {
+			notificationElement.style.display = 'none'; // Masque la notification
+			}
+
+			// Mettre à jour le compteur de notifications
+			const countElement = document.querySelector('.notification-count');
+			const currentCount = parseInt(countElement.textContent, 10);
+			countElement.textContent = currentCount - 1;
+			// Décrementer le compteur
+
+			// Vérifiez les notifications du client
+			checkClientNotifications();
+			} else {
+			console.error(data);
+			}
+			}).catch(error => console.error('Erreur:', error));
+			});
+			});
+
+			function checkClientNotifications() {
+			const clients = document.querySelectorAll('.client-notification');
+			let hasVisibleNotifications = false;
+
+			clients.forEach(client => {
+				const notifications = client.querySelectorAll('li[id^="notification-"]'); // Sélectionner les notifications
+				const visibleNotifications = Array.from(notifications).filter(notification => notification.style.display !== 'none');
+
+				if (visibleNotifications.length === 0) {
+					client.style.display = 'none'; // Masquer le client si aucune notification n'est visible
+				} else {
+					hasVisibleNotifications = true; // Il y a encore des notifications visibles
+				}
+			});
+
+			// Afficher le message si aucune notification visible
+			const notificationList = document.getElementById('notificationList');
+			if (! hasVisibleNotifications) {
+				notificationList.innerHTML = '<li>Aucune notification disponible</li>'; // Afficher le message
+			}
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profil de {{ user.username }}</title>
+</head>
+<body>
+    <header>
+        <h1>Profil de {{ user.username }}</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Informations Personnelles</h2>
+            <ul>
+                <li><strong>id:</strong> {{ user.id }}</li>
+                <li><strong>Prénom :</strong> {{ user.username }}</li>
+                <li><strong>Email :</strong> {{ user.email }}</li>
+                <li><strong>TEST :</strong> {{ user.webtaskOuvertureContact }}</li>
+                <li><strong>TEST :</strong> {{ user.departentreprise }}</li>
+            </ul>
+        </section>
+
+        <!-- Section pour réinitialiser le mot de passe -->
+        <section>
+            <h2>Réinitialiser le mot de passe</h2>
+            <p>Si vous souhaitez réinitialiser votre mot de passe, cliquez sur le bouton ci-dessous :</p>
+            <form action="{{ path('reset_password') }}" method="POST">
+                <input type="hidden" name="email" value="{{ user.email }}">
+                <button type="submit">Réinitialiser mon mot de passe</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Votre Société</p>
+    </footer>
+</body>
+</html>

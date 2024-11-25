@@ -1,0 +1,129 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ parent() }}
+    Page de connexion
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Style personnalisé pour la page de login */
+        body {
+            margin: 0;
+            height: 100vh;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden; /* Pour éviter le débordement */
+            background-color: #f5f7fa; /* Couleur de fond douce */
+        }
+
+        .login-container {
+            position: relative;
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            width: 400px; /* Réduit la largeur pour un aspect plus compact */
+            text-align: center;
+            z-index: 2; /* Assurez-vous que le conteneur de connexion est au-dessus du fond */
+        }
+
+        .login-container img {
+            display: block;
+            margin: 0 auto 40px;
+            max-width: 70%; /* Limite la taille de l'image */
+            height: auto;
+        }
+
+        .login-container p {
+            text-align: left;
+            font-weight: bold;
+            text-decoration: underline;
+            margin: 15px 0 10px;
+        }
+
+        .login-container input {
+            width: 90%;
+            padding: 15px;
+            margin: 0 0 20px;
+            border: 2px solid #007BFF; /* Bordure colorée */
+            border-radius: 6px;
+            transition: border-color 0.3s;
+        }
+
+        .login-container input:focus {
+            border-color: #0056b3; /* Changement de couleur au focus */
+            outline: none; /* Supprime l'outline par défaut */
+        }
+
+        /* Button Styles */
+        .login-container .btn-secondary {
+            background-color: #fff;
+            color: #000;
+            border: 1px solid black;
+            margin-right: 10px;
+            padding: 10px 20px; /* Espacement interne du bouton */
+            font-size: 16px; /* Taille de la police */
+            border-radius: 5px;
+            transition: all 0.3s ease; /* Transition pour les effets de survol */
+        }
+
+        .login-container .btn-secondary:hover {
+            background-color: #6c757d; /* Couleur de fond au survol */
+            color: #fff; /* Couleur du texte au survol */
+            transform: translateY(-3px); /* Effet de levée au survol */
+            border-color: #6c757d; /* Couleur de bordure au survol */
+            cursor: pointer;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center; /* Centre les boutons */
+            gap: 15px; /* Espace entre les boutons */
+            margin-top: 20px;
+        }
+
+        .error-message {
+            color: red; /* Pour rendre le texte rouge */
+            margin-top: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="login-container">
+    <img src="img/Logo Pagos.png" alt="Logo">
+    <form method="post" action="{{ path('app_login') }}">
+        {# Affichage des messages d'erreur #}
+        {% for flashMessage in app.flashes('error') %}
+            <div class="alert alert-danger error-message">
+                {{ flashMessage }}
+            </div>
+        {% endfor %}
+
+        {% if error %}
+            <div class="alert alert-danger error-message">
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+            </div>
+        {% endif %}
+
+        <p><label for="inputEmail" class="fw-bold">Identifiant :</label></p>
+        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" placeholder="Renseigner votre email" required autofocus>
+        <br>
+        <p><label for="inputPassword" class="fw-bold">Mot de passe : </label></p>
+        <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" placeholder="Renseigner votre mot de passe" required>
+
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+        <div class="text-center">
+            <button class="btn btn-secondary" type="submit">
+                <b>CONNEXION</b>
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
