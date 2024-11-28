@@ -23,6 +23,4 @@ class ForumRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-
-    // Autres méthodes personnalisées peuvent être ajoutées ici
 }

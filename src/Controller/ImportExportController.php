@@ -63,71 +63,6 @@ class ImportExportController extends AbstractController
         ]);
     }
 
-    #[Route('/notifications', name: 'get_notifications', methods: ['GET'])]
-    public function getNotifications(): JsonResponse
-    {
-        // Récupérer l'utilisateur connecté
-        $user = $this->getUser();
-
-        // Vérifier si l'utilisateur est connecté
-        if (!$user) {
-            return $this->json([
-                'count' => 0,
-                'notifications' => [],
-                'message' => 'Utilisateur non connecté',
-            ], Response::HTTP_UNAUTHORIZED);
-        }
-
-        // Récupérer l'ID de l'utilisateur
-        $userId = $user->getId();
-
-        // Récupérer les notifications visibles pour l'utilisateur connecté
-        $notifications = $this->notificationRepository->createQueryBuilder('n')
-            ->where('n.visible = :visible')
-            ->andWhere('n.user = :userId')
-            ->setParameter('visible', true)
-            ->setParameter('userId', $userId)
-            ->getQuery()
-            ->getResult();
-
-        return $this->json([
-            'count' => count($notifications),
-            'notifications' => $notifications,
-        ]);
-    }
-
-    #[Route('/mark-as-read/{id}', name: 'app_mark_as_read', methods: ['POST'])]
-    public function markAsRead($id): JsonResponse
-    {
-        // Récupérer l'utilisateur connecté
-        $user = $this->getUser();
-
-        if (!$user) {
-            return new JsonResponse(['status' => 'unauthorized'], 401);
-        }
-
-        // Récupérer la notification par son ID
-        $notification = $this->notificationRepository->find($id);
-
-        if (!$notification) {
-            return new JsonResponse(['status' => 'not_found'], 404);
-        }
-
-        // Vérifier que la notification appartient à l'utilisateur connecté
-        if ($notification->getUser() !== $user->getId()) {
-            return new JsonResponse(['status' => 'forbidden'], 403);
-        }
-
-        // Mettre à jour le champ visible à 0
-        $notification->setVisible(false); // Assurez-vous que cette méthode existe dans l'entité Notification
-
-        // Enregistrer les modifications
-        $this->entityManager->persist($notification);
-        $this->entityManager->flush();
-
-        return new JsonResponse(['status' => 'success']);
-    }
-
     #[Route('/admin/import-clients', name: 'app_import_clients', methods: ['POST'])]
     public function importClients(Request $request, Connection $conn): Response
     {
@@ -539,5 +474,84 @@ class ImportExportController extends AbstractController
 
         // Rediriger vers une page après l'exportation
         return $this->redirectToRoute('app_importexport'); // Remplace 'app_importexport' par la route souhaitée
+    }
+
+    #[Route('/notifications/reset-visibility', name: 'reset_notifications_visibility', methods: ['POST'])]
+    public function resetVisibility(EntityManagerInterface $entityManager): Response
+    {
+        // Exécutez une requête pour mettre le champ visible à 0
+        $query = $entityManager->createQuery('UPDATE App\Entity\Notification n SET n.visible = 0');
+        $query->execute();
+
+        // Ajoutez un message flash ou une autre méthode de confirmation
+        $this->addFlash('success', 'Toutes les notifications ont été mises à jour avec succès.');
+
+        // Redirigez vers la page actuelle (ou une autre)
+        return $this->redirectToRoute('app_importexport');
+    }
+
+    #[Route('/notifications', name: 'get_notifications', methods: ['GET'])]
+    public function getNotifications(): JsonResponse
+    {
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
+        // Vérifier si l'utilisateur est connecté
+        if (!$user) {
+            return $this->json([
+                'count' => 0,
+                'notifications' => [],
+                'message' => 'Utilisateur non connecté',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        // Récupérer l'ID de l'utilisateur
+        $userId = $user->getId();
+
+        // Récupérer les notifications visibles pour l'utilisateur connecté
+        $notifications = $this->notificationRepository->createQueryBuilder('n')
+            ->where('n.visible = :visible')
+            ->andWhere('n.user = :userId')
+            ->setParameter('visible', true)
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult();
+
+        return $this->json([
+            'count' => count($notifications),
+            'notifications' => $notifications,
+        ]);
+    }
+
+    #[Route('/mark-as-read/{id}', name: 'app_mark_as_read', methods: ['POST'])]
+    public function markAsRead($id): JsonResponse
+    {
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
+        if (!$user) {
+            return new JsonResponse(['status' => 'unauthorized'], 401);
+        }
+
+        // Récupérer la notification par son ID
+        $notification = $this->notificationRepository->find($id);
+
+        if (!$notification) {
+            return new JsonResponse(['status' => 'not_found'], 404);
+        }
+
+        // Vérifier que la notification appartient à l'utilisateur connecté
+        if ($notification->getUser() !== $user->getId()) {
+            return new JsonResponse(['status' => 'forbidden'], 403);
+        }
+
+        // Mettre à jour le champ visible à 0
+        $notification->setVisible(false); // Assurez-vous que cette méthode existe dans l'entité Notification
+
+        // Enregistrer les modifications
+        $this->entityManager->persist($notification);
+        $this->entityManager->flush();
+
+        return new JsonResponse(['status' => 'success']);
     }
 }

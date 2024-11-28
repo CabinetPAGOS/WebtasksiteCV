@@ -238,6 +238,20 @@
                 transform: translateY(-3px); /* Effet de levée au survol */
             }
 
+			.center-button .btn-warning {
+				color: #fff;
+                border: none;
+                padding: 10px 20px; /* Espacement interne du bouton */
+                font-size: 16px; /* Taille de la police */
+                border-radius: 5px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Ombre du bouton */
+                transition: all 0.3s ease; /* Transition pour les effets de survol */
+            }
+
+            .center-button .btn-warning:hover {
+                transform: translateY(-3px); /* Effet de levée au survol */
+            }
+
             /* Footer */
 			footer {
 				text-align: center;
@@ -399,7 +413,7 @@
 
         <div class="container mt-5">
 			<!-- Section Import -->
-			<h2 class="text-center">IMPORT</h2>
+			<h2 class="text-center">IMPORTS</h2>
 			<div class="center-button">
 				<form action="{{ path('app_import_clients') }}" method="post">
 					<button type="submit" class="btn btn-secondary">IMPORTER DES CLIENTS</button>
@@ -413,10 +427,18 @@
 			</div>
 
 			<!-- Section Export -->
-			<h2 class="text-center mt-5">EXPORT</h2>
+			<h2 class="text-center mt-5">EXPORTS</h2>
 			<div class="center-button">
 				<form action="{{ path('app_export_webtasks') }}" method="get">
 					<button type="submit" class="btn btn-secondary">EXPORTER DES WEBTASK</button>
+				</form>
+			</div>
+
+			<!-- Section Bouton Notification -->
+			<h2 class="text-center mt-5">NOTIFICATIONS</h2>
+			<div class="center-button">
+				<form action="{{ path('reset_notifications_visibility') }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir rendre toutes les notifications invisibles ?');">
+					<button type="submit" class="btn btn-warning">NOTIFICATIONS INVISIBLES</button>
 				</form>
 			</div>
 		</div>
