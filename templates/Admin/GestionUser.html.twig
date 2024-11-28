@@ -484,7 +484,7 @@
 				<div class="collapse navbar-collapse" id="navbarColor01">
 					<ul class="navbar-nav me-auto">
 						<li class="nav-item">
-							<a class="nav-link nav-link-custom" href="{{ path('app_homeadmin') }}">
+							<a class="nav-link nav-link-custom" style="color: #000" href="{{ path('app_homeadmin') }}">
 								<b>Accueil</b>
 							</a>
 						</li>
@@ -504,7 +504,7 @@
 								<b>Administration</b>
 							</a>
 							<ul class="dropdown-menu" aria-labelledby="gestionDropdown">
-								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_gestionuser') }}" style="background-color: #000"><b>Gestion utilisateur</b></a></li>
+								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_gestionuser') }}"><b>Gestion utilisateur</b></a></li>
 								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_importexport') }}"><b>Imports / Exports</b></a></li>
 								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_register') }}"><b>Créer un utilisateur</b></a></li>
 								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_createclientadmin') }}"><b>Créer un Client</b></a></li>
@@ -562,6 +562,7 @@
 																	</div>
 																	<div class="notification-buttons">
 																		<button class="mark-as-read" data-id="{{ notification.id }}">Lu</button>
+																		{% set idWebtask = idWebtaskMap[notification.codeWebtask] %}
 																		<button onclick="window.location.href='{{ path('app_consultertachesadmin', { 'id': notification.codeWebtask }) }}'">Consulter</button>
 																	</div>
 																</li>
@@ -740,47 +741,6 @@
 		<!-- JS de Bootstrap et dépendances -->
 		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
-		<!-- JavaScript pour gérer l'activation/désactivation des accès -->
-		<script>
-			// Mémoriser la position de défilement avant soumission du formulaire
-			function saveScrollPosition() {
-			const scrollPosition = window.scrollY;
-			sessionStorage.setItem('scrollPosition', scrollPosition);
-			}
-
-			// Restaurer la position de défilement après rechargement
-			function restoreScrollPosition() {
-			const scrollPosition = sessionStorage.getItem('scrollPosition');
-			if (scrollPosition !== null) {
-			window.scrollTo(0, scrollPosition);
-			sessionStorage.removeItem('scrollPosition'); // Supprimer la position après restauration
-			}
-			}
-
-			// Restaurer la position de défilement quand la page est chargée
-			window.addEventListener('load', restoreScrollPosition);
-		</script>
-		<script type="text/javascript">
-			document.getElementById('toggle-maintenance').onsubmit = function(event) {
-				event.preventDefault();
-
-				fetch('{{ path('toggle_maintenance') }}', {
-					method: 'POST'
-				})
-				.then(response => response.json())
-				.then(data => {
-					if (data.maintenance) {
-						alert('Maintenance activée');
-					} else {
-						alert('Maintenance désactivée');
-					}
-				});
-			};
-
-			$(function () {
-				$('[data-bs-toggle="tooltip"]').tooltip();
-			});
-		</script>
 		<script>
 			document.addEventListener('DOMContentLoaded', function () {
 				// Code de gestion des notifications ici
@@ -859,6 +819,47 @@
 					notificationList.innerHTML = '<li>Aucune notification disponible</li>'; // Afficher le message
 				}
 			}
+		</script>
+		<!-- JavaScript pour gérer l'activation/désactivation des accès -->
+		<script>
+			// Mémoriser la position de défilement avant soumission du formulaire
+			function saveScrollPosition() {
+			const scrollPosition = window.scrollY;
+			sessionStorage.setItem('scrollPosition', scrollPosition);
+			}
+
+			// Restaurer la position de défilement après rechargement
+			function restoreScrollPosition() {
+			const scrollPosition = sessionStorage.getItem('scrollPosition');
+			if (scrollPosition !== null) {
+			window.scrollTo(0, scrollPosition);
+			sessionStorage.removeItem('scrollPosition'); // Supprimer la position après restauration
+			}
+			}
+
+			// Restaurer la position de défilement quand la page est chargée
+			window.addEventListener('load', restoreScrollPosition);
+		</script>
+		<script type="text/javascript">
+			document.getElementById('toggle-maintenance').onsubmit = function(event) {
+				event.preventDefault();
+
+				fetch('{{ path('toggle_maintenance') }}', {
+					method: 'POST'
+				})
+				.then(response => response.json())
+				.then(data => {
+					if (data.maintenance) {
+						alert('Maintenance activée');
+					} else {
+						alert('Maintenance désactivée');
+					}
+				});
+			};
+
+			$(function () {
+				$('[data-bs-toggle="tooltip"]').tooltip();
+			});
 		</script>
 	</body>
 </html>

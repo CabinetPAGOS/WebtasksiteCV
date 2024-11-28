@@ -3,6 +3,7 @@
 
 namespace App\Controller;
 
+use App\Repository\WebtaskRepository;
 use App\Entity\Notification;
 use App\Repository\NotificationRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,19 +18,22 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class GestionUserController extends AbstractController
 {
+    private $webTaskRepository;
     private $entityManager;
     private $notificationRepository;
 
     public function __construct(
+        WebtaskRepository $webTaskRepository,
         EntityManagerInterface $entityManager, 
         NotificationRepository $notificationRepository
     ) {
+        $this->webTaskRepository = $webTaskRepository;
         $this->entityManager = $entityManager;
         $this->notificationRepository = $notificationRepository;
     }
 
     #[Route('/gestionutilisateur', name: 'app_gestionuser')]
-    public function gestionUtilisateur(EntityManagerInterface $entityManager, NotificationRepository $notificationRepository): Response
+    public function gestionUtilisateur(EntityManagerInterface $entityManager, WebtaskRepository $webtaskRepository, NotificationRepository $notificationRepository): Response
     {
         // Récupérer l'utilisateur connecté
         $user = $this->getUser();
@@ -51,6 +55,21 @@ class GestionUserController extends AbstractController
         $logo = null;
         if ($idclient->getLogo()) {
             $logo = base64_encode(stream_get_contents($idclient->getLogo()));
+        }
+
+        // Récupérer les notifications visibles de l'utilisateur connecté
+        $notifications = $notificationRepository->findBy([
+            'user' => $user->getId(),
+            'visible' => true
+        ]);
+
+        // Créer un tableau pour lier codeWebtask à id
+        $idWebtaskMap = [];
+        foreach ($notifications as $notification) {
+            $idWebtask = $this->webTaskRepository->findIdByCodeWebtask($notification->getCodeWebtask());
+            if ($idWebtask !== null) {
+                $idWebtaskMap[$notification->getCodeWebtask()] = $idWebtask;
+            }
         }
 
         // Récupérer les utilisateurs associés
@@ -97,17 +116,12 @@ class GestionUserController extends AbstractController
             $user->linkedWebtasksCount = count($linkedWebtasks); // Compte des webtasks pour le message d'erreur
         }
 
-        // Récupérer les notifications visibles de l'utilisateur connecté
-        $notifications = $notificationRepository->findBy([
-            'user' => $user->getId(),
-            'visible' => true
-        ]);
-        
         return $this->render('Admin/GestionUser.html.twig', [
             'users' => $users,
             'currentUser' => $user,
             'logo' => $logo,
             'notifications' => $notifications,
+            'idWebtaskMap' => $idWebtaskMap,
         ]);
     }
 

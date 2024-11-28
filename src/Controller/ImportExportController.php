@@ -7,6 +7,7 @@ use App\Repository\NotificationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Webtask;
 use App\Entity\Client;
+use App\Entity\User;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -266,7 +267,7 @@ class ImportExportController extends AbstractController
     }
     
     #[Route('/admin/import-webtasks', name: 'app_import_webtasks', methods: ['POST'])]
-    public function importWebTasks(Request $request, Connection $conn): Response
+    public function importWebTasks(Request $request, Connection $conn, EntityManagerInterface $entityManager): Response
     {
         if (!$request->isMethod('POST')) {
             $this->addFlash('error', 'La méthode de requête n\'est pas POST');
@@ -322,6 +323,13 @@ class ImportExportController extends AbstractController
                     $field = str_replace('<cr/>', "\n", $field);
                     $field = str_replace('"', '', $field); // Enlève les guillemets
                     $field = trim($field); // Supprime les espaces superflus
+
+                    // Convertir les valeurs booléennes en 0 ou 1
+                    if ($field === 'true' || $field === true) {
+                        $field = 1;
+                    } elseif ($field === 'false' || $field === false) {
+                        $field = 0;
+                    }
                 }
     
                 fputcsv($handle_out, $data, ";");
@@ -338,31 +346,40 @@ class ImportExportController extends AbstractController
             }
     
             $insertQuery = 'INSERT INTO webtask (
-                id, code, libelle, idclient_id, titre, webtask, description, entite, tag, iddemandeur_id,
+                code, libelle, idclient_id, titre, webtask, description, entite, tag, iddemandeur_id,
                 responsable_id, piloteid_id, estimation_temps, date_fin_demandee, avancement_de_la_tache,
                 demande_de_recettage, commentaire_webtask_client, commentaireinternepagos, documents_attaches,
                 etat_de_la_webtask, lien_drive_1, lien_drive_2, lien_drive_3, archiver, ordonnele, ordre,
                 recommandations, idversion, etat_version, idtracabilite, webtask_mere, filtre, baseclient, sylob5, cree_le, creer_par, nom_doc_export
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-            
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
             $stmt = $conn->prepare($insertQuery);
             
             $rowCount = 0;
             while (($data = fgetcsv($handle_clean, 100000, ";")) !== false) {
-                if (count($data) == 37) { // Assurez-vous qu'il y a bien 37 colonnes
-                    $code = $data[1];
+                if (count($data) == 37) { // Vérifie que la ligne contient 37 colonnes dans le fichier CSV
+                    $code = $data[1]; // Le code est la deuxième colonne du fichier CSV
+                    
+                    // Vérifie si le code existe déjà dans la base
                     $existingWebtask = $conn->fetchOne('SELECT COUNT(*) FROM webtask WHERE code = ?', [$code]);
-            
                     if ($existingWebtask > 0) {
-                        continue; // Si le code existe déjà, ignorer cette ligne
+                        continue; // Si le code existe déjà, ignore cette ligne
                     }
-            
-                    try {
-                        $stmt->execute($data);
-                        $rowCount++;
-                    } catch (\Exception $e) {
-                        $this->addFlash('error', 'Erreur d\'insertion pour la ligne ' . $rowCount . ' : ' . $e->getMessage());
+                    
+                    // Retire la première colonne (id) pour correspondre aux 36 champs restants
+                    $data = array_slice($data, 1);
+                    
+                    if (count($data) == 36) { // Vérifie après suppression qu'il reste bien 36 colonnes
+                        try {
+                            $stmt->execute($data);
+                            $rowCount++;
+                        } catch (\Exception $e) {
+                            $this->addFlash('error', 'Erreur d\'insertion pour la ligne ' . $rowCount . ' : ' . $e->getMessage());
+                        }
+                    } else {
+                        $this->addFlash('error', 'Erreur : la ligne ne contient pas 36 colonnes après suppression de l\'id.');
                     }
+                } else {
+                    $this->addFlash('error', 'Erreur : la ligne ne contient pas 37 colonnes.');
                 }
             }
             fclose($handle_clean);
@@ -378,6 +395,32 @@ class ImportExportController extends AbstractController
                 $outputFileArchived = $archiveDir . basename($output_file);
                 rename($output_file, $outputFileArchived);
             }
+
+            // ---- Ajout de la création de notifications ----
+            $webtasks = $entityManager->getRepository(WebTask::class)->findAll();
+
+            foreach ($webtasks as $webtask) {
+                if ($webtask->getCommentaireWebtaskClient() && 
+                    !$entityManager->getRepository(Notification::class)->findOneBy(['codeWebtask' => $webtask->getCode()])
+                ) {
+                    $client = $webtask->getIdclient();
+                    $users = $entityManager->getRepository(User::class)->findBy(['idclient' => $client]);
+
+                    foreach ($users as $user) {
+                        $notification = new Notification();
+                        $notification->setMessage('Nouvelle tâche : ' . $webtask->getTitre());
+                        $notification->setTitreWebtask($webtask->getTitre());
+                        $notification->setLibelleWebtask($webtask->getLibelle());
+                        $notification->setCodeWebtask($webtask->getCode());
+                        $notification->setDateCreation(new \DateTime());
+                        $notification->setClient($client);
+                        $notification->setUser($user);
+                        $notification->setVisible(true);
+                        $entityManager->persist($notification);
+                    }
+                }
+            }
+            $entityManager->flush();
         }
     
         // Fin du processus d'importation, avec un seul message de succès
