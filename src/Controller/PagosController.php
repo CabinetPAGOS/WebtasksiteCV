@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\ClientRepository;
+use App\Repository\NotificationRepository;
 
 
 class PagosController extends AbstractController
@@ -19,19 +20,24 @@ class PagosController extends AbstractController
     private $versionService;
     private $textTransformer;
     private $clientRepository;
+    private $notificationRepository;
 
-
-    public function __construct(WebtaskRepository $webTaskRepository, VersionService $versionService, TextTransformer $textTransformer, ClientRepository $clientRepository) 
-    {
+    public function __construct(
+        WebtaskRepository $webTaskRepository, 
+        VersionService $versionService, 
+        TextTransformer $textTransformer, 
+        ClientRepository $clientRepository,
+        NotificationRepository $notificationRepository
+    ) {
         $this->webTaskRepository = $webTaskRepository;
         $this->versionService = $versionService;
         $this->textTransformer = $textTransformer;
         $this->clientRepository = $clientRepository;
-
+        $this->notificationRepository = $notificationRepository;
     }
 
     #[Route('/taches', name: 'app_taches')]
-    public function taches(Request $request): Response
+    public function taches(Request $request, NotificationRepository $notificationRepository): Response
     {
         $query = $request->query->get('query');
         $selectedAvancement = $request->query->get('filter', 'all'); // Remplace `filter` par `selectedAvancement`
@@ -50,7 +56,6 @@ class PagosController extends AbstractController
 
         $client = $this->clientRepository->find($idclient);
 
-
         if (!$client) {
             throw $this->createNotFoundException('Client non trouvé');
         }
@@ -60,7 +65,6 @@ class PagosController extends AbstractController
         if ($client->getLogo()) {
             $logo = base64_encode(stream_get_contents($client->getLogo()));
         }
-
 
         // Filtrer les tâches avec un état d'avancement 'ON'
         $webtasksON = array_filter($webtasks, function($webtask) {
@@ -157,6 +161,21 @@ class PagosController extends AbstractController
             return $webtask;
         }, $webtasksON);
 
+        // Récupérer les notifications visibles de l'utilisateur connecté
+        $notifications = $notificationRepository->findBy([
+            'user' => $user->getId(),
+            'visible' => true
+        ]);
+
+        // Créer un tableau pour lier codeWebtask à id
+        $idWebtaskMap = [];
+        foreach ($notifications as $notification) {
+            $idWebtask = $this->webTaskRepository->findIdByCodeWebtask($notification->getCodeWebtask());
+            if ($idWebtask !== null) {
+                $idWebtaskMap[$notification->getCodeWebtask()] = $idWebtask;
+            }
+        }
+
         return $this->render('Client/taches.html.twig', [
             'webtasks' => $webtasksON, // Renvoie les webtasks filtrés
             'query' => $query,
@@ -164,7 +183,74 @@ class PagosController extends AbstractController
             'pilotes' => $pilotes,
             'filterByPilote' => $filterByPilote,
             'logo' => $logo,
+            'notifications' => $notifications,
+            'idWebtaskMap' => $idWebtaskMap,
         ]);
+    }
+
+    #[Route('/notifications', name: 'get_notifications', methods: ['GET'])]
+    public function getNotifications(): JsonResponse
+    {
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
+        // Vérifier si l'utilisateur est connecté
+        if (!$user) {
+            return $this->json([
+                'count' => 0,
+                'notifications' => [],
+                'message' => 'Utilisateur non connecté',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        // Récupérer l'ID de l'utilisateur
+        $userId = $user->getId();
+
+        // Récupérer les notifications visibles pour l'utilisateur connecté
+        $notifications = $this->notificationRepository->createQueryBuilder('n')
+            ->where('n.visible = :visible')
+            ->andWhere('n.user = :userId')
+            ->setParameter('visible', true)
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult();
+
+        return $this->json([
+            'count' => count($notifications),
+            'notifications' => $notifications,
+        ]);
+    }
+
+    #[Route('/mark-as-read/{id}', name: 'app_mark_as_read', methods: ['POST'])]
+    public function markAsRead($id): JsonResponse
+    {
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
+        if (!$user) {
+            return new JsonResponse(['status' => 'unauthorized'], 401);
+        }
+
+        // Récupérer la notification par son ID
+        $notification = $this->notificationRepository->find($id);
+
+        if (!$notification) {
+            return new JsonResponse(['status' => 'not_found'], 404);
+        }
+
+        // Vérifier que la notification appartient à l'utilisateur connecté
+        if ($notification->getUser() !== $user->getId()) {
+            return new JsonResponse(['status' => 'forbidden'], 403);
+        }
+
+        // Mettre à jour le champ visible à 0
+        $notification->setVisible(false); // Assurez-vous que cette méthode existe dans l'entité Notification
+
+        // Enregistrer les modifications
+        $this->entityManager->persist($notification);
+        $this->entityManager->flush();
+
+        return new JsonResponse(['status' => 'success']);
     }
 
     private function mapTag(?int $tag): string

@@ -4,6 +4,7 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="icon" href="\img\logoPagosImg02.png" type="image/x-icon">
+
 		<title>Création d'une WebTask</title>
 
 		<!-- Bootstrap CSS -->
@@ -19,56 +20,201 @@
 			body {
 				font-family: 'Helvetica', Arial, sans-serif;
 			}
-			/* Navbar */
-			/* Navbar */
+
+			/* Style global de la navbar */
 			.navbar-custom {
-				background-color: #818285;
-				border-style: none;
+				background-color: #818285; /* Couleur de fond principale */
+				padding: 10px 20px; /* Espacement autour de la navbar */
 			}
 
-			.navbar-custom .nav-link {
-				color: #ffffff;
-				font-size: 19px;
-			}
-
-			.navbar-custom .nav-link:hover {
-				color: #000000;
-			}
-
-			.img-navbar {
-				width: 100%;
+			/* Logo dans la navbar */
+			.navbar-custom .navbar-brand img {
+				width: auto;
 				height: 80px;
 			}
 
-			.navbar-toggler-icon {
-				color: white;
-			}
-			/* Assurer que le dropdown est bien aligné à droite et ne dépasse pas */
-			.navbar-nav .dropdown-menu {
-				position: absolute;
-				right: 0; /* Alignement à droite */
-				left: auto; /* Désactiver l'alignement automatique à gauche */
-			}
-
-
-			.dropdown-menu {
-				background-color: #818285;
+			/* Boutons et liens de la navbar */
+			.navbar-custom .navbar-nav .nav-link {
+				color: #fff; /* Couleur du texte des liens */
+				font-weight: bold;
+				text-transform: uppercase; /* Mettre en majuscules */
+				padding: 10px 15px;
+				transition: color 0.3s ease; /* Transition pour le changement de couleur */
 			}
 
-			.dropdown-menu .dropdown-header {
-				color: #ffffff;
-				font-size: 16px;
+			.navbar-custom .navbar-nav .nav-link:hover {
+				color: #000000; /* Couleur au survol */
 			}
 
-			.dropdown-menu .dropdown-item {
-				color: #ff0000;
+			.navbar-custom .navbar-nav .nav-item.active .nav-link {
+				color: #000000; /* Couleur pour l'élément actif */
 			}
 
-			.dropdown-menu .dropdown-item:hover {
-				background-color: #818285;
-				color: #ffffff;
+			/* Dropdown (menu déroulant) */
+			.navbar-custom .navbar-nav .nav-item.dropdown .nav-link {
+				color: #fff; /* Couleur du lien de la dropdown */
+				border-bottom: 2px solid transparent; /* Ajouter une bordure discrète */
+				padding-bottom: 5px;
 			}
 
+			.navbar-custom .navbar-nav .nav-item.dropdown:hover .nav-link {
+				color: #000000; /* Couleur de la dropdown au survol */
+				border-bottom: 2px solid #000000; /* Bordure colorée au survol */
+			}
+
+			.navbar-custom .navbar-nav .nav-item .dropdown-menu {
+				background-color: #818285; /* Fond de la dropdown */
+				border: none; /* Enlever les bordures */
+				padding: 10px 0; /* Espacement intérieur */
+			}
+
+			.navbar-custom .navbar-nav .nav-item .dropdown-item {
+				color: #fff; /* Couleur des éléments de la dropdown */
+				padding: 10px 20px;
+				transition: background-color 0.3s ease; /* Transition pour la couleur de fond */
+			}
+
+			.navbar-custom .navbar-nav .nav-item .dropdown-item:hover {
+				background-color: #000000; /* Couleur de fond au survol */
+				color: #fff; /* Couleur du texte au survol */
+			}
+
+			/* Style pour le nom de l'utilisateur */
+			.user-name {
+				color: #000;
+				font-size: 1rem;
+				margin-top: 0.4rem;
+			}
+
+			/* Logo client adaptable pour formats carré et rectangulaire */
+			.client-logo {
+				max-height: 40px;
+				max-width: 60px; /* Taille max pour gérer les logos rectangulaires */
+				object-fit: contain;
+				border-radius: 8px;
+				padding: 2px;
+				background-color: #fff;
+				transition: transform 0.2s ease;
+			}
+
+			.client-logo:hover {
+				transform: scale(1.1);
+			}
+
+			/* Icône de déconnexion */
+			.logout-icon {
+				font-size: 1.5rem;
+				color: #000;
+				transition: color 0.3s ease, transform 0.3s ease;
+			}
+
+			.logout-icon:hover {
+				color: #818285;
+				transform: scale(1.1);
+			}
+
+			/* Notifications */
+			.notification-container {
+				position: relative; /* Pour permettre le positionnement de la liste de notifications */
+				margin-right: 15px; /* Espacement à droite pour ne pas être collé aux éléments adjacents */
+				display: flex; /* Utilisation de flex pour aligner les éléments */
+				align-items: center; /* Alignement vertical centré */
+			}
+
+			#notificationIcon {
+				font-size: 24px; /* Taille de l'icône de notification */
+				color: white; /* Couleur de l'icône */
+				position: relative; /* Pour positionner le compteur */
+				cursor: pointer; /* Change le curseur lors du survol */
+			}
+
+			.notification-count {
+				position: absolute; /* Positionnement absolu par rapport à l'icône */
+				top: 0; /* Ajuste la position verticale */
+				right: -2px; /* Ajuste la position horizontale */
+				background-color: red; /* Couleur d'arrière-plan pour le compteur */
+				color: white; /* Couleur du texte */
+				border-radius: 50%; /* Arrondi pour un style circulaire */
+				padding: 3px 7px; /* Espacement intérieur */
+				font-size: 12px; /* Taille du texte */
+				font-weight: bold; /* Gras pour le compteur */
+			}
+
+			.notifications {
+				border: 2px solid #000; /* Bordure autour de la liste de notifications */
+				background-color: #fff; /* Couleur d'arrière-plan */
+				position: absolute; /* Positionnement absolu */
+				z-index: 1000; /* S'assurer qu'il est au-dessus des autres éléments */
+				width: 600px;
+				top: -210px; /* Ajustez selon vos besoins */
+				right: 0; /* Aligne le conteneur à droite */
+				margin-top: 250px; /* Espacement au-dessus de la liste */
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre pour le conteneur */
+				padding: 2px; /* Espacement intérieur */
+			}
+
+			.notifications ul {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+			}
+
+			.notifications li {
+				padding: 10px;
+				border-bottom: 1px solid #ccc; /* Bordure en bas */
+				font-size: 12px; /* Taille de police réduite */
+			}
+
+			/* Supprime la bordure du dernier élément */
+			.notifications li:last-child {
+				border-bottom: none;
+			}
+
+			/* Header de notification */
+			.notification-header {
+				display: flex; /* Utilise flexbox pour aligner les éléments */
+				justify-content: space-between; /* Espace entre le nom et la date */
+				align-items: center; /* Centrage vertical */
+			}
+
+			/* Style de la date de création */
+			.creation-date {
+				font-size: 0.9em; /* Taille de police plus petite pour la date */
+				color: #666; /* Couleur de texte grise pour la date */
+			}
+
+			/* Corps de la notification */
+			.notification-body {
+				margin-bottom: 10px; /* Ajoute un espace entre le corps et les boutons */
+			}
+
+			/* Boutons de notification */
+			.notification-buttons {
+				display: flex; /* Utilise flexbox pour aligner les boutons */
+				justify-content: flex-end; /* Aligne les boutons à droite */
+				gap: 10px; /* Espace entre les boutons */
+			}
+
+			.notification-buttons button {
+				padding: 5px 10px; /* Espacement intérieur des boutons */
+				margin: 0 2px; /* Espacement horizontal entre les boutons */
+				cursor: pointer; /* Curseur pointer pour les boutons */
+				border: none; /* Pas de bordure */
+				border-radius: 5px; /* Coins arrondis */
+				background-color: #007bff; /* Couleur d'arrière-plan des boutons */
+				color: white; /* Couleur du texte des boutons */
+				transition: background-color 0.3s; /* Transition pour l'effet de survol */
+			}
+
+			.notification-buttons button:hover {
+				background-color: #0056b3; /* Couleur au survol des boutons */
+			}
+
+			.d-none {
+				display: none;
+			}
+
+			/* STYLE CONTAINER PRINCIPAL */
 			.title {
 				text-align: center;
 				background-color: #d7df22;
@@ -205,6 +351,15 @@
 			.file-details {
 				margin-top: 15px;
 			}
+			
+			.btn-custom-green {
+				background-color: green;
+				color: white;
+			}
+			.btn-custom-red {
+				background-color: red;
+				color: white;
+			}
 
 			/* Footer */
 			footer {
@@ -217,24 +372,9 @@
 			footer p {
 				color: #333;
 			}
-			.btn-custom-green {
-				background-color: green;
-				color: white;
-			}
-			.btn-custom-red {
-				background-color: red;
-				color: white;
-			}
 		</style>
 	</head>
 	<body>
-		{% if app.session.flashBag.has('error') %}
-			<div class="alert alert-danger" role="alert">
-				{% for message in app.session.flashBag.get('error') %}
-					<p>{{ message }}</p>
-				{% endfor %}
-			</div>
-		{% endif %}
 		<nav class="navbar navbar-expand-lg navbar-custom">
 			<div class="container-fluid">
 				<a class="navbar-brand" href="{{ path('app_homeclient') }}">
@@ -257,11 +397,13 @@
 								<b>Tâches</b>
 							</a>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link" style="color: #000" href="{{ path('app_creertaches') }}">
-								<b>Créer une tâche</b>
-							</a>
-						</li>
+						{% if app.user.roleWx == 'createur' %}
+							<li class="nav-item">
+								<a class="nav-link" style="color: #000" href="{{ path('app_creertaches') }}">
+									<b>Créer une tâche</b>
+								</a>
+							</li>
+						{% endif %}
 
 						{% set allowed_ids = ['e4e080b3758761bd01758f5fcfed03d9'] %}
 						{% if app.user.idclient and app.user.idclient.getId() in allowed_ids %}
@@ -271,9 +413,8 @@
 								</a>
 							</li>
 						{% endif %}
-
-
 					</ul>
+
 					<ul class="navbar-nav ms-auto">
 						<li class="nav-item">
 							<a class="nav-link" href="#" style="color: #ffffff; text-align: center;">
@@ -282,25 +423,73 @@
 							</a>
 						</li>
 
-						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#" id="navbarUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-								<img
-								src="data:image/png;base64,{{ logo }}" alt="Logo du client" class="client-logo" style="width: 30px; height: 30px; border-radius: 50%;"/>
-							<!-- Ajout du logo client -->
+						<!-- Icône de notification -->
+						<li class="nav-item notification-container">
+							<a class="nav-link" href="#" style="color: #ffffff; text-align: center;">
+								<i class="fas fa-bell" style="font-size: 1.5em; color: white;" id="notificationIcon"></i>
+								<span class="notification-count">{{ notifications|filter(notification => notification.visible == 1)|length }}</span>
 							</a>
-							<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown">
-								<li><hr class="dropdown-divider"></li>
-								<li>
-									<a class="dropdown-item" href="{{ path('app_logout') }}">
-										<b>
-											<i class="fas fa-sign-out-alt"></i>
-											Se déconnecter
-										</b>
-									</a>
-								</li>
-							</ul>
+							<div id="notificationList" class="notifications" style="display: none;">
+								<ul>
+									{% set visibleNotifications = notifications|filter(notification => notificationUser[notification.id] is not defined or notificationUser[notification.id].isRead == false) %}
+									{% if visibleNotifications is empty %}
+										<li>Aucune notification</li>
+									{% else %}
+										{% set notificationsByClient = {} %}
+
+										{# Regrouper les notifications par client #}
+										{% for notification in visibleNotifications %}
+											{% set clientName = notification.getClient.getRaisonSociale() %}
+											{% if notificationsByClient[clientName] is not defined %}
+												{% set notificationsByClient = notificationsByClient|merge({(clientName): []}) %}
+											{% endif %}
+											{% set notificationsByClient = notificationsByClient|merge({(clientName): notificationsByClient[clientName] | merge([notification])}) %}
+										{% endfor %}
+
+										{# Affichage des notifications regroupées par client #}
+										{% for client, clientNotifications in notificationsByClient %}
+											{% if clientNotifications|length > 0 %}
+												<li class="client-notification" data-client="{{ client }}">
+													<div class="client-notification-header" style="border-bottom: 2px solid #007bff; margin-bottom: 10px; padding-bottom: 5px;">
+														<b>{{ client }}</b>
+													</div>
+													<ul style="list-style: none; padding-left: 0; border-left: 2px dashed #ccc; padding-left: 10px;">
+														{% for notification in clientNotifications %}
+															<li id="notification-{{ notification.id }}" style="margin-bottom: 15px; padding: 10px; border: 1px solid #e0e0e0; border-radius: 5px; background-color: #f9f9f9;">
+																<div class="notification-header">
+																	<span class="creation-date">{{ notification.getDateCreation() | date('d/m/y H:i:s') }}</span>
+																</div>
+																<div class="notification-body">
+																	{{ notification.getTitreWebtask() }}
+																	({{ notification.getLibelleWebtask() }})<br>
+																	{{ notification.getMessage() }}
+																</div>
+																<div class="notification-buttons">
+																	<button class="mark-as-read" data-id="{{ notification.id }}">Lu</button>
+																	{% set idWebtask = idWebtaskMap[notification.codeWebtask] %}
+																	<button onclick="window.location.href='{{ path('app_consultertaches', { 'id': notification.codeWebtask }) }}'">Consulter</button>
+																</div>
+															</li>
+														{% endfor %}
+													</ul>
+												</li>
+												<hr
+												style="border-top: 2px solid #007bff; margin: 10px 0;">
+											{# Séparation entre clients #}
+											{% endif %}
+										{% endfor %}
+									{% endif %}
+								</ul>
+							</div>
 						</li>
 
+						<!-- Logo client et déconnexion -->
+						<li class="nav-item d-flex align-items-center">
+							<img src="data:image/png;base64,{{ logo }}" alt="Logo du client" class="client-logo me-2"/>
+							<a class="nav-link logout-icon" href="{{ path('app_logout') }}" title="Se déconnecter">
+								<i class="fas fa-sign-out-alt"></i>
+							</a>
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -308,10 +497,18 @@
 
 		<br>
 
+		{% if app.session.flashBag.has('error') %}
+			<div class="alert alert-danger" role="alert">
+				{% for message in app.session.flashBag.get('error') %}
+					<p>{{ message }}</p>
+				{% endfor %}
+			</div>
+		{% endif %}
+
+		<br>
+
 		<div class="container">
-			<h3 class="title">
-				<b>CRÉER UNE TÂCHE</b>
-			</h3>
+			<h3 class="title"><b>CRÉER UNE TÂCHE</b></h3>
 		</div>
 
 		<form method="post" action="{{ path('app_creertaches') }}" id="taskForm" class="task-form">
@@ -320,20 +517,15 @@
 				<!-- Autres champs de formulaire -->
 				<div class="form-group">
 					<label for="title">
-						<b>
-							<u>Titre de la Tâche :</u>
-						</b>
+						<b><u>Titre de la Tâche :</u></b>
 					</label>
 					<input type="text" id="title" name="title" placeholder="Renseigner le titre de la tâche" required class="form-control" oninput="checkTitle()">
 					<div id="title-warning" style="margin-top: 5px; color: red;"></div>
 				</div>
 
-
 				<div class="form-group">
 					<label for="description">
-						<b>
-							<u>Description :</u>
-						</b>
+						<b><u>Description :</u></b>
 					</label>
 					<textarea id="description" name="description" rows="4" placeholder="Renseigner la description de la tâche" required class="form-control"></textarea>
 				</div>
@@ -341,9 +533,7 @@
 				<div class="form-row">
 					<div class="form-group">
 						<label for="due_date">
-							<b>
-								<u>Date de Fin Demandée :</u>
-							</b>
+							<b><u>Date de Fin Demandée :</u></b>
 						</label>
 						<input type="date" id="due_date" name="due_date" required class="form-control">
 						<small id="date_warning" style="color: red; display: none;">
@@ -353,28 +543,18 @@
 
 					<div class="form-group">
 						<label for="tag">
-							<b>
-								<u>Tag :</u>
-							</b>
+							<b><u>Tag :</u></b>
 						</label>
 						<select id="tag" name="tag" class="form-control" required>
-							<option value="0" style="color: green;">
-								(1) Mineur
-							</option>
-							<option value="1" style="color: yellow;">
-								(2) Grave
-							</option>
-							<option value="2" style="color: red;">
-								(3) Bloquant
-							</option>
+							<option value="0" style="color: green;">(1) Mineur</option>
+							<option value="1" style="color: yellow;">(2) Grave</option>
+							<option value="2" style="color: red;">(3) Bloquant</option>
 						</select>
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="fileUpload">
-						<b>
-							<u>Souhaitez-vous déposer des fichiers ?</u>
-						</b>
+						<b><u>Souhaitez-vous déposer des fichiers ?</u></b>
 					</label>
 					<div>
 						<button type="button" class="btn btn-success" onclick="handleFileUpload(true, '{{ googleDriveLink }}')">Oui</button>
@@ -390,262 +570,332 @@
 						<b>ENREGISTRER</b>
 					</button>
 				</div>
+			</div>
+		</form>
+		
+		<!-- Footer -->
+		<footer>
+			<p><b>© Copyright @ 2024 par <span style="color: #d7df22;">Cabinet PAGOS</span> | tous droits réservés.</b></p>
+		</footer>
 
-				<!-- CSS Bootstrap -->
-				<link
-				href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+		<!-- JS de Bootstrap et dépendances -->
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+		<script>
+			const maxFiles = 3;
+			let fileCount = 0;
+			const fileInputContainer = document.getElementById('fileInputContainer');
+			const submitButton = document.getElementById('submitButton');
+			const fileUploadSection = document.getElementById('fileUploadSection');
 
-				<!-- JS Bootstrap -->
-				<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+			function handleFileUpload(wantsToUpload, googleDriveLink) {
+				if (wantsToUpload) { // Ouvre le lien Google Drive dans une nouvelle fenêtre
+					if (googleDriveLink) {
+						window.open(googleDriveLink, '_blank');
+					}
 
+					// Afficher la section de téléchargement des fichiers
+					fileUploadSection.style.display = 'block';
+					submitButton.style.display = 'none'; // Masque le bouton "ENREGISTRER" jusqu'à saisie du titre
+					fileInputContainer.innerHTML = ''; // Vide les champs existants
+					fileCount = 0; // Réinitialise le compteur de fichiers
+					addFileInputFields(maxFiles); // Ajoute trois champs pour les fichiers
+				} else { // Masque la section de téléchargement
+					fileUploadSection.style.display = 'none';
+					fileInputContainer.innerHTML = ''; // Efface le contenu de la section pour supprimer les champs et valeurs
+					fileCount = 0; // Réinitialise le compteur de fichiers
+					submitButton.style.display = 'block'; // Affiche directement le bouton "ENREGISTRER"
+				}
+			}
 
-				<script>
-					const maxFiles = 3;
-let fileCount = 0;
-const fileInputContainer = document.getElementById('fileInputContainer');
-const submitButton = document.getElementById('submitButton');
-const fileUploadSection = document.getElementById('fileUploadSection');
+			function addFileInputFields(count) {
+				while (fileCount < count && fileCount < maxFiles) {
+					fileCount++;
+					const fileDiv = document.createElement('div');
+					fileDiv.classList.add('form-group');
+					fileDiv.innerHTML = `
+						<label for="fileTitle${fileCount}"><b>Titre du fichier ${fileCount} :</b></label>
+						<input type="text" id="fileTitle${fileCount}" name="fileTitle${fileCount}" class="form-control"
+							oninput="validateFileTitle()">
+						<label for="fileLink${fileCount}"><b>Lien du fichier ${fileCount} :</b></label>
+						<input type="text" id="fileLink${fileCount}" name="fileLink${fileCount}" class="form-control">
+					`;
+					fileInputContainer.appendChild(fileDiv);
+				}
+			}
 
-function handleFileUpload(wantsToUpload, googleDriveLink) {
-if (wantsToUpload) { // Ouvre le lien Google Drive dans une nouvelle fenêtre
-if (googleDriveLink) {
-window.open(googleDriveLink, '_blank');
-}
+			// Valide le titre du premier fichier pour afficher le bouton ENREGISTRER
+			function validateFileTitle() {
+				const titleField1 = document.getElementById('fileTitle1');
 
-// Afficher la section de téléchargement des fichiers
-fileUploadSection.style.display = 'block';
-submitButton.style.display = 'none'; // Masque le bouton "ENREGISTRER" jusqu'à saisie du titre
-fileInputContainer.innerHTML = ''; // Vide les champs existants
-fileCount = 0; // Réinitialise le compteur de fichiers
-addFileInputFields(maxFiles); // Ajoute trois champs pour les fichiers
-} else { // Masque la section de téléchargement
-fileUploadSection.style.display = 'none';
-fileInputContainer.innerHTML = ''; // Efface le contenu de la section pour supprimer les champs et valeurs
-fileCount = 0; // Réinitialise le compteur de fichiers
-submitButton.style.display = 'block'; // Affiche directement le bouton "ENREGISTRER"
-}
-}
+				if (titleField1 && titleField1.value.trim() !== '') {
+					submitButton.style.display = 'block'; // Affiche le bouton "ENREGISTRER" si le titre du premier fichier est rempli
+				} else {
+					submitButton.style.display = 'none'; // Masque le bouton si le titre du premier fichier est vide
+				}
+			}
 
+			document.addEventListener('DOMContentLoaded', function () {
+				const today = new Date();
+				const yyyy = today.getFullYear();
+				const mm = String(today.getMonth() + 1).padStart(2, '0'); // Mois de 0 à 11
+				const dd = String(today.getDate()).padStart(2, '0'); // Jours du mois
 
-function addFileInputFields(count) {
-while (fileCount < count && fileCount < maxFiles) {
-fileCount++;
-const fileDiv = document.createElement('div');
-fileDiv.classList.add('form-group');
-fileDiv.innerHTML = `
-                <label for="fileTitle${fileCount}"><b>Titre du fichier ${fileCount} :</b></label>
-                <input type="text" id="fileTitle${fileCount}" name="fileTitle${fileCount}" class="form-control"
-                       oninput="validateFileTitle()">
-                <label for="fileLink${fileCount}"><b>Lien du fichier ${fileCount} :</b></label>
-                <input type="text" id="fileLink${fileCount}" name="fileLink${fileCount}" class="form-control">
-            `;
-fileInputContainer.appendChild(fileDiv);
-}
-}
+				const formattedDate = `${yyyy}-${mm}-${dd}`;
+				const dueDateInput = document.getElementById('due_date');
+				dueDateInput.setAttribute('min', formattedDate); // Définir la date minimale
 
-// Valide le titre du premier fichier pour afficher le bouton ENREGISTRER
-function validateFileTitle() {
-const titleField1 = document.getElementById('fileTitle1');
+				dueDateInput.addEventListener('change', function () {
+					const inputDate = new Date(this.value);
+					const limitDate = new Date(today.getTime() + 48 * 60 * 60 * 1000); // 48 heures à partir de maintenant
 
-if (titleField1 && titleField1.value.trim() !== '') {
-submitButton.style.display = 'block'; // Affiche le bouton "ENREGISTRER" si le titre du premier fichier est rempli
-} else {
-submitButton.style.display = 'none'; // Masque le bouton si le titre du premier fichier est vide
-}
-}
+					if (inputDate < limitDate) {
+						document.getElementById('date_warning').style.display = 'block';
+					} else {
+						document.getElementById('date_warning').style.display = 'none';
+					}
+				});
+			});
+		</script>
+		<script>
+			function showAdditionalFileQuestion() {
+				if (!document.getElementById('additionalFileQuestion')) {
+					const additionalFileQuestion = document.createElement('div');
+					additionalFileQuestion.id = 'additionalFileQuestion';
+					additionalFileQuestion.innerHTML = `
+						<p>Voulez-vous déposer un autre fichier ?</p>
+						<button type="button" onclick="addAnotherFile(true)">Oui</button>
+						<button type="button" onclick="addAnotherFile(false)">Non</button>
+					`;
+					fileInputContainer.appendChild(additionalFileQuestion);
+				}
+			}
 
-document.addEventListener('DOMContentLoaded', function () {
-const today = new Date();
-const yyyy = today.getFullYear();
-const mm = String(today.getMonth() + 1).padStart(2, '0'); // Mois de 0 à 11
-const dd = String(today.getDate()).padStart(2, '0'); // Jours du mois
+			function hideAdditionalFileQuestion() {
+				const additionalFileQuestion = document.getElementById('additionalFileQuestion');
+				if (additionalFileQuestion) 
+				additionalFileQuestion.remove();
+			}
 
-const formattedDate = `${yyyy}-${mm}-${dd}`;
-const dueDateInput = document.getElementById('due_date');
-dueDateInput.setAttribute('min', formattedDate); // Définir la date minimale
+			function addAnotherFile(addFile) {
+				if (addFile && fileCount < maxFiles) {
+					addFileInputFields();
+				} else {
+					const submitButton = document.getElementById('submitButton');
+					const titleField1 = document.getElementById('fileTitle1');
 
-dueDateInput.addEventListener('change', function () {
-const inputDate = new Date(this.value);
-const limitDate = new Date(today.getTime() + 48 * 60 * 60 * 1000); // 48 heures à partir de maintenant
+					if (titleField1 && titleField1.value.trim() !== '') {
+						submitButton.disabled = false; // Active le bouton de soumission si le titre est rempli
+					}hideAdditionalFileQuestion();
+				}
+			}
 
-if (inputDate < limitDate) {
-document.getElementById('date_warning').style.display = 'block';
-} else {
-document.getElementById('date_warning').style.display = 'none';
-}
-});
-});
-				</script>
+			// Vérification du titre lors de la saisie avec affichage instantané du message d'avertissement
+			document.getElementById('title').addEventListener('input', function () {
+				const title = this.value;
+				const warningDiv = document.getElementById('title-warning'); // Div pour afficher les messages d'avertissement
 
+				fetch(`/check-title?title=${
+					encodeURIComponent(title)
+				}`).then(response => {
+					if (!response.ok) {
+						throw new Error('Erreur lors de la vérification du titre.');
+					}
+					return response.json();
+				}).then(data => {
+					if (data.exists) {
+						warningDiv.innerHTML = 'Un titre similaire existe déjà !';
+						warningDiv.style.color = 'red'; // Mettre le texte en rouge
+					} else {
+						warningDiv.innerHTML = ''; // Effacer le message si le titre est unique
+					}
+				}).catch(error => {
+					console.error('Erreur:', error);
+					warningDiv.innerHTML = 'Erreur de réseau lors de la vérification du titre.';
+					warningDiv.style.color = 'orange'; // Mettre le texte en orange
+				});
+			});
 
-				<script>
+			document.getElementById('due_date').addEventListener('change', function () {
+				const selectedDate = new Date(this.value);
+				const today = new Date();
+				const timeDifference = selectedDate.getTime() - today.getTime();
+				const daysDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
 
+				const warningMessage = document.getElementById('date_warning');
 
-					function showAdditionalFileQuestion() {
-if (!document.getElementById('additionalFileQuestion')) {
-const additionalFileQuestion = document.createElement('div');
-additionalFileQuestion.id = 'additionalFileQuestion';
-additionalFileQuestion.innerHTML = `
-                <p>Voulez-vous déposer un autre fichier ?</p>
-                <button type="button" onclick="addAnotherFile(true)">Oui</button>
-                <button type="button" onclick="addAnotherFile(false)">Non</button>
-            `;
-fileInputContainer.appendChild(additionalFileQuestion);
-}
-}
+				if (daysDifference < 1 && daysDifference > 0) {
+					warningMessage.style.display = 'block';
+				} else {
+					warningMessage.style.display = 'none';
+				}
+			});
 
-function hideAdditionalFileQuestion() {
-const additionalFileQuestion = document.getElementById('additionalFileQuestion');
-if (additionalFileQuestion) 
-additionalFileQuestion.remove();
+			function toggleFileUpload() {
+				const checkbox = document.getElementById('uploadFileCheckbox');
+				const fileUploadSection = document.getElementById('fileUploadSection');
+				const hiddenInput = document.querySelector('input[name="documents_attaches"]');
 
+				// Affiche ou masque la section d'upload en fonction de l'état de la case à cocher
+				if (checkbox.checked) {
+					fileUploadSection.style.display = 'block'; // Affiche la section
+					hiddenInput.value = '1'; // Change la valeur à 1
+				} else {
+					fileUploadSection.style.display = 'none'; // Masque la section
+					hiddenInput.value = '0'; // Change la valeur à 0
+				}
+			}
 
+			// Fonction pour bannir le point-virgule, la séquence "V(" et les guillemets uniquement pour le champ "title"
+			function bannirCaracteresInterdits(event) {
+				if (event.target.id === "title") {
+					event.target.value = event.target.value.replace(/[;""]|V\(/g, "");
+				} else {
+					event.target.value = event.target.value.replace(/[;]/g, "");
+				}
+			}
 
-}
+			// Ajoute l'écouteur d'événements pour les champs du formulaire
+			const formFields = document.querySelectorAll('input[type="text"], textarea');
+			formFields.forEach(field => {
+				field.addEventListener('input', bannirCaracteresInterdits);
+			});
 
-function addAnotherFile(addFile) {
-if (addFile && fileCount < maxFiles) {
-addFileInputFields();
-} else {
-const submitButton = document.getElementById('submitButton');
-const titleField1 = document.getElementById('fileTitle1');
+			document.getElementById('due_date').addEventListener('change', function () {
+				const inputDate = new Date(this.value);
+				const currentDate = new Date();
 
-if (titleField1 && titleField1.value.trim() !== '') {
-submitButton.disabled = false; // Active le bouton de soumission si le titre est rempli
-}hideAdditionalFileQuestion();
-}
-}
+				// Calculer la date limite 48h après la date actuelle
+				const limitDate = new Date(currentDate.getTime() + 48 * 60 * 60 * 1000);
+				// ajout de 48 heures
 
+				// Vérifier si la date choisie est inférieure à la limite des 48 heures
+				if (inputDate < limitDate) {
+					document.getElementById('date_warning').style.display = 'block';
+				} else {
+					document.getElementById('date_warning').style.display = 'none';
+				}
+			});
+		</script>
+		<script>
+			document.getElementById('taskForm').addEventListener('submit', function () { // Désactiver le bouton ENREGISTRER une fois cliqué
+				document.getElementById('submitButton').disabled = true;
+				// Optionnel : Changer le texte du bouton pour indiquer que la soumission est en cours
+				document.getElementById('submitButton').innerText = 'Enregistrement en cours...';
+			});
+		</script>
+		<script>
+			// Initialisation du champ de date
+			document.addEventListener('DOMContentLoaded', function () {
+				const today = new Date();
+				const yyyy = today.getFullYear();
+				const mm = String(today.getMonth() + 1).padStart(2, '0'); // Mois de 0 à 11
+				const dd = String(today.getDate()).padStart(2, '0');
+				// Jours du mois
 
-// Vérification du titre lors de la saisie avec affichage instantané du message d'avertissement
-document.getElementById('title').addEventListener('input', function () {
-const title = this.value;
-const warningDiv = document.getElementById('title-warning'); // Div pour afficher les messages d'avertissement
+				// Formater la date au format YYYY-MM-DD
+				const formattedDate = `${yyyy}-${mm}-${dd}`;
+				const dueDateInput = document.getElementById('due_date');
+				dueDateInput.setAttribute('min', formattedDate); // Définir la date minimale
 
-fetch(`/check-title?title=${
-encodeURIComponent(title)
-}`).then(response => {
-if (!response.ok) {
-throw new Error('Erreur lors de la vérification du titre.');
-}
-return response.json();
-}).then(data => {
-if (data.exists) {
-warningDiv.innerHTML = 'Un titre similaire existe déjà !';
-warningDiv.style.color = 'red'; // Mettre le texte en rouge
-} else {
-warningDiv.innerHTML = ''; // Effacer le message si le titre est unique
-}
-}).catch(error => {
-console.error('Erreur:', error);
-warningDiv.innerHTML = 'Erreur de réseau lors de la vérification du titre.';
-warningDiv.style.color = 'orange'; // Mettre le texte en orange
-});
-});
+				dueDateInput.addEventListener('change', function () {
+					const inputDate = new Date(this.value);
+					const limitDate = new Date(today.getTime() + 48 * 60 * 60 * 1000); // 48 heures à partir de maintenant
 
-document.getElementById('due_date').addEventListener('change', function () {
-const selectedDate = new Date(this.value);
-const today = new Date();
-const timeDifference = selectedDate.getTime() - today.getTime();
-const daysDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
+					if (inputDate < limitDate) {
+						document.getElementById('date_warning').style.display = 'block';
+					} else {
+						document.getElementById('date_warning').style.display = 'none';
+					}
+				});
+			});
 
-const warningMessage = document.getElementById('date_warning');
+			// Exemple d'initialisation manuelle pour le dropdown
+			document.querySelectorAll('.dropdown-toggle').forEach(function (dropdownToggle) {
+				dropdownToggle.addEventListener('click', function () {
+					const dropdownMenu = dropdownToggle.nextElementSibling;
+					dropdownMenu.classList.toggle('show');
+				});
+			});
+		</script>
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				// Code de gestion des notifications ici
 
-if (daysDifference < 1 && daysDifference > 0) {
-warningMessage.style.display = 'block';
-} else {
-warningMessage.style.display = 'none';
-}
-});
+				// Gestion de l'affichage des notifications
+				document.getElementById('notificationIcon').addEventListener('click', function() {
+					var notificationList = document.getElementById('notificationList');
+					notificationList.style.display = notificationList.style.display === 'none' || notificationList.style.display === '' ? 'block' : 'none'; // Toggle
+				});
+			});
 
-function toggleFileUpload() {
-const checkbox = document.getElementById('uploadFileCheckbox');
-const fileUploadSection = document.getElementById('fileUploadSection');
-const hiddenInput = document.querySelector('input[name="documents_attaches"]');
+			function consulterNotification(notificationId) {
+				// Rediriger vers la page de consultation de la notification
+				window.location.href = `/notification/${notificationId}`; // Remplacez par l'URL réelle
+			}
+		</script>
+		<script>
+			document.querySelectorAll('.mark-as-read').forEach(button => {
+				button.addEventListener('click', function() {
+					const notificationId = this.getAttribute('data-id');
 
-// Affiche ou masque la section d'upload en fonction de l'état de la case à cocher
-if (checkbox.checked) {
-fileUploadSection.style.display = 'block'; // Affiche la section
-hiddenInput.value = '1'; // Change la valeur à 1
-} else {
-fileUploadSection.style.display = 'none'; // Masque la section
-hiddenInput.value = '0'; // Change la valeur à 0
-}
-}
+					fetch(`/mark-as-read/${notificationId}`, {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+							'X-Requested-With': 'XMLHttpRequest'
+						}
+					})
+					.then(response => {
+						if (!response.ok) {
+							throw new Error('Erreur lors de la mise à jour de la notification');
+						}
+						return response.json();
+					})
+					.then(data => {
+						if (data.status === 'success') {
+							// Masquer la notification
+							const notificationElement = document.getElementById(`notification-${notificationId}`);
+							if (notificationElement) {
+								notificationElement.style.display = 'none'; // Masque la notification
+							}
 
-// Fonction pour bannir le point-virgule, la séquence "V(" et les guillemets uniquement pour le champ "title"
-function bannirCaracteresInterdits(event) {
-if (event.target.id === "title") {
-event.target.value = event.target.value.replace(/[;""]|V\(/g, "");
-} else {
-event.target.value = event.target.value.replace(/[;]/g, "");
-}
-}
+							// Mettre à jour le compteur de notifications
+							const countElement = document.querySelector('.notification-count');
+							const currentCount = parseInt(countElement.textContent, 10);
+							countElement.textContent = currentCount - 1; // Décrementer le compteur
 
-// Ajoute l'écouteur d'événements pour les champs du formulaire
-const formFields = document.querySelectorAll('input[type="text"], textarea');
-formFields.forEach(field => {
-field.addEventListener('input', bannirCaracteresInterdits);
-});
-document.getElementById('due_date').addEventListener('change', function () {
-const inputDate = new Date(this.value);
-const currentDate = new Date();
+							// Vérifiez les notifications du client
+							checkClientNotifications();
+						} else {
+							console.error(data);
+						}
+					})
+					.catch(error => console.error('Erreur:', error));
+				});
+			});
 
-// Calculer la date limite 48h après la date actuelle
-const limitDate = new Date(currentDate.getTime() + 48 * 60 * 60 * 1000);
-// ajout de 48 heures
+			function checkClientNotifications() {
+				const clients = document.querySelectorAll('.client-notification');
+				let hasVisibleNotifications = false;
 
-// Vérifier si la date choisie est inférieure à la limite des 48 heures
-if (inputDate < limitDate) {
-document.getElementById('date_warning').style.display = 'block';
-} else {
-document.getElementById('date_warning').style.display = 'none';
-}
-});
-				</script>
-				<script>
-					document.getElementById('taskForm').addEventListener('submit', function () { // Désactiver le bouton ENREGISTRER une fois cliqué
-document.getElementById('submitButton').disabled = true;
-// Optionnel : Changer le texte du bouton pour indiquer que la soumission est en cours
-document.getElementById('submitButton').innerText = 'Enregistrement en cours...';
-});
-				</script>
+				clients.forEach(client => {
+					const notifications = client.querySelectorAll('li[id^="notification-"]'); // Sélectionner les notifications
+					const visibleNotifications = Array.from(notifications).filter(notification => notification.style.display !== 'none');
 
-				<script>
-					// Initialisation du champ de date
-document.addEventListener('DOMContentLoaded', function () {
-const today = new Date();
-const yyyy = today.getFullYear();
-const mm = String(today.getMonth() + 1).padStart(2, '0'); // Mois de 0 à 11
-const dd = String(today.getDate()).padStart(2, '0');
-// Jours du mois
+					if (visibleNotifications.length === 0) {
+						client.style.display = 'none'; // Masquer le client si aucune notification n'est visible
+					} else {
+						hasVisibleNotifications = true; // Il y a encore des notifications visibles
+					}
+				});
 
-// Formater la date au format YYYY-MM-DD
-const formattedDate = `${yyyy}-${mm}-${dd}`;
-const dueDateInput = document.getElementById('due_date');
-dueDateInput.setAttribute('min', formattedDate); // Définir la date minimale
-
-dueDateInput.addEventListener('change', function () {
-const inputDate = new Date(this.value);
-const limitDate = new Date(today.getTime() + 48 * 60 * 60 * 1000); // 48 heures à partir de maintenant
-
-if (inputDate < limitDate) {
-document.getElementById('date_warning').style.display = 'block';
-} else {
-document.getElementById('date_warning').style.display = 'none';
-}
-});
-});
-
-// Exemple d'initialisation manuelle pour le dropdown
-document.querySelectorAll('.dropdown-toggle').forEach(function (dropdownToggle) {
-dropdownToggle.addEventListener('click', function () {
-const dropdownMenu = dropdownToggle.nextElementSibling;
-dropdownMenu.classList.toggle('show');
-});
-});
-				</script>
-			</body>
-		</html>
+				// Afficher le message si aucune notification visible
+				const notificationList = document.getElementById('notificationList');
+				if (!hasVisibleNotifications) {
+					notificationList.innerHTML = '<li>Aucune notification disponible</li>'; // Afficher le message
+				}
+			}
+		</script>
 	</body>
 </html>

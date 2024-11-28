@@ -51,7 +51,7 @@ class HomeAdminController extends AbstractController
         $webtasks = $webtaskRepository->findBy(['Piloteid' => $user]);
 
         // Vérifier si l'utilisateur est le pilote de l'une des webtasks
-        $isPilote = count($webtasks) > 0; // Si l'utilisateur est le pilote d'au moins une webtask
+        $isPilote = count($webtasks) > 0;
 
         // Récupérer l'ID du client associé à l'utilisateur connecté
         $idclient = $user->getIdclient(); 

@@ -51,7 +51,7 @@ class HomeController extends AbstractController
     }
 
     #[Route('/home', name: 'app_homeclient')]
-    public function base(SessionInterface $session): Response
+    public function base(WebtaskRepository $webtaskRepository, SessionInterface $session, NotificationRepository $notificationRepository): Response
     {
         // Récupérer l'utilisateur connecté
         $user = $this->getUser();
@@ -60,6 +60,12 @@ class HomeController extends AbstractController
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
+
+        // Récupérer les webtasks de l'utilisateur connecté
+        $webtasks = $webtaskRepository->findBy(['Piloteid' => $user]);
+
+        // Vérifier si l'utilisateur est le pilote de l'une des webtasks
+        $isPilote = count($webtasks) > 0;
 
         // Récupérer l'ID du client associé à l'utilisateur connecté
         $idclient = $user->getIdclient();
@@ -76,18 +82,12 @@ class HomeController extends AbstractController
             throw $this->createNotFoundException('Client non trouvé');
         }
 
-        // // Vérifier si l'utilisateur a déjà visité le forum
-        // if (!$session->get('forum_visited', false)) {
-        //     $session->set('forum_visited', true); // Indique que le forum a été visité
-        //     return $this->redirectToRoute('app_forum', ['id' => $client->getId()]);
-        // }
-
         // Récupérer le logo du client
         $logo = null;
         if ($client->getLogo()) {
             $logo = base64_encode(stream_get_contents($client->getLogo()));
         }
-
+        
         // Récupérer les Webtasks associées à cet ID client
         $webtasks = $this->webTaskRepository->findBy(['idclient' => $idclient]);
 
@@ -180,8 +180,11 @@ class HomeController extends AbstractController
 
         $lastModifiedStopClientWebtasks = array_slice($lastModifiedStopClientWebtasks, 0, 3);
 
-        // Récupérer les notifications visibles
-        $notifications = $this->notificationRepository->findVisibleNotifications();
+        // Récupérer les notifications visibles de l'utilisateur connecté
+        $notifications = $notificationRepository->findBy([
+            'user' => $user->getId(),
+            'visible' => true
+        ]);
 
         // Vérifier le mode maintenance
         $settings = $this->settingsRepository->find(1);
@@ -200,8 +203,7 @@ class HomeController extends AbstractController
             'webtasks' => $webtasks,
             'nonPrisesEnCompte' => $nonPrisesEnCompte,
             'priseEnCompte' => $priseEnCompte,
-            'totalPriseEnCompteEtAmelioration' => $totalPriseEnCompteEtAmelioration,  // Afficher la somme des tâches "Prise en Compte" + "Amélioration"
-
+            'totalPriseEnCompteEtAmelioration' => $totalPriseEnCompteEtAmelioration,
             'terminee' => $terminee,
             'refusee' => $refusee,
             'validee' => $validee,
@@ -213,33 +215,67 @@ class HomeController extends AbstractController
             'maintenance_mode' => $maintenanceMode,
             'logo' => $logo,
             'client' => $client,
+            'isPilote' => $isPilote,
         ]);
     }
 
     #[Route('/notifications', name: 'get_notifications', methods: ['GET'])]
     public function getNotifications(): JsonResponse
     {
-        // Récupérer les notifications visibles
-        $notifications = $this->notificationRepository->findVisibleNotifications();
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
+        // Vérifier si l'utilisateur est connecté
+        if (!$user) {
+            return $this->json([
+                'count' => 0,
+                'notifications' => [],
+                'message' => 'Utilisateur non connecté',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        // Récupérer l'ID de l'utilisateur
+        $userId = $user->getId();
+
+        // Récupérer les notifications visibles pour l'utilisateur connecté
+        $notifications = $this->notificationRepository->createQueryBuilder('n')
+            ->where('n.visible = :visible')
+            ->andWhere('n.user = :userId')
+            ->setParameter('visible', true)
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult();
 
         return $this->json([
-            'count' => count($notifications), // Compte le nombre de notifications
-            'notifications' => $notifications, // Renvoie les notifications
+            'count' => count($notifications),
+            'notifications' => $notifications,
         ]);
     }
 
     #[Route('/mark-as-read/{id}', name: 'app_mark_as_read', methods: ['POST'])]
     public function markAsRead($id): JsonResponse
     {
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
+        if (!$user) {
+            return new JsonResponse(['status' => 'unauthorized'], 401);
+        }
+
         // Récupérer la notification par son ID
-        $notification = $this->notificationRepository->find($id); // Utiliser le repository injecté
+        $notification = $this->notificationRepository->find($id);
 
         if (!$notification) {
             return new JsonResponse(['status' => 'not_found'], 404);
         }
 
+        // Vérifier que la notification appartient à l'utilisateur connecté
+        if ($notification->getUser() !== $user->getId()) {
+            return new JsonResponse(['status' => 'forbidden'], 403);
+        }
+
         // Mettre à jour le champ visible à 0
-        $notification->setVisible(0); // Assurez-vous que vous avez une méthode pour cela
+        $notification->setVisible(false); // Assurez-vous que cette méthode existe dans l'entité Notification
 
         // Enregistrer les modifications
         $this->entityManager->persist($notification);

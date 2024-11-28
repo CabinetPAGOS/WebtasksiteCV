@@ -149,7 +149,6 @@ class ClientsdePagosAdminController extends AbstractController
             'id' => $user->getId(),
             'name' => $user->getName(),
             'email' => $user->getEmail(),
-            // Ajoutez ici les informations supplémentaires à afficher
         ];
 
         return new JsonResponse($data);
