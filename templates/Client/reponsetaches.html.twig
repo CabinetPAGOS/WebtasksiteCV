@@ -57,13 +57,55 @@
                 background-color: #818285;
                 color: #ffffff;
             }  
-            hr {
-                margin: 20px 0;
-                opacity: 1;
-                border: 2px solid #000;
+
+            /* Styles pour les titres avec fond coloré séparé */
+            .title-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-bottom: 1rem;
             }
-            p {
+
+            .title01 {
+                background-color: #d7df22;
+                padding: 1rem 10rem;
+                border-radius: 5px;
+                margin: 0 0.5rem;
                 text-align: center;
+                position: relative;
+                z-index: 1;
+            }
+
+            .title02 {
+                background-color: #d7df22;
+                padding: 1rem 5rem;
+                border-radius: 5px;
+                margin: 0 0.5rem;
+                text-align: center;
+                position: relative;
+                z-index: 1;
+            }
+
+            .title:nth-child(1)::after {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 100%;
+                width: 1rem;
+                height: 100%;
+                background: white;
+                z-index: -1;
+            }
+
+            .title:nth-child(2)::before {
+                content: "";
+                position: absolute;
+                top: 50%;
+                right: 100%;
+                width: 1rem;
+                height: 100%;
+                background: white;
+                z-index: -1;
             }
 
             /* Styles spécifiques pour le formulaire */
@@ -76,22 +118,27 @@
                 display: flex;
                 flex-direction: column;
             }
+
             .form-row {
                 display: flex;
                 flex-wrap: wrap;
                 gap: 1rem;
                 margin-bottom: 1rem;
             }
+
             .form-row .form-group {
                 flex: 1 1 calc(33.33% - 1rem);
             }
+
             .form-group {
                 margin-bottom: 1rem;
             }
+
             .form-group label {
                 font-weight: bold;
                 text-decoration: underline;
             }
+
             .form-group div {
                 width: 100%;
                 padding: 0.5rem;
@@ -101,6 +148,7 @@
                 font-size: 16px;
                 margin-bottom: 0.5rem;
             }
+
             .form-group input {
                 width: 100%;
                 padding: 0.5rem;
@@ -110,6 +158,7 @@
                 font-size: 16px;
                 margin-bottom: 0.5rem;
             }
+
             .form-group textarea {
                 width: 100%;
                 padding: 0.5rem;
@@ -120,80 +169,54 @@
                 margin-bottom: 0.5rem;
             }
 
-            /* Button Styles */
-            .form .btn-secondary {
-                background-color: #fff;
-                color: #000;
-                border: 1px solid black;
-                margin-right: 10px;
-                padding: 10px 20px; /* Espacement interne du bouton */
-                font-size: 16px; /* Taille de la police */
-                border-radius: 5px;
-                transition: all 0.3s ease; /* Transition pour les effets de survol */
-            }
+            .form-control {
+				width: 100%;
+				padding: 10px;
+				border: 1px solid #ccc;
+				border-radius: 5px;
+				transition: border-color 0.3s;
+			}
 
-            .form .btn-secondary:hover {
-                background-color: #6c757d; /* Couleur de fond au survol */
-                color: #fff; /* Couleur du texte au survol */
-                transform: translateY(-3px); /* Effet de levée au survol */
-                border-color: #6c757d; /* Couleur de bordure au survol */
-            }
+			.form-control:focus {
+				border-color: #007bff;
+				outline: none;
+			}
 
-            .btn-group {
-                display: flex;
-                justify-content: center; /* Centre les boutons */
-                gap: 15px; /* Espace entre les boutons */
-                margin-top: 20px;
-            }
+			.placeholder-diagonal::placeholder {
+				transform: rotate(-15deg); /* Rotation du placeholder */
+				opacity: 0.6; /* Opacité pour un effet plus doux */
+			}
 
-            /* Styles pour les titres avec fond coloré séparé */
-            .title-container {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                margin-bottom: 1rem;
-            }
-            .title01 {
-                background-color: #d7df22;
-                padding: 1rem 10rem;
-                border-radius: 5px;
-                margin: 0 0.5rem;
-                text-align: center;
-                position: relative;
-                z-index: 1;
-            }
-            .title02 {
-                background-color: #d7df22;
-                padding: 1rem 5rem;
-                border-radius: 5px;
-                margin: 0 0.5rem;
-                text-align: center;
-                position: relative;
-                z-index: 1;
-            }
-            .title:nth-child(1)::after {
-                content: "";
-                position: absolute;
-                top: 50%;
-                left: 100%;
-                width: 1rem;
-                height: 100%;
-                background: white;
-                z-index: -1;
-            }
-            .title:nth-child(2)::before {
-                content: "";
-                position: absolute;
-                top: 50%;
-                right: 100%;
-                width: 1rem;
-                height: 100%;
-                background: white;
-                z-index: -1;
-            }
+            /* STYLE POUR LA DESCRIPTION */
             .description-text {
                 color: #1AC2DD; /* Couleur bleu ciel */
             }
+
+            /* Button Styles */
+			.form .btn-secondary {
+				background-color: #fff;
+				color: #000;
+				border: 1px solid black;
+				margin-right: 10px;
+				padding: 10px 20px; /* Espacement interne du bouton */
+				font-size: 16px; /* Taille de la police */
+				border-radius: 5px;
+				transition: all 0.3s ease; /* Transition pour les effets de survol */
+			}
+
+			.form .btn-secondary:hover {
+				background-color: #6c757d; /* Couleur de fond au survol */
+				color: #fff; /* Couleur du texte au survol */
+				transform: translateY(-3px); /* Effet de levée au survol */
+				border-color: #6c757d; /* Couleur de bordure au survol */
+			}
+
+			.btn-group {
+				display: flex;
+				justify-content: center; /* Centre les boutons */
+				gap: 15px; /* Espace entre les boutons */
+				margin-top: 20px;
+			}
 
             /* Style Tag */
             .tag-minor {
@@ -245,16 +268,15 @@
 			.file-details {
 				margin-top: 15px;
 			}
-
-            .btn-custom-green {
-                background-color: green;
-                color: white;
-            }
-
-            .btn-custom-red {
-                background-color: red;
-                color: white;
-            }
+			
+			.btn-custom-green {
+				background-color: green;
+				color: white;
+			}
+			.btn-custom-red {
+				background-color: red;
+				color: white;
+			}
 
             /* Footer */
             footer {
@@ -392,37 +414,26 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="fileUpload">
-                        <b><u>Souhaitez-vous déposer des fichiers ?</u></b>
-                    </label>
+					<label for="fileUpload">
+						<b><u>Souhaitez-vous déposer des fichiers ?</u></b>
+					</label>
+                    <div>
+                        <button type="button" class="btn btn-success" onclick="handleFileUpload(true, '{{ googleDriveLink }}')">Oui</button>
+                        <button type="button" class="btn btn-danger" onclick="handleFileUpload(false)">Non</button>
+                    </div>
+                    <div id="fileUploadSection" style="display: none; margin-top: 15px;">
+                        <div id="fileInputContainer"></div>
+                    </div>
                 </div>
 
-                <!-- Boutons Oui et Non pour activer/désactiver l'upload -->
-                <div>
-                    <button type="button" class="btn btn-success" onclick="handleFileUpload(true, '{{ googleDriveLink }}')">Oui</button>
-                    <button type="button" class="btn btn-danger" onclick="handleFileUpload(false)">Non</button>
-                </div>
-
-                <!-- Section pour uploader des fichiers (masquée par défaut) -->
-                <div id="fileUploadSection" style="display: none; margin-top: 15px;">
-                    {% if googleDriveLink %}
-                        
-                    {% else %}
-                        <p>Pas de Google Drive associé à ce client.</p>
-                    {% endif %}
-                    
-                    <!-- Conteneur pour les champs de titre et de lien pour chaque fichier -->
-                    <div id="fileInputContainer"></div>
+                <!-- Bouton ENREGISTRER, masqué initialement -->
+                <div class="btn-group" role="group">
+                    <button type="submit" class="btn btn-secondary" id="submitButton" style="display: none;">
+                        <b>ENREGISTRER</b>
+                    </button>
                 </div>
             </div>
-        </div>
-
-        <!-- Bouton ENREGISTRER, masqué initialement -->
-        <div class="btn-group" role="group">
-            <button type="submit" class="btn btn-secondary" id="submitButton" style="display: none;">
-                <b>ENREGISTRER</b>
-            </button>
-        </div>
+        </form>
 
 		<!-- Footer -->
 		<footer>

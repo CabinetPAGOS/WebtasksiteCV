@@ -239,30 +239,34 @@ class CreerTachesController extends AbstractController
             ->findOneBy(['raison_sociale' => 'CABINET PAGOS']);
 
             $usersCabinetPagos = $cabinetPagosClient
-                ? $entityManager->getRepository(User::class)
-                    ->findBy(['idclient' => $cabinetPagosClient])
-                : [];
+            ? $entityManager->getRepository(User::class)
+                ->findBy(['idclient' => $cabinetPagosClient])
+            : [];
 
             // Récupérer tous les utilisateurs du client actuel
             $usersCurrentClient = $entityManager->getRepository(User::class)
-                ->findBy(['idclient' => $client]);
+            ->findBy(['idclient' => $client]);
 
             // Fusionner les listes d'utilisateurs sans doublons
             $allUsers = array_unique(array_merge($usersCabinetPagos, $usersCurrentClient), SORT_REGULAR);
 
-            // Créer une notification pour chaque utilisateur
+            // Créer une notification pour chaque utilisateur, sauf l'utilisateur connecté
             foreach ($allUsers as $userNotification) {
-                $notification = new Notification();
-                $notification->setMessage('Création de la WebTask : ' . $newTache->getLibelle());
-                $notification->setLibelleWebtask($newTache->getLibelle());
-                $notification->setDateCreation(new \DateTime());
-                $notification->setVisible(true);
-                $notification->setClient($newTache->getIdclient());
-                $notification->setTitreWebtask($newTache->getTitre());
-                $notification->setCodeWebtask($newTache->getCode());
-                $notification->setUser($userNotification);
+            if ($userNotification === $user) {
+                continue; // Ignorer l'utilisateur connecté
+            }
 
-                $entityManager->persist($notification);
+            $notification = new Notification();
+            $notification->setMessage('Création de la WebTask : ' . $newTache->getLibelle());
+            $notification->setLibelleWebtask($newTache->getLibelle());
+            $notification->setDateCreation(new \DateTime());
+            $notification->setVisible(true);
+            $notification->setClient($newTache->getIdclient());
+            $notification->setTitreWebtask($newTache->getTitre());
+            $notification->setCodeWebtask($newTache->getCode());
+            $notification->setUser($userNotification);
+
+            $entityManager->persist($notification);
             }
 
             // Sauvegarder les notifications en base de données
