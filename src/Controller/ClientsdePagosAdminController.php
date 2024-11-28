@@ -40,7 +40,7 @@ class ClientsdePagosAdminController extends AbstractController
     }
 
     #[Route('/admin/clientsdepagos', name: 'app_clientsdepagosadmin')]
-    public function clientsdepagosadmin(ClientRepository $clientRepository, Request $request): Response
+    public function clientsdepagosadmin(ClientRepository $clientRepository, NotificationRepository $notificationRepository, Request $request): Response
     {
         // Récupérer l'utilisateur connecté
         $user = $this->getUser();
@@ -118,8 +118,11 @@ class ClientsdePagosAdminController extends AbstractController
         // Récupérer les utilisateurs depuis le UserRepository
         $users = $this->userRepository->findAll();  // Récupération de tous les utilisateurs
 
-        // Récupérer les notifications visibles
-        $notifications = $this->notificationRepository->findVisibleNotifications();
+        // Récupérer les notifications visibles de l'utilisateur connecté
+        $notifications = $notificationRepository->findBy([
+            'user' => $user->getId(),
+            'visible' => true
+        ]);
 
         // Passer $clientsData et $users à la vue
         return $this->render('Admin/ClientsdePagosadmin.html.twig', [
@@ -255,27 +258,60 @@ class ClientsdePagosAdminController extends AbstractController
     #[Route('/notifications', name: 'get_notifications', methods: ['GET'])]
     public function getNotifications(): JsonResponse
     {
-        // Récupérer les notifications visibles
-        $notifications = $this->notificationRepository->findVisibleNotifications();
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
+        // Vérifier si l'utilisateur est connecté
+        if (!$user) {
+            return $this->json([
+                'count' => 0,
+                'notifications' => [],
+                'message' => 'Utilisateur non connecté',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        // Récupérer l'ID de l'utilisateur
+        $userId = $user->getId();
+
+        // Récupérer les notifications visibles pour l'utilisateur connecté
+        $notifications = $this->notificationRepository->createQueryBuilder('n')
+            ->where('n.visible = :visible')
+            ->andWhere('n.user = :userId')
+            ->setParameter('visible', true)
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult();
 
         return $this->json([
-            'count' => count($notifications), // Compte le nombre de notifications
-            'notifications' => $notifications, // Renvoie les notifications
+            'count' => count($notifications),
+            'notifications' => $notifications,
         ]);
     }
 
     #[Route('/mark-as-read/{id}', name: 'app_mark_as_read', methods: ['POST'])]
     public function markAsRead($id): JsonResponse
     {
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
+        if (!$user) {
+            return new JsonResponse(['status' => 'unauthorized'], 401);
+        }
+
         // Récupérer la notification par son ID
-        $notification = $this->notificationRepository->find($id); // Utiliser le repository injecté
+        $notification = $this->notificationRepository->find($id);
 
         if (!$notification) {
             return new JsonResponse(['status' => 'not_found'], 404);
         }
 
+        // Vérifier que la notification appartient à l'utilisateur connecté
+        if ($notification->getUser() !== $user->getId()) {
+            return new JsonResponse(['status' => 'forbidden'], 403);
+        }
+
         // Mettre à jour le champ visible à 0
-        $notification->setVisible(0); // Assurez-vous que vous avez une méthode pour cela
+        $notification->setVisible(false); // Assurez-vous que cette méthode existe dans l'entité Notification
 
         // Enregistrer les modifications
         $this->entityManager->persist($notification);

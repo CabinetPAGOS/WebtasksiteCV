@@ -13,11 +13,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Services\TextTransformer;
 use App\Services\VersionService;
 use App\Entity\User;
+use App\Entity\Client;
 use App\Entity\Responsable;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repository\ClientRepository;
-
-
 
 class CreerTachesController extends AbstractController
 {
@@ -47,12 +46,6 @@ class CreerTachesController extends AbstractController
 
         // Récupérer le client associé à l'utilisateur
         $client = $user->getIdclient();
-        if (!$client) {
-            throw $this->createNotFoundException('Client not found for this user.');
-        }
-
-
-
         if (!$client) {
             throw $this->createNotFoundException('Client non trouvé');
         }
@@ -97,8 +90,6 @@ class CreerTachesController extends AbstractController
                 $setter = "setLienDrive{$i}";
                 $newTache->$setter($liendrive);
             }
-            
-            
 
             // Vérifier si au moins un lien est renseigné
             $hasDocuments = !empty($liendrive1) || !empty($liendrive2) || !empty($liendrive3);
@@ -131,21 +122,21 @@ class CreerTachesController extends AbstractController
             }
             $newTache->setCode(sprintf('SWT-%06d', $newCodeNumber));
         
-           // Générer le libellé et le code automatique pour les webtasks en fonction du champ libellé
+            // Générer le libellé et le code automatique pour les webtasks en fonction du champ libellé
             $lastTaskWithLabel = $entityManager->getRepository(Webtask::class)->createQueryBuilder('w')
-            ->where('w.libelle LIKE :prefix')
-            ->setParameter('prefix', 'SWTK%')
-            ->orderBy('w.libelle', 'DESC')
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult();
+                ->where('w.libelle LIKE :prefix')
+                ->setParameter('prefix', 'SWTK%')
+                ->orderBy('w.libelle', 'DESC')
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getOneOrNullResult();
 
             if ($lastTaskWithLabel) {
-            // On extrait le numéro à partir du libellé 'SWTK' et on l'incrémente
-            $newTaskNumber = (int) substr($lastTaskWithLabel->getLibelle(), 6) + 1;
+                // On extrait le numéro à partir du libellé 'SWTK' et on l'incrémente
+                $newTaskNumber = (int) substr($lastTaskWithLabel->getLibelle(), 6) + 1;
             } else {
-            // Si aucune tâche avec un libellé 'SWTK' n'existe, on commence à 1
-            $newTaskNumber = 1;
+                // Si aucune tâche avec un libellé 'SWTK' n'existe, on commence à 1
+                $newTaskNumber = 1;
             }
 
             // Générer le nouveau libellé et webtask
@@ -207,7 +198,6 @@ class CreerTachesController extends AbstractController
             $currentDateTime = new \DateTime();
             $newTache->setCreeLe($currentDateTime->format('d/m/Y - H:i:s'));
             $newTache->setCreerPar($user->getPrenom() . ' ' . $user->getNom());
-
             $newTache->setEtatDeLaWebtask('ON');
             $newTache->setIdclient($client);
             $newTache->setTitre($request->request->get('title'));
@@ -235,26 +225,46 @@ class CreerTachesController extends AbstractController
             $entityManager->persist($newTache);
             $entityManager->flush();
 
-            // Création de la notification
-            $notification = new Notification();
-            $notification->setMessage('Création de la WebTask : ' . $newTache->getLibelle());
-            $notification->setLibelleWebtask($newTache->getLibelle());
-            $notification->setDateCreation(new \DateTime()); // Date et heure courante
-            $notification->setVisible(true); // 1 pour visible
-            $notification->setClient($newTache->getIdclient()); // ID du client
-            $notification->setTitreWebtask($newTache->getTitre()); // Titre de la WebTask
-            $notification->setCodeWebtask($newTache->getCode());
+            // Récupérer tous les utilisateurs du client CABINET PAGOS
+            $cabinetPagosClient = $entityManager->getRepository(Client::class)
+            ->findOneBy(['raison_sociale' => 'CABINET PAGOS']);
 
-            // Persist notification
-            $entityManager->persist($notification);
-            $entityManager->flush(); // Sauvegarder la notification en base de données
+            $usersCabinetPagos = $cabinetPagosClient
+                ? $entityManager->getRepository(User::class)
+                    ->findBy(['idclient' => $cabinetPagosClient])
+                : [];
+
+            // Récupérer tous les utilisateurs du client actuel
+            $usersCurrentClient = $entityManager->getRepository(User::class)
+                ->findBy(['idclient' => $client]);
+
+            // Fusionner les listes d'utilisateurs sans doublons
+            $allUsers = array_unique(array_merge($usersCabinetPagos, $usersCurrentClient), SORT_REGULAR);
+
+            // Créer une notification pour chaque utilisateur
+            foreach ($allUsers as $userNotification) {
+                $notification = new Notification();
+                $notification->setMessage('Création de la WebTask : ' . $newTache->getLibelle());
+                $notification->setLibelleWebtask($newTache->getLibelle());
+                $notification->setDateCreation(new \DateTime());
+                $notification->setVisible(true);
+                $notification->setClient($newTache->getIdclient());
+                $notification->setTitreWebtask($newTache->getTitre());
+                $notification->setCodeWebtask($newTache->getCode());
+                $notification->setUser($userNotification);
+
+                $entityManager->persist($notification);
+            }
+
+            // Sauvegarder les notifications en base de données
+            $entityManager->flush();
 
             return $this->redirectToRoute('app_taches');
         }
 
         // Passer le lien Google Drive à la vue Twig
         return $this->render('Client/creertaches.html.twig', [
-            'googleDriveLink' => $googleDriveLink, // Lien Google Drive du client
+            'googleDriveLink' => $googleDriveLink,
             'logo' => $logo,
         ]);
     }

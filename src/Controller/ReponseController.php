@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\ClientRepository;
+use App\Entity\User;
+use App\Entity\Client;
 
 
 class ReponseController extends AbstractController
@@ -20,13 +22,11 @@ class ReponseController extends AbstractController
     private $versionService;
     private $clientRepository;
 
-
     public function __construct(TextTransformer $textTransformer, VersionService $versionService, ClientRepository $clientRepository)
     {
         $this->textTransformer = $textTransformer;
         $this->versionService = $versionService;
         $this->clientRepository = $clientRepository;
-
     }
 
     #[Route('/reponsetaches/{id}', name: 'app_reponsetaches')]
@@ -169,23 +169,43 @@ class ReponseController extends AbstractController
             );
             $newTache->setFiltre($filter); // Assurez-vous que la méthode setFiltre existe dans l'entité Webtask
 
-            // Persister les entités
-            $entityManager->persist($newTache);
-            $entityManager->flush();
+          // Persister les entités
+          $entityManager->persist($newTache);
+          $entityManager->flush();
 
-            // Création de la notification
-            $notification = new Notification();
-            $notification->setMessage('Réponse à la WebTask : ' . $newTache->getLibelle());
-            $notification->setLibelleWebtask($newTache->getLibelle());
-            $notification->setDateCreation(new \DateTime()); // Date et heure courante
-            $notification->setVisible(true); // 1 pour visible
-            $notification->setClient($newTache->getIdclient()); // ID du client
-            $notification->setTitreWebtask($newTache->getTitre()); // Titre de la WebTask
-            $notification->setCodeWebtask($newTache->getCode());
+          // Récupérer tous les utilisateurs du client CABINET PAGOS
+          $cabinetPagosClient = $entityManager->getRepository(Client::class)
+          ->findOneBy(['raison_sociale' => 'CABINET PAGOS']);
 
-            // Persist notification
-            $entityManager->persist($notification);
-            $entityManager->flush(); // Sauvegarder la notification en base de données
+          $usersCabinetPagos = $cabinetPagosClient
+              ? $entityManager->getRepository(User::class)
+                  ->findBy(['idclient' => $cabinetPagosClient])
+              : [];
+
+          // Récupérer tous les utilisateurs du client actuel
+          $usersCurrentClient = $entityManager->getRepository(User::class)
+              ->findBy(['idclient' => $client]);
+
+          // Fusionner les listes d'utilisateurs sans doublons
+          $allUsers = array_unique(array_merge($usersCabinetPagos, $usersCurrentClient), SORT_REGULAR);
+
+          // Créer une notification pour chaque utilisateur
+          foreach ($allUsers as $userNotification) {
+              $notification = new Notification();
+              $notification->setMessage('Création de la WebTask : ' . $newTache->getLibelle());
+              $notification->setLibelleWebtask($newTache->getLibelle());
+              $notification->setDateCreation(new \DateTime());
+              $notification->setVisible(true);
+              $notification->setClient($newTache->getIdclient());
+              $notification->setTitreWebtask($newTache->getTitre());
+              $notification->setCodeWebtask($newTache->getCode());
+              $notification->setUser($userNotification);
+
+              $entityManager->persist($notification);
+          }
+
+          // Sauvegarder les notifications en base de données
+          $entityManager->flush();
 
             return $this->redirectToRoute('app_taches');
         }

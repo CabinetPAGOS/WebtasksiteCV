@@ -35,6 +35,10 @@ class Notification
     #[ORM\Column(length: 255, nullable: true)] // Ajoutez cette ligne pour codeWebtask
     private ?string $codeWebtask = null; // Ajoutez cette ligne
 
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
     // Getters et Setters
 
     public function getId(): ?int
@@ -51,6 +55,17 @@ class Notification
     {
         $this->message = $message;
 
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
         return $this;
     }
 
@@ -102,24 +117,24 @@ class Notification
         return $this;
     }
 
-    public function getTitreWebtask(): ?string // Getter pour titreWebtask
+    public function getTitreWebtask(): ?string
     {
         return $this->titreWebtask;
     }
 
-    public function setTitreWebtask(?string $titreWebtask): self // Setter pour titreWebtask
+    public function setTitreWebtask(?string $titreWebtask): self
     {
         $this->titreWebtask = $titreWebtask;
 
         return $this;
     }
 
-    public function getCodeWebtask(): ?string // Ajoutez ce getter
+    public function getCodeWebtask(): ?string // Getter pour codeWebtask
     {
         return $this->codeWebtask;
     }
 
-    public function setCodeWebtask(?string $codeWebtask): self // Ajoutez ce setter
+    public function setCodeWebtask(?string $codeWebtask): self // Setter pour codeWebtask
     {
         $this->codeWebtask = $codeWebtask;
 

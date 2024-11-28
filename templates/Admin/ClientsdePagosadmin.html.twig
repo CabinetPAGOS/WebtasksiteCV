@@ -214,13 +214,13 @@
 			}
 
 			/* Centrage du titre principal */
-            .title {
-                text-align: center;
-                font-size: 2rem;
-                color: #000;
-                margin-bottom: 20px;
-                font-weight: bold;
-            }
+			.title {
+				text-align: center;
+				font-size: 2rem;
+				color: #000;
+				margin-bottom: 20px;
+				font-weight: bold;
+			}
 
 			/* Container pour les clients */
 			.client-container {
@@ -231,190 +231,92 @@
 				width: 95%;
 				max-width: 1200px;
 				background-color: #fff;
-				border-radius: 50px;
-				box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+				border-radius: 15px;  /* Changement du border-radius pour une courbure plus douce */
+				box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); /* Ombre plus douce */
 			}
 
+			/* Carte des clients */
 			.client-card {
 				display: flex;
-				flex-wrap: wrap;
-				justify-content: center;
+				flex-direction: column;
 				gap: 20px;
 			}
 
-			/* Bloc client */
-			.client-rectangle {
-				display: flex;
-				flex-direction: column;
-				justify-content: flex-start;
-				width: 30%;
-				background-color: #fff;
-				border: 2px solid #000;
-				border-radius: 15px;
-				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-				transition: transform 0.2s ease;
+			/* Tableau des clients */
+			.client-table {
+				width: 100%;
+				border-collapse: collapse; /* Assure que les bordures se touchent sans espace */
+				margin-top: 20px;
+				transition: all 0.3s ease; /* Transition pour des interactions plus douces */
+				border: 2px solid #000; /* Bordure noire autour du tableau */
 			}
 
-			.client-rectangle:hover {
-				transform: translateY(-5px);
+			.client-table th, .client-table td {
+				padding: 15px;
+				text-align: center;
+				font-size: 16px;
+				border: 1px solid #000; /* Bordure noire autour des cellules */
 			}
 
-			/* Header du client avec logo et nom */
-			.client-header {
-				display: flex;
-				align-items: center;
+			.client-table th {
 				background-color: #d7df22;
-				padding: 10px;
-				height: 100px; /* Hauteur fixe pour toutes les bandes */
-				border-radius: 15px 15px 0 0;
-			}
-
-			.client-img {
-				max-width: 65px;
-				height: auto;
-				margin-right: 10px;
-				border-radius: 5px;
-			}
-
-			.client-header h3 {
-				margin: 0;
-				font-size: 18px;
 				color: #000;
 				font-weight: bold;
-				flex: 1;
+				text-transform: uppercase; /* Met en majuscule les en-têtes */
 			}
 
-			.client-content {
-				display: flex;
-				flex-direction: column;
-				justify-content: center; /* Centre verticalement le contenu */
-				align-items: center; /* Centre horizontalement le contenu */
-				padding: 20px;
+			.client-table td {
 				background-color: #fff;
-				border-radius: 0 0 15px 15px;
-				text-align: center;
-			}
-
-			/* Titre des utilisateurs associés */
-			.client-content h4 {
-				font-size: 18px;
-				font-weight: bold;
-				text-align: center;
-				margin-bottom: 15px;
 				color: #333;
 			}
 
-			/* Liste des utilisateurs */
-			.client-content ul {
-				list-style: none;
-				padding-left: 0;
-				margin-bottom: 0;
-				display: flex;
-				flex-direction: column;
-				align-items: flex-start; /* Centrer la liste des utilisateurs */
+			/* Survol des lignes du tableau sans changement de curseur */
+			.client-table tr:hover {
+				background-color: #f1f1f1;
+				/* Suppression du curseur pointer */
 			}
 
-			.client-content li {
-				display: flex;
-				align-items: center; /* Pour aligner les icônes et le texte sur une ligne */
-				margin-bottom: 10px;
-				font-size: 16px;
-				font-weight: 500;
-				color: #555;
+			/* Espacement et alignement des logos des clients */
+			.client-img {
+				max-width: 80px; /* Taille augmentée pour rendre le logo plus visible */
+				height: auto;
+				border-radius: 10px; /* Bordure plus douce */
+				transition: transform 0.3s ease, box-shadow 0.3s ease; /* Effet de transition plus fluide */
 			}
 
-			/* Icône utilisateur */
-			.user-icon {
-				margin-right: 10px;
-				font-size: 18px;
-				color: #6c757d;
+			.client-img:hover {
+				transform: scale(1.1);
+				box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Ombre douce au survol */
 			}
 
-			.client-content li:hover .user-icon {
-				color: #333; /* Changement de couleur sur hover */
+			/* Réinitialisation du style pour la liste des utilisateurs */
+			.client-table ul {
+				list-style-type: none; /* Supprime les puces */
+				padding-left: 0; /* Enlève le padding à gauche */
+				margin: 0; /* Enlève la marge par défaut */
 			}
 
-			/* Style des noms d'utilisateurs */
-			.client-content li:hover {
-				color: #000; /* Nom plus visible au hover */
-				font-weight: bold;
+			.client-table li {
+				margin: 5px 0; /* Espacement entre les éléments de la liste */
+				font-size: 14px; /* Taille de police un peu plus petite */
 			}
 
-			/* Style du bouton 'VISUALISER' */
-			.client-content .btn-secondary {
+			/* Style des boutons */
+			.btn-secondary {
 				background-color: #fff;
 				color: #000;
-				border: 1px solid black;
-				margin-top: 15px;
+				border: 1px solid #000;
 				padding: 10px 20px;
 				font-size: 16px;
 				border-radius: 5px;
 				transition: all 0.3s ease;
 			}
 
-			/* Effet au survol pour le bouton */
-			.client-content .btn-secondary:hover {
+			.btn-secondary:hover {
 				background-color: #6c757d;
 				color: #fff;
 				transform: translateY(-3px);
 				border-color: #6c757d;
-			}
-
-			/* Icônes de pouces et cloche */
-			.client-actions {
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				gap: 10px; /* Espacement entre les icônes */
-				margin-top: 10px;
-			}
-
-			.thumb-icon {
-				color: #000;
-				cursor: pointer;
-				font-size: 24px;
-				transition: color 0.3s ease, transform 0.3s ease;
-			}
-
-			.thumb-icon:hover {
-				transform: scale(1.2);
-			}
-
-			.approve {
-				color: green;
-			}
-
-			.disapprove {
-				color: red;
-			}
-
-			.notify-icon {
-				color: blue;
-				cursor: pointer;
-				font-size: 24px;
-			}
-
-			.notify-icon:hover {
-				transform: scale(1.2);
-				color: darkblue;
-			}
-
-			p {
-				text-align: center;
-			}
-
-			hr {
-				margin: 20px 0;
-				opacity: 1;
-				border: 2px solid #000;
-			}
-
-			#filter-container {
-				margin-bottom: 20px;
-			}
-
-			.form-check {
-				margin-right: 20px;
 			}
 
 			/* Style pour la barre de recherche */
@@ -431,18 +333,6 @@
 				border: 2px solid #000; /* Bordure solide noire */
 				border-radius: 10px; /* Bordures arrondies */
 				box-sizing: border-box; /* Inclut le padding dans la largeur totale */
-			}
-
-			/* Footer */
-			footer {
-				text-align: center;
-				padding: 20px 0;
-				background-color: #f4f4f4;
-				border-top: 1px solid #ccc;
-			}
-
-			footer p {
-				color: #333;
 			}
 
 			/* Style pour les webtasks */
@@ -550,7 +440,18 @@
 				font-weight: bold;
 				cursor: pointer;
 			}
-			
+
+			/* Footer */
+			footer {
+				text-align: center;
+				padding: 20px 0;
+				background-color: #f4f4f4;
+				border-top: 1px solid #ccc;
+			}
+
+			footer p {
+				color: #333;
+			}
 		</style>
 	</head>
 	<body>
@@ -677,48 +578,49 @@
 
 		<div class="client-container">
 			<h2 class="title">CLIENTS DU CABINET PAGOS</h2>
-			<br>
 			<div class="client-card">
-				{% for client in clients %}
-					<div class="client-rectangle">
-						<div class="client-header">
-							{% if client.logoBase64 %}
-								<img src="data:image/png;base64,{{ client.logoBase64 }}" alt="Logo de {{ client.raisonSociale }}" class="client-img"/>
-							{% endif %}
-							<h3>{{ client.raisonSociale }}</h3>
-						</div>
-						<div class="client-content">
-							<ul>
-								{% set hasUsers = false %}
-								{% for user in users %}
-									{% if user.idclient is not null and user.idclient.getid() == client.id %}
-										{% set hasUsers = true %}
-										<li>
-											<span class="user-icon">👤</span>
-											{{ user.nom }}
-											{{ user.prenom }}
-										</li>
+				<!-- Table d'affichage des clients -->
+				<table class="client-table">
+					<thead>
+						<tr>
+							<th>Logo</th>
+							<th>Nom du Client</th>
+							<th>Utilisateurs Associés</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for client in clients %}
+						<tr>
+							<td><img src="data:image/png;base64,{{ client.logoBase64 }}" alt="Logo de {{ client.raisonSociale }}" class="client-img"/></td>
+							<td>{{ client.raisonSociale }}</td>
+							<td>
+								<ul>
+									{% set hasUsers = false %}
+									{% for user in users %}
+										{% if user.idclient is not null and user.idclient.getid() == client.id %}
+											{% set hasUsers = true %}
+											<li>
+												<span class="user-icon">👤</span>
+												{{ user.nom }}
+												{{ user.prenom }}
+											</li>
+										{% endif %}
+									{% endfor %}
+									{% if not hasUsers %}
+										<li>Aucun utilisateur associé.</li>
 									{% endif %}
-								{% endfor %}
-								{% if not hasUsers %}
-									<li>Aucun utilisateur associé.</li>
-								{% endif %}
-							</ul>
-							<div class="client-actions">
-								<i class="fas fa-thumbs-up thumb-icon approve" title="Approuver"></i>
-								<i class="fas fa-thumbs-down thumb-icon disapprove" title="Désapprouver"></i>
-								<i class="fas fa-bell notify-icon" title="Notifier"></i>
-							</div>
-							<button type="button" class="btn btn-secondary consulter" data-client-id="{{ client.id }}">VISUALISER</button>
-
-                            <button type="button" class="btn btn-secondary consulter rounded" onclick="window.location.href='{{ path('app_adminforum', { 'id': client.id }) }}'">FORUM</button>
-							<div class="summary-container" id="summary-container-{{ client.id }}" style="display: none;">
-								<h4>Résumé de la réunion :</h4>
-								<div class="summary-content" id="summary-content-{{ client.id }}"></div>
-							</div>
-						</div>
-					</div>
-				{% endfor %}
+								</ul>
+							</td>
+							<td>
+								<!-- Bouton Visualiser -->
+                            	<button type="button" class="btn btn-secondary consulter" data-client-id="{{ client.id }}">VISUALISER</button>
+								<button type="button" class="btn btn-secondary consulter rounded" onclick="window.location.href='{{ path('app_adminforum', { 'id': client.id }) }}'">FORUM</button>
+							</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
 			</div>
 		</div>
 
