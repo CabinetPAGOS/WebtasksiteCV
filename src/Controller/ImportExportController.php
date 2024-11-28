@@ -396,7 +396,7 @@ class ImportExportController extends AbstractController
                 rename($output_file, $outputFileArchived);
             }
 
-            // ---- Ajout de la création de notifications ----
+             // ---- Création de notifications excluant le CABINET PAGOS ----
             $webtasks = $entityManager->getRepository(WebTask::class)->findAll();
 
             foreach ($webtasks as $webtask) {
@@ -407,16 +407,18 @@ class ImportExportController extends AbstractController
                     $users = $entityManager->getRepository(User::class)->findBy(['idclient' => $client]);
 
                     foreach ($users as $user) {
-                        $notification = new Notification();
-                        $notification->setMessage('Nouvelle tâche : ' . $webtask->getTitre());
-                        $notification->setTitreWebtask($webtask->getTitre());
-                        $notification->setLibelleWebtask($webtask->getLibelle());
-                        $notification->setCodeWebtask($webtask->getCode());
-                        $notification->setDateCreation(new \DateTime());
-                        $notification->setClient($client);
-                        $notification->setUser($user);
-                        $notification->setVisible(true);
-                        $entityManager->persist($notification);
+                        if (strpos($client->getRaisonSociale(), 'CABINET PAGOS') === false) { // Vérifie que le client n'est pas "CABINET PAGOS"
+                            $notification = new Notification();
+                            $notification->setMessage('Nouvelle WebTask : ' . $webtask->getTitre());
+                            $notification->setTitreWebtask($webtask->getTitre());
+                            $notification->setLibelleWebtask($webtask->getLibelle());
+                            $notification->setCodeWebtask($webtask->getCode());
+                            $notification->setDateCreation(new \DateTime());
+                            $notification->setClient($client);
+                            $notification->setUser($user);
+                            $notification->setVisible(true);
+                            $entityManager->persist($notification);
+                        }
                     }
                 }
             }
