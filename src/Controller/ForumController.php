@@ -105,6 +105,7 @@ class ForumController extends AbstractController
         $form = $this->createForm(ForumType::class, $forum);
         $form->handleRequest($request);
 
+<<<<<<< HEAD
         $user = $this->getUser();
 
 
@@ -115,6 +116,15 @@ class ForumController extends AbstractController
         if (!$idclient) {
             throw $this->createNotFoundException('Aucun client associé à cet utilisateur.');
         }
+=======
+         // Récupérer l'ID du client associé à l'utilisateur connecté
+         $idclient = $user->getIdclient(); 
+
+         // Vérifier si un client est associé à l'utilisateur
+         if (!$idclient) {
+             throw $this->createNotFoundException('Aucun client associé à cet utilisateur.');
+         }
+>>>>>>> 0cd9f0874bc661ec000c7339333ef610f33049fc
 
         $logo = null;
         if ($idclient->getLogo()) {
@@ -146,10 +156,13 @@ class ForumController extends AbstractController
             'form' => $form->createView(),
             'forum' => $forum,
             'logo' => $logo,
+<<<<<<< HEAD
             'idWebtaskMap' => $idWebtaskMap,
             'notifications' => $notifications,
 
 
+=======
+>>>>>>> 0cd9f0874bc661ec000c7339333ef610f33049fc
 
         ]);
     }

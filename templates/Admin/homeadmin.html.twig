@@ -935,91 +935,106 @@
 		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
 		<script>
-			document.addEventListener('DOMContentLoaded', function () {
-				var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-				var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-				return new bootstrap.Tooltip(tooltipTriggerEl);
-				});
-			});
-		</script>
-		<script>
-			document.addEventListener('DOMContentLoaded', function () {
-				// Code de gestion des notifications ici
+    document.addEventListener('DOMContentLoaded', function () {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
 
-				// Gestion de l'affichage des notifications
-				document.getElementById('notificationIcon').addEventListener('click', function() {
-					var notificationList = document.getElementById('notificationList');
-					notificationList.style.display = notificationList.style.display === 'none' || notificationList.style.display === '' ? 'block' : 'none'; // Toggle
-				});
-			});
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Code de gestion des notifications ici
 
-			function consulterNotification(notificationId) {
-				// Rediriger vers la page de consultation de la notification
-				window.location.href = `/notification/${notificationId}`; // Remplacez par l'URL réelle
-			}
-		</script>
-		<script>
-			document.querySelectorAll('.mark-as-read').forEach(button => {
-				button.addEventListener('click', function() {
-					const notificationId = this.getAttribute('data-id');
+        // Gestion de l'affichage des notifications
+        document.getElementById('notificationIcon').addEventListener('click', function() {
+            var notificationList = document.getElementById('notificationList');
+            notificationList.style.display = notificationList.style.display === 'none' || notificationList.style.display === '' ? 'block' : 'none'; // Toggle
+        });
+    });
 
-					fetch(`/mark-as-read/${notificationId}`, {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json',
-							'X-Requested-With': 'XMLHttpRequest'
-						}
-					})
-					.then(response => {
-						if (!response.ok) {
-							throw new Error('Erreur lors de la mise à jour de la notification');
-						}
-						return response.json();
-					})
-					.then(data => {
-						if (data.status === 'success') {
-							// Masquer la notification
-							const notificationElement = document.getElementById(`notification-${notificationId}`);
-							if (notificationElement) {
-								notificationElement.style.display = 'none'; // Masque la notification
-							}
+    function consulterNotification(notificationId) {
+        // Rediriger vers la page de consultation de la notification
+        window.location.href = '/notification/' + notificationId; // Remplacez par l'URL réelle
+    }
+</script>
 
-							// Mettre à jour le compteur de notifications
-							const countElement = document.querySelector('.notification-count');
-							const currentCount = parseInt(countElement.textContent, 10);
-							countElement.textContent = currentCount - 1; // Décrementer le compteur
+<script>
+    document.querySelectorAll('.mark-as-read').forEach(function(button) {
+        button.addEventListener('click', function() {
+            const notificationId = this.getAttribute('data-id');
 
-							// Vérifiez les notifications du client
-							checkClientNotifications();
-						} else {
-							console.error(data);
-						}
-					})
-					.catch(error => console.error('Erreur:', error));
-				});
-			});
+            // Générer l'URL correcte pour la route "app_mark_as_read"
+            const url = '/mark-as-read/' + notificationId;
 
-			function checkClientNotifications() {
-				const clients = document.querySelectorAll('.client-notification');
-				let hasVisibleNotifications = false;
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-Token': '{{ csrf_token('app_mark_as_read') }}'
+                }
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    return response.json().then(function(data) {
+                        // Afficher un message d'erreur plus précis
+                        throw new Error(data.status || 'Erreur lors de la mise à jour de la notification');
+                    });
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                if (data.status === 'success') {
+                    // Masquer la notification
+                    const notificationElement = document.getElementById('notification-' + notificationId);
+                    if (notificationElement) {
+                        notificationElement.style.display = 'none'; // Masquer la notification
+                    }
 
-				clients.forEach(client => {
-					const notifications = client.querySelectorAll('li[id^="notification-"]'); // Sélectionner les notifications
-					const visibleNotifications = Array.from(notifications).filter(notification => notification.style.display !== 'none');
+                    // Mettre à jour le compteur de notifications
+                    const countElement = document.querySelector('.notification-count');
+                    const currentCount = parseInt(countElement.textContent, 10);
+                    countElement.textContent = currentCount - 1; // Décrementer le compteur
 
-					if (visibleNotifications.length === 0) {
-						client.style.display = 'none'; // Masquer le client si aucune notification n'est visible
-					} else {
-						hasVisibleNotifications = true; // Il y a encore des notifications visibles
-					}
-				});
+                    // Vérifiez les notifications du client
+                    checkClientNotifications();
+                } else {
+                    console.error(data); // Afficher des erreurs supplémentaires
+                }
+            })
+            .catch(function(error) {
+                console.error('Erreur:', error.message); // Afficher l'erreur spécifique dans la console
+                alert('Erreur lors de la mise à jour de la notification. ' + error.message); // Afficher un message d'erreur à l'utilisateur
+            });
+        });
+    });
 
-				// Afficher le message si aucune notification visible
-				const notificationList = document.getElementById('notificationList');
-				if (!hasVisibleNotifications) {
-					notificationList.innerHTML = '<li>Aucune notification disponible</li>'; // Afficher le message
-				}
-			}
-		</script>
+    function checkClientNotifications() {
+        const clients = document.querySelectorAll('.client-notification');
+        let hasVisibleNotifications = false;
+
+        clients.forEach(function(client) {
+            const notifications = client.querySelectorAll('li[id^="notification-"]'); // Sélectionner les notifications
+            const visibleNotifications = Array.from(notifications).filter(function(notification) {
+                return notification.style.display !== 'none';
+            });
+
+            if (visibleNotifications.length === 0) {
+                client.style.display = 'none'; // Masquer le client si aucune notification n'est visible
+            } else {
+                hasVisibleNotifications = true; // Il y a encore des notifications visibles
+            }
+        });
+
+        // Afficher le message si aucune notification visible
+        const notificationList = document.getElementById('notificationList');
+        if (!hasVisibleNotifications) {
+            notificationList.innerHTML = '<li>Aucune notification disponible</li>'; // Afficher le message
+        }
+    }
+</script>
+
 	</body>
 </html>

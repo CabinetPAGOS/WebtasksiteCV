@@ -73,4 +73,4 @@ class Forum
 
         return $this;
     }
-}
+} 

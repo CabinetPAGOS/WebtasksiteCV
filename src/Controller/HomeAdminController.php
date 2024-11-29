@@ -229,10 +229,10 @@ class HomeAdminController extends AbstractController
 
     #[Route('/mark-as-read/{id}', name: 'app_mark_as_read', methods: ['POST'])]
     public function markAsRead($id): JsonResponse
-    {
-        // Récupérer l'utilisateur connecté
-        $user = $this->getUser();
+{
+    
 
+<<<<<<< HEAD
         if (!$user) {
             return new JsonResponse(['status' => 'unauthorized'], 401);
         }
@@ -259,7 +259,38 @@ class HomeAdminController extends AbstractController
         $this->entityManager->flush();
 
         return new JsonResponse(['status' => 'success']);
+=======
+    $user = $this->getUser();
+    if (!$user) {
+        return new JsonResponse(['status' => 'unauthorized'], 401);
+>>>>>>> 0cd9f0874bc661ec000c7339333ef610f33049fc
     }
+
+    // Récupérer la notification par son ID
+    $notification = $this->notificationRepository->find($id);
+
+    // Vérifier si la notification existe
+    if (!$notification) {
+        return new JsonResponse(['status' => 'not_found'], 404);
+    }
+
+    // Vérifier que la notification appartient bien à l'utilisateur connecté
+    if ($notification->getUser()->getId() !== $user->getId()) {
+        return new JsonResponse(['status' => 'forbidden'], 403);
+    }
+    
+
+    // Marquer la notification comme lue
+    $notification->setVisible(false);  // ou setIsRead(true) si vous ajoutez ce champ
+
+    // Enregistrer les modifications
+    $this->entityManager->persist($notification);
+    $this->entityManager->flush();
+
+    return new JsonResponse(['status' => 'success']);
+}
+
+
 
     private function mapTag(?string $tag): string
     {

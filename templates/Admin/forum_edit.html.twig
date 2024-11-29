@@ -17,6 +17,7 @@
 		<!-- Custom CSS -->
 		<style>
 			body {
+<<<<<<< HEAD
 				font-family: 'Helvetica', Arial, sans-serif;
 			}
 
@@ -607,12 +608,266 @@
 			footer p {
 				color: #333;
 			}
+=======
+  font-family: 'Helvetica', Arial, sans-serif;
+}
+
+/* Navbar Styling */
+.navbar-custom {
+  background-color: #818285;
+  padding: 10px 20px;
+}
+
+.navbar-custom .navbar-brand img {
+  width: auto;
+  height: 80px;
+}
+
+.navbar-custom .navbar-nav .nav-link {
+  color: #fff;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 10px 15px;
+  transition: color 0.3s ease;
+}
+
+.navbar-custom .navbar-nav .nav-link:hover {
+  color: #000;
+}
+
+.navbar-custom .navbar-nav .nav-item.active .nav-link {
+  color: #000;
+}
+
+.navbar-custom .navbar-nav .nav-item.dropdown .nav-link {
+  color: #fff;
+  padding-bottom: 5px;
+  border-bottom: 2px solid transparent;
+}
+
+.navbar-custom .navbar-nav .nav-item.dropdown:hover .nav-link {
+  color: #000;
+  border-bottom: 2px solid #000;
+}
+
+.navbar-custom .navbar-nav .nav-item .dropdown-menu {
+  background-color: #818285;
+  border: none;
+  padding: 10px 0;
+}
+
+.navbar-custom .navbar-nav .nav-item .dropdown-item {
+  color: #fff;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease;
+}
+
+.navbar-custom .navbar-nav .nav-item .dropdown-item:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+/* User Info */
+.user-name {
+  color: #000;
+  font-size: 1rem;
+  margin-top: 0.4rem;
+}
+
+.client-logo {
+  max-height: 40px;
+  max-width: 60px;
+  object-fit: contain;
+  border-radius: 8px;
+  padding: 2px;
+  background-color: #fff;
+  transition: transform 0.2s ease;
+}
+
+.client-logo:hover {
+  transform: scale(1.1);
+}
+
+.logout-icon {
+  font-size: 1.5rem;
+  color: #000;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.logout-icon:hover {
+  color: #818285;
+  transform: scale(1.1);
+}
+
+/* Notifications */
+.notification-container {
+  position: relative;
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+}
+
+#notificationIcon {
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+}
+
+.notification-count {
+  position: absolute;
+  top: 0px;
+  right: -2px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 3px 7px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.notifications {
+  position: absolute;
+  z-index: 1000;
+  width: 600px;
+  top: -210px;
+  right: 0;
+  margin-top: 250px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 2px;
+  background-color: #fff;
+  border: 2px solid #000;
+}
+
+.notifications ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notifications li {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  font-size: 12px;
+}
+
+.notifications li:last-child {
+  border-bottom: none;
+}
+
+/* Container Custom */
+.container-custom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px auto;
+  max-width: 1400px;
+}
+
+/* Form Container */
+.form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #818285;
+  color: white;
+  font-size: 16px;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #6c757d;
+}
+
+/* Back Link */
+.back-link {
+  display: block;
+  margin-top: 20px;
+  text-decoration: none;
+  color: #818285;
+  font-size: 14px;
+}
+
+.back-link:hover {
+  color: #000;
+}
+
+/* Button Styling */
+.btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.center-button {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 20px;
+}
+
+.center-button .btn-secondary {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid black;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.center-button .btn-secondary:hover {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 20px 0;
+  background-color: #f4f4f4;
+  border-top: 1px solid #ccc;
+}
+
+footer p {
+  color: #333;
+}
+
+			
+>>>>>>> 0cd9f0874bc661ec000c7339333ef610f33049fc
 		</style>
 	</head>
 	<body>
 		<nav class="navbar navbar-expand-lg navbar-custom">
+<<<<<<< HEAD
 			<div
 				class="container-fluid">
+=======
+			<div class="container-fluid">
+>>>>>>> 0cd9f0874bc661ec000c7339333ef610f33049fc
 				<!-- Logo -->
 				<a class="navbar-brand" href="{{ path('app_logout') }}">
 					<img class="img-navbar" src="/img/logoPagosImg04.png" alt="Logo" height="40">
@@ -627,7 +882,11 @@
 				<div class="collapse navbar-collapse" id="navbarColor01">
 					<ul class="navbar-nav me-auto">
 						<li class="nav-item">
+<<<<<<< HEAD
 							<a class="nav-link nav-link-custom" href="{{ path('app_homeadmin') }}">
+=======
+							<a class="nav-link nav-link-custom" style="color: #000" href="{{ path('app_homeadmin') }}">
+>>>>>>> 0cd9f0874bc661ec000c7339333ef610f33049fc
 								<b>Accueil</b>
 							</a>
 						</li>
@@ -647,6 +906,7 @@
 								<b>Administration</b>
 							</a>
 							<ul class="dropdown-menu" aria-labelledby="gestionDropdown">
+<<<<<<< HEAD
 								<li>
 									<a class="dropdown-item dropdown-item-custom" href="{{ path('app_gestionuser') }}">
 										<b>Gestion utilisateur</b>
@@ -667,6 +927,12 @@
 										<b>Créer un Client</b>
 									</a>
 								</li>
+=======
+								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_gestionuser') }}"><b>Gestion utilisateur</b></a></li>
+								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_importexport') }}"><b>Imports / Exports</b></a></li>
+								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_register') }}"><b>Créer un utilisateur</b></a></li>
+								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_createclientadmin') }}"><b>Créer un Client</b></a></li>
+>>>>>>> 0cd9f0874bc661ec000c7339333ef610f33049fc
 							</ul>
 						</li>
 					</ul>
@@ -674,6 +940,7 @@
 					<!-- Liens côté droit -->
 					<ul class="navbar-nav ms-auto">
 						<li class="nav-item nav-link nav-link-custom user-name">
+<<<<<<< HEAD
 							<b>{{ app.user.nom }}
 								{{ app.user.prenom }}</b>
 						</li>
@@ -744,6 +1011,16 @@
 						<!-- Logo client et déconnexion -->
 						<li class="nav-item d-flex align-items-center">
 							<img src="data:image/png;base64,{{ logo }}" alt="Logo du client" class="client-logo me-2"/>
+=======
+							<b>{{ app.user.nom }} {{ app.user.prenom }}</b>
+						</li>
+
+			
+
+						<!-- Logo client et déconnexion -->
+						<li class="nav-item d-flex align-items-center">
+							<img src="data:image/png;base64,{{ logo }}" alt="Logo du client" class="client-logo me-2" />
+>>>>>>> 0cd9f0874bc661ec000c7339333ef610f33049fc
 							<a class="nav-link logout-icon" href="{{ path('app_logout') }}" title="Se déconnecter">
 								<i class="fas fa-sign-out-alt"></i>
 							</a>
