@@ -609,41 +609,43 @@
 				color: #333;
 			}
 		</style>
-		<body>
-
-			<!-- Navbar -->
-			<nav class="navbar navbar-expand-lg navbar-custom">
-				<div class="container-fluid">
-					<a class="navbar-brand" href="{{ path('app_homeclient') }}">
-						<img class="img-navbar" src="/img/logoPagosImg04.png" alt="Logo" height="40">
-					</a>
-					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-						<span class="navbar-toggler-icon">
-							<i class="fas fa-bars"></i>
-						</span>
-					</button>
-					<div class="collapse navbar-collapse" id="navbarColor01">
-						<ul class="navbar-nav me-auto">
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-lg navbar-custom">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="{{ path('app_homeclient') }}">
+					<img class="img-navbar" src="/img/logoPagosImg04.png" alt="Logo" height="40">
+				</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon">
+						<i class="fas fa-bars"></i>
+					</span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarColor01">
+					<ul class="navbar-nav me-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_homeclient') }}">
+								<b>Accueil</b>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_taches') }}">
+								<b>Tâches</b>
+							</a>
+						</li>
+						{% if app.user.roleWx == 'createur' %}
 							<li class="nav-item">
-								<a class="nav-link" href="{{ path('app_homeclient') }}">
-									<b>Accueil</b>
+								<a class="nav-link" href="{{ path('app_creertaches') }}">
+									<b>Créer une tâche</b>
 								</a>
 							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="{{ path('app_taches') }}">
-									<b>Tâches</b>
-								</a>
-							</li>
-							{% if app.user.roleWx == 'createur' %}
-								<li class="nav-item">
-									<a class="nav-link" href="{{ path('app_creertaches') }}">
-										<b>Créer une tâche</b>
-									</a>
-								</li>
-							{% endif %}
+						{% endif %}
+
+						{% set forbidden_ids = ['e4e080b3758761bd01758f5fcfed03d9'] %}
+						{% if app.user.idclient and app.user.idclient.getId() not in forbidden_ids %}
 
 							<li class="nav-item">
-								<a class="nav-link" href="{{ path('app_forum', { 'id': client.id }) }}">
+								<a class="nav-link" style="color: #000" href="{{ path('app_forum', { 'id': client.id }) }}">
 									<b>Forum</b>
 								</a>
 							</li>
@@ -659,39 +661,85 @@
 						{% endif %}
 					</ul>
 
-						<ul class="navbar-nav ms-auto">
-							<li class="nav-item">
-								<a class="nav-link" href="#" style="color: #ffffff; text-align: center;">
-									<b>{{ app.user.nom }}
-										{{ app.user.prenom }}</b>
-								</a>
-							</li>
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="#" style="color: #ffffff; text-align: center;">
+								<b>{{ app.user.nom }}
+									{{ app.user.prenom }}</b>
+							</a>
+						</li>
 
-							<li class="nav-item dropdown">
-								<a class="nav-link dropdown-toggle" href="#" id="navbarUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+						<!-- Icône de notification -->
+						<li class="nav-item notification-container">
+							<a class="nav-link" href="#" style="color: #ffffff; text-align: center;">
+								<i class="fas fa-bell" style="font-size: 1.5em; color: white;" id="notificationIcon"></i>
+								<span class="notification-count">{{ notifications|filter(notification => notification.visible == 1)|length }}</span>
+							</a>
+							<div id="notificationList" class="notifications" style="display: none;">
+								<ul>
+									{% set visibleNotifications = notifications|filter(notification => notificationUser[notification.id] is not defined or notificationUser[notification.id].isRead == false) %}
+									{% if visibleNotifications is empty %}
+										<li>Aucune notification</li>
+									{% else %}
+										{% set notificationsByClient = {} %}
 
-									<img
-									src="data:image/png;base64,{{ logo }}" alt="Logo du client" class="client-logo" style="width: 30px; height: 30px; border-radius: 50%;"/>
+										{# Regrouper les notifications par client #}
+										{% for notification in visibleNotifications %}
+											{% set clientName = notification.getClient.getRaisonSociale() %}
+											{% if notificationsByClient[clientName] is not defined %}
+												{% set notificationsByClient = notificationsByClient|merge({(clientName): []}) %}
+											{% endif %}
+											{% set notificationsByClient = notificationsByClient|merge({(clientName): notificationsByClient[clientName] | merge([notification])}) %}
+										{% endfor %}
 
-								<!-- Ajout du logo client -->
-								</a>
-								<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown">
-									<li><hr class="dropdown-divider"></li>
-									<li>
-										<a class="dropdown-item" href="{{ path('app_logout') }}">
-											<b>
-												<i class="fas fa-sign-out-alt"></i>
-												Se déconnecter
-											</b>
-										</a>
-									</li>
+										{# Affichage des notifications regroupées par client #}
+										{% for client, clientNotifications in notificationsByClient %}
+											{% if clientNotifications|length > 0 %}
+												<li class="client-notification" data-client="{{ client }}">
+													<div class="client-notification-header" style="border-bottom: 2px solid #007bff; margin-bottom: 10px; padding-bottom: 5px;">
+														<b>{{ client }}</b>
+													</div>
+													<ul style="list-style: none; padding-left: 0; border-left: 2px dashed #ccc; padding-left: 10px;">
+														{% for notification in clientNotifications %}
+															<li id="notification-{{ notification.id }}" style="margin-bottom: 15px; padding: 10px; border: 1px solid #e0e0e0; border-radius: 5px; background-color: #f9f9f9;">
+																<div class="notification-header">
+																	<span class="creation-date">{{ notification.getDateCreation() | date('d/m/y H:i:s') }}</span>
+																</div>
+																<div class="notification-body">
+																	{{ notification.getTitreWebtask() }}
+																	({{ notification.getLibelleWebtask() }})<br>
+																	{{ notification.getMessage() }}
+																</div>
+																<div class="notification-buttons">
+																	<button class="mark-as-read" data-id="{{ notification.id }}">Lu</button>
+																	{% set idWebtask = idWebtaskMap[notification.codeWebtask] %}
+																	<button onclick="window.location.href='{{ path('app_consultertaches', { 'id': notification.codeWebtask }) }}'">Consulter</button>
+																</div>
+															</li>
+														{% endfor %}
+													</ul>
+												</li>
+												<hr
+												style="border-top: 2px solid #007bff; margin: 10px 0;">
+											{# Séparation entre clients #}
+											{% endif %}
+										{% endfor %}
+									{% endif %}
 								</ul>
-							</li>
+							</div>
+						</li>
 
-						</ul>
-					</div>
+						<!-- Logo client et déconnexion -->
+						<li class="nav-item d-flex align-items-center">
+							<img src="data:image/png;base64,{{ logo }}" alt="Logo du client" class="client-logo me-2"/>
+							<a class="nav-link logout-icon" href="{{ path('app_logout') }}" title="Se déconnecter">
+								<i class="fas fa-sign-out-alt"></i>
+							</a>
+						</li>
+					</ul>
 				</div>
-			</nav>
+			</div>
+		</nav>
 
 		<br>
 
