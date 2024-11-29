@@ -7,8 +7,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use App\Repository\UserRepository; 
+use Symfony\Component\HttpFoundation\JsonResponse; // Ajoutez cette ligne
+use App\Repository\UserRepository; // Assurez-vous que ce repository existe
 use App\Entity\Forum;
 use App\Entity\Client;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,7 +16,6 @@ use App\Form\ForumType;
 use App\Entity\Notification;
 use App\Repository\NotificationRepository;
 use App\Repository\WebtaskRepository;
-
 
 class ForumController extends AbstractController
 {
@@ -105,7 +104,6 @@ class ForumController extends AbstractController
         $form = $this->createForm(ForumType::class, $forum);
         $form->handleRequest($request);
 
-<<<<<<< HEAD
         $user = $this->getUser();
 
 
@@ -116,15 +114,6 @@ class ForumController extends AbstractController
         if (!$idclient) {
             throw $this->createNotFoundException('Aucun client associé à cet utilisateur.');
         }
-=======
-         // Récupérer l'ID du client associé à l'utilisateur connecté
-         $idclient = $user->getIdclient(); 
-
-         // Vérifier si un client est associé à l'utilisateur
-         if (!$idclient) {
-             throw $this->createNotFoundException('Aucun client associé à cet utilisateur.');
-         }
->>>>>>> 0cd9f0874bc661ec000c7339333ef610f33049fc
 
         $logo = null;
         if ($idclient->getLogo()) {
@@ -156,13 +145,10 @@ class ForumController extends AbstractController
             'form' => $form->createView(),
             'forum' => $forum,
             'logo' => $logo,
-<<<<<<< HEAD
             'idWebtaskMap' => $idWebtaskMap,
             'notifications' => $notifications,
 
 
-=======
->>>>>>> 0cd9f0874bc661ec000c7339333ef610f33049fc
 
         ]);
     }
@@ -191,6 +177,7 @@ class ForumController extends AbstractController
         if ($idclient->getLogo()) {
             $logo = base64_encode(stream_get_contents($idclient->getLogo()));
         }
+
 
         $notifications = $notificationRepository->findBy([
             'user' => $user->getId(),
@@ -282,9 +269,9 @@ class ForumController extends AbstractController
     #[Route('/mark-as-read/{id}', name: 'app_mark_as_read', methods: ['POST'])]
     public function markAsRead($id): JsonResponse
     {
-        // Récupérer l'utilisateur connecté
-        $user = $this->getUser();
+        
 
+        $user = $this->getUser();
         if (!$user) {
             return new JsonResponse(['status' => 'unauthorized'], 401);
         }
@@ -292,17 +279,19 @@ class ForumController extends AbstractController
         // Récupérer la notification par son ID
         $notification = $this->notificationRepository->find($id);
 
+        // Vérifier si la notification existe
         if (!$notification) {
             return new JsonResponse(['status' => 'not_found'], 404);
         }
 
-        // Vérifier que la notification appartient à l'utilisateur connecté
-        if ($notification->getUser() !== $user->getId()) {
+        // Vérifier que la notification appartient bien à l'utilisateur connecté
+        if ($notification->getUser()->getId() !== $user->getId()) {
             return new JsonResponse(['status' => 'forbidden'], 403);
         }
+        
 
-        // Mettre à jour le champ visible à 0
-        $notification->setVisible(false); // Assurez-vous que cette méthode existe dans l'entité Notification
+        // Marquer la notification comme lue
+        $notification->setVisible(false);  // ou setIsRead(true) si vous ajoutez ce champ
 
         // Enregistrer les modifications
         $this->entityManager->persist($notification);
