@@ -17,24 +17,33 @@ use App\Entity\Client;
 use App\Entity\Responsable;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repository\ClientRepository;
+use App\Repository\NotificationRepository;
+use App\Repository\WebtaskRepository;
 
 class CreerTachesController extends AbstractController
 {
+    private $webTaskRepository;
     private $textTransformer;
     private $versionService;
     private $clientRepository;
+    private $notificationRepository;
 
-
-    public function __construct(TextTransformer $textTransformer, VersionService $versionService, ClientRepository $clientRepository)
-    {
+    public function __construct(
+        WebtaskRepository $webTaskRepository,
+        TextTransformer $textTransformer, 
+        VersionService $versionService, 
+        ClientRepository $clientRepository, 
+        NotificationRepository $notificationRepository
+    ) {
+        $this->webTaskRepository = $webTaskRepository;
         $this->textTransformer = $textTransformer;
         $this->versionService = $versionService;
         $this->clientRepository = $clientRepository;
-
+        $this->notificationRepository = $notificationRepository;
     }
 
     #[Route('/creertaches', name: 'app_creertaches')]
-    public function creertaches(Request $request, EntityManagerInterface $entityManager): Response
+    public function creertaches(Request $request, EntityManagerInterface $entityManager, NotificationRepository $notificationRepository): Response
     {
         // Récupérer l'utilisateur connecté
         $user = $this->getUser();
@@ -230,30 +239,34 @@ class CreerTachesController extends AbstractController
             ->findOneBy(['raison_sociale' => 'CABINET PAGOS']);
 
             $usersCabinetPagos = $cabinetPagosClient
-                ? $entityManager->getRepository(User::class)
-                    ->findBy(['idclient' => $cabinetPagosClient])
-                : [];
+            ? $entityManager->getRepository(User::class)
+                ->findBy(['idclient' => $cabinetPagosClient])
+            : [];
 
             // Récupérer tous les utilisateurs du client actuel
             $usersCurrentClient = $entityManager->getRepository(User::class)
-                ->findBy(['idclient' => $client]);
+            ->findBy(['idclient' => $client]);
 
             // Fusionner les listes d'utilisateurs sans doublons
             $allUsers = array_unique(array_merge($usersCabinetPagos, $usersCurrentClient), SORT_REGULAR);
 
-            // Créer une notification pour chaque utilisateur
+            // Créer une notification pour chaque utilisateur, sauf l'utilisateur connecté
             foreach ($allUsers as $userNotification) {
-                $notification = new Notification();
-                $notification->setMessage('Création de la WebTask : ' . $newTache->getLibelle());
-                $notification->setLibelleWebtask($newTache->getLibelle());
-                $notification->setDateCreation(new \DateTime());
-                $notification->setVisible(true);
-                $notification->setClient($newTache->getIdclient());
-                $notification->setTitreWebtask($newTache->getTitre());
-                $notification->setCodeWebtask($newTache->getCode());
-                $notification->setUser($userNotification);
+            if ($userNotification === $user) {
+                continue; // Ignorer l'utilisateur connecté
+            }
 
-                $entityManager->persist($notification);
+            $notification = new Notification();
+            $notification->setMessage('Création de la WebTask : ' . $newTache->getLibelle());
+            $notification->setLibelleWebtask($newTache->getLibelle());
+            $notification->setDateCreation(new \DateTime());
+            $notification->setVisible(true);
+            $notification->setClient($newTache->getIdclient());
+            $notification->setTitreWebtask($newTache->getTitre());
+            $notification->setCodeWebtask($newTache->getCode());
+            $notification->setUser($userNotification);
+
+            $entityManager->persist($notification);
             }
 
             // Sauvegarder les notifications en base de données
@@ -262,11 +275,93 @@ class CreerTachesController extends AbstractController
             return $this->redirectToRoute('app_taches');
         }
 
+        // Récupérer les notifications visibles de l'utilisateur connecté
+        $notifications = $notificationRepository->findBy([
+            'user' => $user->getId(),
+            'visible' => true
+        ]);
+
+        // Créer un tableau pour lier codeWebtask à id
+        $idWebtaskMap = [];
+        foreach ($notifications as $notification) {
+            $idWebtask = $this->webTaskRepository->findIdByCodeWebtask($notification->getCodeWebtask());
+            if ($idWebtask !== null) {
+                $idWebtaskMap[$notification->getCodeWebtask()] = $idWebtask;
+            }
+        }
+
         // Passer le lien Google Drive à la vue Twig
         return $this->render('Client/creertaches.html.twig', [
             'googleDriveLink' => $googleDriveLink,
             'logo' => $logo,
+            'notifications' => $notifications,
+            'idWebtaskMap' => $idWebtaskMap,
         ]);
+    }
+
+    #[Route('/notifications', name: 'get_notifications', methods: ['GET'])]
+    public function getNotifications(): JsonResponse
+    {
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
+        // Vérifier si l'utilisateur est connecté
+        if (!$user) {
+            return $this->json([
+                'count' => 0,
+                'notifications' => [],
+                'message' => 'Utilisateur non connecté',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        // Récupérer l'ID de l'utilisateur
+        $userId = $user->getId();
+
+        // Récupérer les notifications visibles pour l'utilisateur connecté
+        $notifications = $this->notificationRepository->createQueryBuilder('n')
+            ->where('n.visible = :visible')
+            ->andWhere('n.user = :userId')
+            ->setParameter('visible', true)
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult();
+
+        return $this->json([
+            'count' => count($notifications),
+            'notifications' => $notifications,
+        ]);
+    }
+
+    #[Route('/mark-as-read/{id}', name: 'app_mark_as_read', methods: ['POST'])]
+    public function markAsRead($id): JsonResponse
+    {
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
+        if (!$user) {
+            return new JsonResponse(['status' => 'unauthorized'], 401);
+        }
+
+        // Récupérer la notification par son ID
+        $notification = $this->notificationRepository->find($id);
+
+        if (!$notification) {
+            return new JsonResponse(['status' => 'not_found'], 404);
+        }
+
+        // Vérifier que la notification appartient à l'utilisateur connecté
+        if ($notification->getUser() !== $user->getId()) {
+            return new JsonResponse(['status' => 'forbidden'], 403);
+        }
+
+        // Mettre à jour le champ visible à 0
+        $notification->setVisible(false); // Assurez-vous que cette méthode existe dans l'entité Notification
+
+        // Enregistrer les modifications
+        $this->entityManager->persist($notification);
+        $this->entityManager->flush();
+
+        return new JsonResponse(['status' => 'success']);
     }
 
     #[Route('/check-title', name: 'check_task_title', methods: ['GET'])]
@@ -308,5 +403,4 @@ class CreerTachesController extends AbstractController
         // Redirigez ou retournez une réponse
         return $this->redirectToRoute('success_page');
     }
-   
 }

@@ -21,7 +21,8 @@ class Forum
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $date;
 
-    #[ORM\Column(name:'client_id', nullable:false)]
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'forums')]
+    #[ORM\JoinColumn(nullable: false)]
     private Client $client;
 
     public function __construct()
@@ -72,4 +73,4 @@ class Forum
 
         return $this;
     }
-}
+} 

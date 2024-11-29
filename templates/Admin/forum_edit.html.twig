@@ -15,233 +15,316 @@
 		<!-- Custom CSS -->
 		<style>
 			body {
-				font-family: 'Helvetica', Arial, sans-serif;
-				background-color: #f9f9f9;
-				margin: 0;
-				padding: 0;
-			}
+  font-family: 'Helvetica', Arial, sans-serif;
+}
 
-			/* Navbar */
-			.navbar-custom {
-				background-color: #818285;
-				border-style: none;
-			}
+/* Navbar Styling */
+.navbar-custom {
+  background-color: #818285;
+  padding: 10px 20px;
+}
 
-			.navbar-custom .nav-link {
-				color: #ffffff;
-				font-size: 19px;
-			}
+.navbar-custom .navbar-brand img {
+  width: auto;
+  height: 80px;
+}
 
-			.navbar-custom .nav-link:hover {
-				color: #000000;
-			}
+.navbar-custom .navbar-nav .nav-link {
+  color: #fff;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 10px 15px;
+  transition: color 0.3s ease;
+}
 
-			/* Notifications */
-			.notification-container {
-				position: relative;
-				display: flex;
-				align-items: center;
-				margin-right: 15px;
-			}
+.navbar-custom .navbar-nav .nav-link:hover {
+  color: #000;
+}
 
-			#notificationIcon {
-				font-size: 24px;
-				color: white;
-				cursor: pointer;
-				position: relative;
-			}
+.navbar-custom .navbar-nav .nav-item.active .nav-link {
+  color: #000;
+}
 
-			.notification-count {
-				position: absolute;
-				top: -7px;
-				right: -7px;
-				background-color: red;
-				color: white;
-				border-radius: 50%;
-				padding: 3px 7px;
-				font-size: 12px;
-				font-weight: bold;
-			}
+.navbar-custom .navbar-nav .nav-item.dropdown .nav-link {
+  color: #fff;
+  padding-bottom: 5px;
+  border-bottom: 2px solid transparent;
+}
 
-			.notifications {
-				border: 2px solid #000;
-				background-color: #fff;
-				position: absolute;
-				top: -220px;
-				right: 0;
-				width: 300px;
-				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-				padding: 10px;
-				visibility: hidden;
-				opacity: 0;
-				transition: visibility 0.2s, opacity 0.2s ease-in-out;
-			}
+.navbar-custom .navbar-nav .nav-item.dropdown:hover .nav-link {
+  color: #000;
+  border-bottom: 2px solid #000;
+}
 
-			.notifications.show {
-				visibility: visible;
-				opacity: 1;
-			}
+.navbar-custom .navbar-nav .nav-item .dropdown-menu {
+  background-color: #818285;
+  border: none;
+  padding: 10px 0;
+}
 
-			.notifications ul {
-				list-style: none;
-				padding: 0;
-			}
+.navbar-custom .navbar-nav .nav-item .dropdown-item {
+  color: #fff;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease;
+}
 
-			.notifications li {
-				padding: 10px;
-				border-bottom: 1px solid #ccc;
-				font-size: 12px;
-			}
+.navbar-custom .navbar-nav .nav-item .dropdown-item:hover {
+  background-color: #000;
+  color: #fff;
+}
 
-			.notifications li:last-child {
-				border-bottom: none;
-			}
+/* User Info */
+.user-name {
+  color: #000;
+  font-size: 1rem;
+  margin-top: 0.4rem;
+}
 
-			/* Container de contenu */
-			.container-custom {
-				max-width: 1200px;
-				margin: 0 auto;
-				padding: 20px;
-			}
+.client-logo {
+  max-height: 40px;
+  max-width: 60px;
+  object-fit: contain;
+  border-radius: 8px;
+  padding: 2px;
+  background-color: #fff;
+  transition: transform 0.2s ease;
+}
 
-			/* Formulaire d'édition */
-			.form-container {
-				background-color: white;
-				padding: 20px;
-				border-radius: 8px;
-				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-				margin-bottom: 30px;
-			}
+.client-logo:hover {
+  transform: scale(1.1);
+}
 
-			.form-container h2 {
-				text-align: center;
-				margin-bottom: 20px;
-				font-size: 1.5rem;
-				color: #333;
-			}
+.logout-icon {
+  font-size: 1.5rem;
+  color: #000;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
 
-			.form-container .form-group {
-				margin-bottom: 15px;
-			}
+.logout-icon:hover {
+  color: #818285;
+  transform: scale(1.1);
+}
 
-			.form-container textarea {
-				width: 100%;
-				height: 200px;
-				padding: 10px;
-				border: 2px solid #ccc;
-				border-radius: 5px;
-				font-size: 1rem;
-				resize: vertical;
-				box-sizing: border-box;
-				margin-top: 10px;
-				font-family: 'Arial', sans-serif;
-			}
+/* Notifications */
+.notification-container {
+  position: relative;
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+}
 
-			.form-container button {
-				width: 100%;
-				background-color: #818285;
-				color: white;
-				border: none;
-				padding: 12px;
-				border-radius: 5px;
-				font-size: 1.1rem;
-				cursor: pointer;
-				transition: background-color 0.3s;
-			}
+#notificationIcon {
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+}
 
-			.form-container button:hover {
-				background-color: #6c757d;
-			}
+.notification-count {
+  position: absolute;
+  top: 0px;
+  right: -2px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 3px 7px;
+  font-size: 12px;
+  font-weight: bold;
+}
 
-			/* Footer */
-			footer {
-				text-align: center;
-				padding: 20px;
-				background-color: #f4f4f4;
-				border-top: 1px solid #ccc;
-			}
+.notifications {
+  position: absolute;
+  z-index: 1000;
+  width: 600px;
+  top: -210px;
+  right: 0;
+  margin-top: 250px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 2px;
+  background-color: #fff;
+  border: 2px solid #000;
+}
 
-			footer p {
-				color: #333;
-			}
+.notifications ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
 
-			/* Retour à la liste */
-			.back-link {
-				display: inline-block;
-				margin-top: 20px;
-				text-decoration: none;
-				color: #007bff;
-				font-weight: bold;
-			}
+.notifications li {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  font-size: 12px;
+}
 
-			.back-link:hover {
-				text-decoration: underline;
-			}
+.notifications li:last-child {
+  border-bottom: none;
+}
 
-			/* Zone de texte "Résumé" */
-			.summary-text {
-				width: 100%;
-				background-color: #f7f7f7;
-				padding: 20px;
-				border: 2px solid #ccc;
-				border-radius: 8px;
-				font-size: 1.1rem;
-				font-family: 'Arial', sans-serif;
-				box-sizing: border-box;
-				margin-top: 20px;
-				color: #333;
-				min-height: 150px;
-				white-space: pre-wrap;
-				word-wrap: break-word;
-			}
+/* Container Custom */
+.container-custom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px auto;
+  max-width: 1400px;
+}
+
+/* Form Container */
+.form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #818285;
+  color: white;
+  font-size: 16px;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #6c757d;
+}
+
+/* Back Link */
+.back-link {
+  display: block;
+  margin-top: 20px;
+  text-decoration: none;
+  color: #818285;
+  font-size: 14px;
+}
+
+.back-link:hover {
+  color: #000;
+}
+
+/* Button Styling */
+.btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.center-button {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 20px;
+}
+
+.center-button .btn-secondary {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid black;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.center-button .btn-secondary:hover {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 20px 0;
+  background-color: #f4f4f4;
+  border-top: 1px solid #ccc;
+}
+
+footer p {
+  color: #333;
+}
+
+			
 		</style>
 	</head>
 	<body>
 		<!-- Navbar -->
 		<nav class="navbar navbar-expand-lg navbar-custom">
 			<div class="container-fluid">
+				<!-- Logo -->
 				<a class="navbar-brand" href="{{ path('app_logout') }}">
-					<img src="/img/logoPagosImg04.png" alt="Logo" height="40">
+					<img class="img-navbar" src="/img/logoPagosImg04.png" alt="Logo" height="40">
 				</a>
 
+				<!-- Bouton pour mobiles -->
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
 
+				<!-- Liens du menu -->
 				<div class="collapse navbar-collapse" id="navbarColor01">
 					<ul class="navbar-nav me-auto">
 						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_homeadmin') }}"><b>Accueil</b></a>
+							<a class="nav-link nav-link-custom" style="color: #000" href="{{ path('app_homeadmin') }}">
+								<b>Accueil</b>
+							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_tachesadmin') }}"><b>Tâches</b></a>
+							<a class="nav-link nav-link-custom" href="{{ path('app_tachesadmin') }}">
+								<b>Tâches</b>
+							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_clientsdepagosadmin') }}"><b>Clients de Pagos</b></a>
+							<a class="nav-link nav-link-custom" href="{{ path('app_clientsdepagosadmin') }}">
+								<b>Clients de Pagos</b>
+							</a>
 						</li>
+
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#" id="gestionDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><b>Administration</b></a>
+							<a class="nav-link dropdown-toggle nav-link-custom" href="#" id="gestionDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								<b>Administration</b>
+							</a>
 							<ul class="dropdown-menu" aria-labelledby="gestionDropdown">
-								<li><a class="dropdown-item" href="{{ path('app_gestionuser') }}"><b>Gestion utilisateur</b></a></li>
-								<li><a class="dropdown-item" href="{{ path('app_importexport') }}"><b>Imports / Exports</b></a></li>
-								<li><a class="dropdown-item" href="{{ path('app_register') }}"><b>Créer un utilisateur</b></a></li>
-								<li><a class="dropdown-item" href="{{ path('app_createclientadmin') }}"><b>Créer un Client</b></a></li>
+								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_gestionuser') }}"><b>Gestion utilisateur</b></a></li>
+								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_importexport') }}"><b>Imports / Exports</b></a></li>
+								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_register') }}"><b>Créer un utilisateur</b></a></li>
+								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_createclientadmin') }}"><b>Créer un Client</b></a></li>
 							</ul>
 						</li>
 					</ul>
 
+					<!-- Liens côté droit -->
 					<ul class="navbar-nav ms-auto">
-						<li class="nav-item">
-							<a class="nav-link" href="#" style="color: #ffffff; text-align: center;"><b>{{ app.user.nom }} {{ app.user.prenom }}</b></a>
+						<li class="nav-item nav-link nav-link-custom user-name">
+							<b>{{ app.user.nom }} {{ app.user.prenom }}</b>
 						</li>
-						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#" id="navbarUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-								<i class="fas fa-user-circle" style="font-size: 1.5em; color: white;"></i>
+
+			
+
+						<!-- Logo client et déconnexion -->
+						<li class="nav-item d-flex align-items-center">
+							<img src="data:image/png;base64,{{ logo }}" alt="Logo du client" class="client-logo me-2" />
+							<a class="nav-link logout-icon" href="{{ path('app_logout') }}" title="Se déconnecter">
+								<i class="fas fa-sign-out-alt"></i>
 							</a>
-							<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown">
-								<li><hr class="dropdown-divider"></li>
-								<li><a class="dropdown-item" href="{{ path('app_logout') }}"><b><i class="fas fa-sign-out-alt"></i> Se déconnecter</b></a></li>
-							</ul>
 						</li>
 					</ul>
 				</div>

@@ -16,25 +16,56 @@ use App\Repository\UserRepository; // Assurez-vous que ce repository existe
 use App\Entity\Forum;
 use App\Entity\Client;
 use Doctrine\ORM\EntityManagerInterface;
-
-
+use App\Entity\Notification;
+use App\Repository\NotificationRepository;
 
 class ClientsdePagosController extends AbstractController
 {
+    private $webTaskRepository;
     private $versionService;
     private $textTransformer;
-    private $userRepository; // Ajout de UserRepository
+    private $userRepository;
+    private $notificationRepository;
 
-    public function __construct(VersionService $versionService, TextTransformer $textTransformer, UserRepository $userRepository)
-    {
+    public function __construct(
+        WebtaskRepository $webTaskRepository,
+        VersionService $versionService, 
+        TextTransformer $textTransformer, 
+        UserRepository $userRepository,
+        NotificationRepository $notificationRepository
+    ) {
+        $this->webTaskRepository = $webTaskRepository;
         $this->versionService = $versionService;
         $this->textTransformer = $textTransformer;
         $this->userRepository = $userRepository;
+        $this->notificationRepository = $notificationRepository;
     }
 
     #[Route('/clientsdepagos', name: 'app_clientsdepagos')]
-    public function clientsdepagos(ClientRepository $clientRepository, Request $request): Response
+    public function clientsdepagos(ClientRepository $clientRepository, Request $request, NotificationRepository $notificationRepository): Response
     {
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
+        // Si l'utilisateur n'est pas connecté, rediriger vers la page de connexion
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+        
+        // Récupérer l'ID du client associé à l'utilisateur connecté
+        $idclient = $user->getIdclient(); 
+
+        // Vérifier si un client est associé à l'utilisateur
+        if (!$idclient) {
+            throw $this->createNotFoundException('Aucun client associé à cet utilisateur.');
+        }
+
+        // Récupérer le logo du client
+        $logo = null;
+        if ($idclient->getLogo()) {
+            $logo = base64_encode(stream_get_contents($idclient->getLogo()));
+        }
+
         $excludedId = 'e4e080b3758761bd01758f5fcfed03d9';
         $clients = $clientRepository->findAll();
  
@@ -87,7 +118,22 @@ class ClientsdePagosController extends AbstractController
         }
 
         // Récupérer les utilisateurs depuis le UserRepository
-        $users = $this->userRepository->findAll();  // Récupération de tous les utilisateurs
+        $users = $this->userRepository->findAll();
+
+        // Récupérer les notifications visibles de l'utilisateur connecté
+        $notifications = $notificationRepository->findBy([
+            'user' => $user->getId(),
+            'visible' => true
+        ]);
+
+        // Créer un tableau pour lier codeWebtask à id
+        $idWebtaskMap = [];
+        foreach ($notifications as $notification) {
+            $idWebtask = $this->webTaskRepository->findIdByCodeWebtask($notification->getCodeWebtask());
+            if ($idWebtask !== null) {
+                $idWebtaskMap[$notification->getCodeWebtask()] = $idWebtask;
+            }
+        }
 
         // Passer $clientsData et $users à la vue
         return $this->render('Client/ClientsdePagos.html.twig', [
@@ -96,6 +142,9 @@ class ClientsdePagosController extends AbstractController
             'query' => $query,
             'sort_by' => $sortBy,
             'sort_order' => $sortOrder,
+            'logo' => $logo,
+            'notifications' => $notifications,
+            'idWebtaskMap' => $idWebtaskMap,
         ]);
     }
 
@@ -112,13 +161,10 @@ class ClientsdePagosController extends AbstractController
             'id' => $user->getId(),
             'name' => $user->getName(),
             'email' => $user->getEmail(),
-            // Ajoutez ici les informations supplémentaires à afficher
         ];
 
         return new JsonResponse($data);
     }
-
-
 
     #[Route('/client/{id}', name: 'app_client_details', methods: ['GET'])]
     public function clientDetails($id, ClientRepository $clientRepository): JsonResponse
@@ -220,43 +266,105 @@ class ClientsdePagosController extends AbstractController
         ]);
     }
 
+    #[Route('/notifications', name: 'get_notifications', methods: ['GET'])]
+    public function getNotifications(): JsonResponse
+    {
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
+        // Vérifier si l'utilisateur est connecté
+        if (!$user) {
+            return $this->json([
+                'count' => 0,
+                'notifications' => [],
+                'message' => 'Utilisateur non connecté',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        // Récupérer l'ID de l'utilisateur
+        $userId = $user->getId();
+
+        // Récupérer les notifications visibles pour l'utilisateur connecté
+        $notifications = $this->notificationRepository->createQueryBuilder('n')
+            ->where('n.visible = :visible')
+            ->andWhere('n.user = :userId')
+            ->setParameter('visible', true)
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult();
+
+        return $this->json([
+            'count' => count($notifications),
+            'notifications' => $notifications,
+        ]);
+    }
+
+    #[Route('/mark-as-read/{id}', name: 'app_mark_as_read', methods: ['POST'])]
+    public function markAsRead($id): JsonResponse
+    {
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
+        if (!$user) {
+            return new JsonResponse(['status' => 'unauthorized'], 401);
+        }
+
+        // Récupérer la notification par son ID
+        $notification = $this->notificationRepository->find($id);
+
+        if (!$notification) {
+            return new JsonResponse(['status' => 'not_found'], 404);
+        }
+
+        // Vérifier que la notification appartient à l'utilisateur connecté
+        if ($notification->getUser() !== $user->getId()) {
+            return new JsonResponse(['status' => 'forbidden'], 403);
+        }
+
+        // Mettre à jour le champ visible à 0
+        $notification->setVisible(false); // Assurez-vous que cette méthode existe dans l'entité Notification
+
+        // Enregistrer les modifications
+        $this->entityManager->persist($notification);
+        $this->entityManager->flush();
+
+        return new JsonResponse(['status' => 'success']);
+    }
+
     #[Route('/client/{id}/forum', name: 'app_client_add_forum', methods: ['POST'])]
-public function addForum(Request $request, Client $client, EntityManagerInterface $entityManager): JsonResponse
-{
-    $data = json_decode($request->getContent(), true);
+    public function addForum(Request $request, Client $client, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
 
-    if (isset($data['content']) && !empty($data['content'])) {
-        $forum = new Forum();
-        $forum->setContent($data['content']);
-        $forum->setClient($client);
-        $forum->setDate(new \DateTime());
+        if (isset($data['content']) && !empty($data['content'])) {
+            $forum = new Forum();
+            $forum->setContent($data['content']);
+            $forum->setClient($client);
+            $forum->setDate(new \DateTime());
 
-        $entityManager->persist($forum);
-        $entityManager->flush();
+            $entityManager->persist($forum);
+            $entityManager->flush();
 
-        return new JsonResponse(['message' => 'Résumé ajouté avec succès'], Response::HTTP_CREATED);
+            return new JsonResponse(['message' => 'Résumé ajouté avec succès'], Response::HTTP_CREATED);
+        }
+
+        return new JsonResponse(['error' => 'Le contenu du résumé est vide'], Response::HTTP_BAD_REQUEST);
     }
 
-    return new JsonResponse(['error' => 'Le contenu du résumé est vide'], Response::HTTP_BAD_REQUEST);
-}
+    #[Route('/client/{id}/forums', name: 'app_client_forums', methods: ['GET'])]
+    public function getClientForums(Client $client): JsonResponse
+    {
+        $forums = $client->getForums();
 
+        $data = [];
+        foreach ($forums as $forum) {
+            $data[] = [
+                'id' => $forum->getId(),
+                'content' => $forum->getContent(),
+                'date' => $forum->getDate()->format('Y-m-d H:i:s'),
+            ];
+        }
 
-#[Route('/client/{id}/forums', name: 'app_client_forums', methods: ['GET'])]
-public function getClientForums(Client $client): JsonResponse
-{
-    $forums = $client->getForums(); // Récupère tous les résumés pour ce client
-
-    $data = [];
-    foreach ($forums as $forum) {
-        $data[] = [
-            'id' => $forum->getId(),
-            'content' => $forum->getContent(),
-            'date' => $forum->getDate()->format('Y-m-d H:i:s'),
-        ];
+        return new JsonResponse($data);
     }
-
-    return new JsonResponse($data);
-}
-
-
 }

@@ -20,47 +20,97 @@
 			body {
 				font-family: 'Helvetica', Arial, sans-serif;
 			}
-			
-			/* Navbar */
+
+			/* Style global de la navbar */
 			.navbar-custom {
-				background-color: #818285;
-				border-style: none;
+				background-color: #818285; /* Couleur de fond principale */
+				padding: 10px 20px; /* Espacement autour de la navbar */
 			}
 
-			.navbar-custom .nav-link {
-				color: #ffffff;
-				font-size: 19px;
-			}
-
-			.navbar-custom .nav-link:hover {
-				color: #000000;
-			}
-
-			.img-navbar {
-				width: 100%;
+			/* Logo dans la navbar */
+			.navbar-custom .navbar-brand img {
+				width: auto;
 				height: 80px;
 			}
 
-			.navbar-toggler-icon {
-				color: white;
+			/* Boutons et liens de la navbar */
+			.navbar-custom .navbar-nav .nav-link {
+				color: #fff; /* Couleur du texte des liens */
+				font-weight: bold;
+				text-transform: uppercase; /* Mettre en majuscules */
+				padding: 10px 15px;
+				transition: color 0.3s ease; /* Transition pour le changement de couleur */
 			}
 
-			.dropdown-menu {
-				background-color: #818285;
+			.navbar-custom .navbar-nav .nav-link:hover {
+				color: #000000; /* Couleur au survol */
 			}
 
-			.dropdown-menu .dropdown-header {
-				color: #ffffff;
-				font-size: 16px;
+			.navbar-custom .navbar-nav .nav-item.active .nav-link {
+				color: #000000; /* Couleur pour l'élément actif */
 			}
 
-			.dropdown-menu .dropdown-item {
-				color: #ff0000;
+			/* Dropdown (menu déroulant) */
+			.navbar-custom .navbar-nav .nav-item.dropdown .nav-link {
+				color: #fff; /* Couleur du lien de la dropdown */
+				border-bottom: 2px solid transparent; /* Ajouter une bordure discrète */
+				padding-bottom: 5px;
 			}
 
-			.dropdown-menu .dropdown-item:hover {
-				background-color: #818285;
-				color: #ffffff;
+			.navbar-custom .navbar-nav .nav-item.dropdown:hover .nav-link {
+				color: #000000; /* Couleur de la dropdown au survol */
+				border-bottom: 2px solid #000000; /* Bordure colorée au survol */
+			}
+
+			.navbar-custom .navbar-nav .nav-item .dropdown-menu {
+				background-color: #818285; /* Fond de la dropdown */
+				border: none; /* Enlever les bordures */
+				padding: 10px 0; /* Espacement intérieur */
+			}
+
+			.navbar-custom .navbar-nav .nav-item .dropdown-item {
+				color: #fff; /* Couleur des éléments de la dropdown */
+				padding: 10px 20px;
+				transition: background-color 0.3s ease; /* Transition pour la couleur de fond */
+			}
+
+			.navbar-custom .navbar-nav .nav-item .dropdown-item:hover {
+				background-color: #000000; /* Couleur de fond au survol */
+				color: #fff; /* Couleur du texte au survol */
+			}
+
+			/* Style pour le nom de l'utilisateur */
+			.user-name {
+				color: #000;
+				font-size: 1rem;
+				margin-top: 0.4rem;
+			}
+
+			/* Logo client adaptable pour formats carré et rectangulaire */
+			.client-logo {
+				max-height: 40px;
+				max-width: 60px; /* Taille max pour gérer les logos rectangulaires */
+				object-fit: contain;
+				border-radius: 8px;
+				padding: 2px;
+				background-color: #fff;
+				transition: transform 0.2s ease;
+			}
+
+			.client-logo:hover {
+				transform: scale(1.1);
+			}
+
+			/* Icône de déconnexion */
+			.logout-icon {
+				font-size: 1.5rem;
+				color: #000;
+				transition: color 0.3s ease, transform 0.3s ease;
+			}
+
+			.logout-icon:hover {
+				color: #818285;
+				transform: scale(1.1);
 			}
 
 			/* Notifications */
@@ -81,7 +131,7 @@
 			.notification-count {
 				position: absolute; /* Positionnement absolu par rapport à l'icône */
 				top: 0; /* Ajuste la position verticale */
-				right: -7px; /* Ajuste la position horizontale */
+				right: -2px; /* Ajuste la position horizontale */
 				background-color: red; /* Couleur d'arrière-plan pour le compteur */
 				color: white; /* Couleur du texte */
 				border-radius: 50%; /* Arrondi pour un style circulaire */
@@ -164,6 +214,7 @@
 				display: none;
 			}
 
+			/* STYLE CONTAINER PRINCIPAL */
 			.container-custom {
 				display: flex;
 				justify-content: space-between;
@@ -255,7 +306,7 @@
 				box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Ombre pour le relief */
 			}
 
-			.client-logo {
+			.client-logo-central {
 				max-width: 70%; /* Limiter la largeur du logo */
 				max-height: 70%; /* Limiter la hauteur du logo */
 				object-fit: contain; /* Garder le ratio du logo */
@@ -557,20 +608,6 @@
 			footer p {
 				color: #333;
 			}
-			.navbar .nav-item .dropdown-menu {
-				min-width: 200px; /* Ajustez la largeur du menu déroulant */
-			}
-
-			.navbar .badge {
-				position: absolute;
-				top: -5px;
-				right: -10px;
-				font-size: 0.75rem; /* Taille du texte du badge */
-			}
-			.img-navbar {
-				height: 60px; /* Taille souhaitée pour le logo */
-				width: auto; /* Conserve les proportions du logo */
-			}
 		</style>
 	</head>
 	<body>
@@ -612,9 +649,7 @@
 									<b>Forum</b>
 								</a>
 							</li>
-
 						{% endif %}
-
 
 						{% set allowed_ids = ['e4e080b3758761bd01758f5fcfed03d9'] %}
 						{% if app.user.idclient and app.user.idclient.getId() in allowed_ids %}
@@ -635,107 +670,86 @@
 						</li>
 
 						<!-- Icône de notification -->
-						{% set allowed_ids = ['e4e080b3758761bd01758f5fcfed03d9'] %}
-						{% if app.user.idclient and app.user.idclient.getId() in allowed_ids %}
-							<li class="nav-item notification-container">
-								<a class="nav-link" href="#" style="color: #ffffff; text-align: center;">
-									<i class="fas fa-bell" style="font-size: 1.5em; color: white;" id="notificationIcon"></i>
-									<span class="notification-count">{{ notifications|filter(notification => notification.visible == 1)|length }}</span>
-								</a>
-								<div id="notificationList" class="notifications" style="display: none;">
-									<ul>
-										{% set visibleNotifications = notifications|filter(notification => notification.visible == 1) %}
-										{% if visibleNotifications is empty %}
-											<li>Aucune notification</li>
-										{% else %}
-											{% set notificationsByClient = {} %}
-
-											{# Regrouper les notifications par client #}
-											{% for notification in visibleNotifications %}
-												{% set clientName = notification.getClient.getRaisonSociale() %}
-												{% if notificationsByClient[clientName] is not defined %}
-													{% set notificationsByClient = notificationsByClient|merge({(clientName): []}) %}
-												{% endif %}
-												{% set notificationsByClient = notificationsByClient|merge({(clientName): notificationsByClient[clientName] | merge([notification])}) %}
-											{% endfor %}
-
-											{# Affichage des notifications regroupées par client #}
-											{% for client, clientNotifications in notificationsByClient %}
-												{% if clientNotifications|length > 0 %}
-													<li class="client-notification" data-client="{{ client }}">
-														<div class="client-notification-header" style="border-bottom: 2px solid #007bff; margin-bottom: 10px; padding-bottom: 5px;">
-															<b>{{ client }}</b>
-														</div>
-														<ul style="list-style: none; padding-left: 0; border-left: 2px dashed #ccc; padding-left: 10px;">
-															{% for notification in clientNotifications %}
-																<li id="notification-{{ notification.id }}" style="margin-bottom: 15px; padding: 10px; border: 1px solid #e0e0e0; border-radius: 5px; background-color: #f9f9f9;">
-																	<div class="notification-header">
-																		<span class="creation-date">{{ notification.getDateCreation() | date('d/m/y H:i:s') }}</span>
-																	</div>
-																	<div class="notification-body">
-																		{{ notification.getTitreWebtask() }}
-																		({{ notification.getLibelleWebtask() }})<br>
-																		{{ notification.getMessage() }}
-																	</div>
-																	<div class="notification-buttons">
-																		<button class="mark-as-read" data-id="{{ notification.id }}">Lu</button>
-																		{% set idWebtask = idWebtaskMap[notification.codeWebtask] %}
-																		{# <button onclick="window.location.href='{{ path('app_suivitaches', { 'id': idWebtask }) }}'">Voir le Suivi</button> #}
-																	</div>
-																</li>
-															{% endfor %}
-														</ul>
-													</li>
-													<hr
-													style="border-top: 2px solid #007bff; margin: 10px 0;">
-												{# Séparation entre clients #}
-												{% endif %}
-											{% endfor %}
-										{% endif %}
-									</ul>
-								</div>
-							</li>
-						{% endif %}
-
-						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#" id="navbarUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-								<img
-								src="data:image/png;base64,{{ logo }}" alt="Logo du client" class="client-logo" style="width: 30px; height: 30px; border-radius: 50%;"/>
-							<!-- Ajout du logo client -->
+						<li class="nav-item notification-container">
+							<a class="nav-link" href="#" style="color: #ffffff; text-align: center;">
+								<i class="fas fa-bell" style="font-size: 1.5em; color: white;" id="notificationIcon"></i>
+								<span class="notification-count">{{ notifications|filter(notification => notification.visible == 1)|length }}</span>
 							</a>
-							<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown">
-								<li><hr class="dropdown-divider"></li>
-								<li>
-									<a class="dropdown-item" href="{{ path('app_logout') }}">
-										<b>
-											<i class="fas fa-sign-out-alt"></i>
-											Se déconnecter
-										</b>
-									</a>
-								</li>
-							</ul>
+							<div id="notificationList" class="notifications" style="display: none;">
+								<ul>
+									{% set visibleNotifications = notifications|filter(notification => notificationUser[notification.id] is not defined or notificationUser[notification.id].isRead == false) %}
+									{% if visibleNotifications is empty %}
+										<li>Aucune notification</li>
+									{% else %}
+										{% set notificationsByClient = {} %}
+
+										{# Regrouper les notifications par client #}
+										{% for notification in visibleNotifications %}
+											{% set clientName = notification.getClient.getRaisonSociale() %}
+											{% if notificationsByClient[clientName] is not defined %}
+												{% set notificationsByClient = notificationsByClient|merge({(clientName): []}) %}
+											{% endif %}
+											{% set notificationsByClient = notificationsByClient|merge({(clientName): notificationsByClient[clientName] | merge([notification])}) %}
+										{% endfor %}
+
+										{# Affichage des notifications regroupées par client #}
+										{% for client, clientNotifications in notificationsByClient %}
+											{% if clientNotifications|length > 0 %}
+												<li class="client-notification" data-client="{{ client }}">
+													<div class="client-notification-header" style="border-bottom: 2px solid #007bff; margin-bottom: 10px; padding-bottom: 5px;">
+														<b>{{ client }}</b>
+													</div>
+													<ul style="list-style: none; padding-left: 0; border-left: 2px dashed #ccc; padding-left: 10px;">
+														{% for notification in clientNotifications %}
+															<li id="notification-{{ notification.id }}" style="margin-bottom: 15px; padding: 10px; border: 1px solid #e0e0e0; border-radius: 5px; background-color: #f9f9f9;">
+																<div class="notification-header">
+																	<span class="creation-date">{{ notification.getDateCreation() | date('d/m/y H:i:s') }}</span>
+																</div>
+																<div class="notification-body">
+																	{{ notification.getTitreWebtask() }}
+																	({{ notification.getLibelleWebtask() }})<br>
+																	{{ notification.getMessage() }}
+																</div>
+																<div class="notification-buttons">
+																	<button class="mark-as-read" data-id="{{ notification.id }}">Lu</button>
+																	{% set idWebtask = idWebtaskMap[notification.codeWebtask] %}
+																	<button onclick="window.location.href='{{ path('app_consultertaches', { 'id': notification.codeWebtask }) }}'">Consulter</button>
+																</div>
+															</li>
+														{% endfor %}
+													</ul>
+												</li>
+												<hr
+												style="border-top: 2px solid #007bff; margin: 10px 0;">
+											{# Séparation entre clients #}
+											{% endif %}
+										{% endfor %}
+									{% endif %}
+								</ul>
+							</div>
 						</li>
 
+						<!-- Logo client et déconnexion -->
+						<li class="nav-item d-flex align-items-center">
+							<img src="data:image/png;base64,{{ logo }}" alt="Logo du client" class="client-logo me-2"/>
+							<a class="nav-link logout-icon" href="{{ path('app_logout') }}" title="Se déconnecter">
+								<i class="fas fa-sign-out-alt"></i>
+							</a>
+						</li>
 					</ul>
 				</div>
 			</div>
 		</nav>
 
-
-		<div
-			class="container">
+		<div class="container">
 			<!-- Main Content -->
 			<div class="container-custom">
 				<div class="custom-rectangle">
 					{% set allowed_ids = ['e4e080b3758761bd01758f5fcfed03d9'] %}
 					{% if app.user.idclient and app.user.idclient.getId() in allowed_ids %}
-						<h2>
-							<b>TÂCHES EN ATTENTE</b>
-						</h2>
+						<h2><b>TÂCHES EN ATTENTE</b></h2>
 					{% else %}
-						<h2>
-							<b>TÂCHES EN ATTENTE CLIENT</b>
-						</h2>
+						<h2><b>TÂCHES EN ATTENTE CLIENT</b></h2>
 					{% endif %}
 					<div id="task-container" class="task-container">
 						{% if webtasks is not empty %}
@@ -743,11 +757,8 @@
 								{% if webtask.etatdelawebtask == 'ON' and webtask.avancementdelatache == '❌ Stop Client ❌' %}
 									<div class="task">
 										<h3>
-											<u>
-												<b>WebTask :</b>
-											</u>
-											{{ webtask.titre }}
-											({{ webtask.webtask }})
+											<u><b>WebTask :</b></u>
+											{{ webtask.titre }} ({{ webtask.webtask }})
 											<span class="info-icon" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="{{ webtask.description|nl2br }}">
 												<i class="fas fa-question-circle"></i>
 											</span>
@@ -771,23 +782,21 @@
 
 				{% if logo %}
 					<div class="logo-circle">
-						<img src="data:image/png;base64,{{ logo }}" alt="Logo du client" class="client-logo"/>
+						<img src="data:image/png;base64,{{ logo }}" alt="Logo du client" class="client-logo-central" />
 					</div>
-
+				{% else %}
+					<p>Aucun logo disponible</p>
 				{% endif %}
 
 				<div class="custom-rectangle-statistic">
 					<div class="icon-grid">
-						<div
-							class="icon-container">
+						<div class="icon-container">
 							<!-- Redirection pour NON PRISE EN COMPTE -->
 							<a href="{{ path('app_taches', {'filter': 'nonPriseEnCompte'}) }}">
 								<div class="black-block" style="position: relative;">
 									<i class="fas fa-traffic-light iconeTheme" style="color: #FF0000;"></i>
 									<div class="light-circle-npc"></div>
-									<div class="statistic-value">
-										{{ nonPrisesEnCompte }}
-									</div>
+									<div class="statistic-value">{{ nonPrisesEnCompte }}</div>
 								</div>
 							</a>
 							<div class="status-text">
@@ -795,15 +804,12 @@
 							</div>
 						</div>
 
-						<div
-							class="icon-container">
+						<div class="icon-container">
 							<!-- Redirection pour STOP CLIENT -->
 							<a href="{{ path('app_taches', {'filter': 'stopClient'}) }}">
 								<div class="green-block" style="position: relative;">
 									<i class="fa-regular fa-face-frown iconeTheme" style="color: #FF0000;"></i>
-									<div class="statistic-value">
-										{{ stopClient }}
-									</div>
+									<div class="statistic-value">{{ stopClient }}</div>
 								</div>
 							</a>
 							<div class="status-text">
@@ -811,16 +817,13 @@
 							</div>
 						</div>
 
-						<div
-							class="icon-container">
+						<div class="icon-container">
 							<!-- Redirection pour PRISE EN COMPTE -->
 							<a href="{{ path('app_taches', {'filter': 'priseEnCompte'}) }}">
 								<div class="black-block" style="position: relative;">
 									<i class="fas fa-traffic-light iconeTheme" style="color: #FFA500;"></i>
 									<div class="light-circle-pc"></div>
-									<div class="statistic-value">
-										{{ totalPriseEnCompteEtAmelioration  }}
-									</div>
+									<div class="statistic-value">{{ totalPriseEnCompteEtAmelioration }}</div>
 								</div>
 							</a>
 							<div class="status-text">
@@ -828,15 +831,12 @@
 							</div>
 						</div>
 
-						<div
-							class="icon-container">
+						<div class="icon-container">
 							<!-- Redirection pour REFUSÉE -->
 							<a href="{{ path('app_taches', {'filter': 'refusee'}) }}">
 								<div class="red-block" style="position: relative;">
 									<i class="fa-solid fa-ban iconeTheme" style="color: #FFFFFF;"></i>
-									<div class="statistic-value">
-										{{ refusee }}
-									</div>
+									<div class="statistic-value">{{ refusee }}</div>
 								</div>
 							</a>
 							<div class="status-text">
@@ -844,16 +844,13 @@
 							</div>
 						</div>
 
-						<div
-							class="icon-container">
+						<div class="icon-container">
 							<!-- Redirection pour TERMINÉE -->
 							<a href="{{ path('app_taches', {'filter': 'terminee'}) }}">
 								<div class="black-block" style="position: relative;">
 									<i class="fas fa-traffic-light iconeTheme" style="color: #008000;"></i>
 									<div class="light-circle-t"></div>
-									<div class="statistic-value">
-										{{ terminee }}
-									</div>
+									<div class="statistic-value"> {{ terminee }}</div>
 								</div>
 							</a>
 							<div class="status-text">
@@ -861,15 +858,12 @@
 							</div>
 						</div>
 
-						<div
-							class="icon-container">
+						<div class="icon-container">
 							<!-- Redirection pour VALIDÉE -->
 							<a href="{{ path('app_taches', {'filter': 'validee'}) }}">
 								<div class="black-block" style="position: relative;">
 									<i class="fa-solid fa-lock-open iconeTheme" style="color: #FFFFFF;"></i>
-									<div class="statistic-value">
-										{{ validee }}
-									</div>
+									<div class="statistic-value">{{ validee }}</div>
 								</div>
 							</a>
 							<div class="status-text">
@@ -881,70 +875,52 @@
 			</div>
 		</div>
 
-		<hr>
-
-		<div class="container-task">
-			<h1>
-				<b>MES TÂCHES</b>
-			</h1>
-			<div class="container-task" id="taskContainer">
+		{% if isPilote %}
+			<hr>
+			<div class="container-task">
+				<h1><b>MES TÂCHES</b></h1>
 				{% if webtasks is not empty %}
-					{% for webtask in webtasks %}
-						{% if webtask.etatdelawebtask == 'ON' and webtask.piloteid is not null and webtask.piloteid.id == app.user.id %}
-							<div class="custom-task hidden" data-code="{{ webtask.webtask }}" data-titre="{{ webtask.titre }}">
-								<h2>
-									<b>{{ webtask.titre }}</b>
-								</h2>
-								<ul>
-									<li>
-										<b>
-											<u>WebTask :</u>
-										</b>
-										{{ webtask.webtask }}
-									</li>
-									<li>
-										<b>
-											<u>Description :</u>
-										</b>
-										{{ webtask.description|nl2br }}
-									</li>
-									<li>
-										<b>
-											<u>Version :</u>
-										</b>
-										{{ webtask.versionLibelle }}
-									</li>
-									<li>
-										<b>
-											<u>Date de fin demandée :</u>
-										</b>
-										{{ webtask.datefinDemandee }}
-									</li>
-									<li>
-										<b>
-											<u>Pilote :</u>
-										</b>
-										{% if webtask.piloteid %}
-											{{ webtask.piloteid.prenom }}
-											{{ webtask.piloteid.nom }}
-										{% else %}
-											Pilote non assigné
-										{% endif %}
-									</li>
-								</ul>
-								<div class="btn-group" role="group">
-									<button type="button" class="btn btn-secondary consulter rounded" onclick="window.location.href='{{ path('app_consultertaches', { 'id': webtask.code }) }}'">CONSULTER</button>
-									{# <button type="button" class="btn btn-secondary consulter rounded" onclick="window.location.href='{{ path('app_suivitaches', { 'id': webtask.id }) }}'">VOIR LE SUIVI</button> #}
-									{% if app.user.idclient and app.user.idclient.getId() not in allowed_ids %}{% endif %}
+					<div class="container-task" id="taskContainer">
+						{% for webtask in webtasks %}
+							{% if webtask.etatdelawebtask == 'ON' and webtask.piloteid is not null and webtask.piloteid.id == app.user.id %}
+								<div class="custom-task hidden" data-code="{{ webtask.webtask }}" data-titre="{{ webtask.titre }}">
+									<h2><b>{{ webtask.titre }}</b></h2>
+									<ul>
+										<li>
+											<b><u>WebTask :</u></b> {{ webtask.webtask }}
+										</li>
+										<li>
+											<b><u>Description :</u></b> {{ webtask.description|nl2br }}
+										</li>
+										<li>
+											<b><u>Version :</u></b> {{ webtask.versionLibelle }}
+										</li>
+										<li>
+											<b><u>Date de fin demandée :</u></b> {{ webtask.datefinDemandee }}
+										</li>
+										<li>
+											<b><u>Pilote :</u></b>
+											{% if webtask.piloteid %}
+												{{ webtask.piloteid.prenom }} {{ webtask.piloteid.nom }}
+											{% else %}
+												Pilote non assigné
+											{% endif %}
+										</li>
+									</ul>
+									<div class="btn-group" role="group">
+										<button type="button" class="btn btn-secondary consulter rounded" onclick="window.location.href='{{ path('app_consultertaches', { 'id': webtask.code }) }}'">CONSULTER</button>
+										{# <button type="button" class="btn btn-secondary consulter rounded" onclick="window.location.href='{{ path('app_suivitaches', { 'id': webtask.id }) }}'">VOIR LE SUIVI</button> #}
+										{% if app.user.idclient and app.user.idclient.getId() not in allowed_ids %}{% endif %}
+									</div>
 								</div>
-							</div>
-						{% endif %}
-					{% endfor %}
+							{% endif %}
+						{% endfor %}
+					</div>
 				{% else %}
 					<p>Aucune tâche disponible.</p>
 				{% endif %}
 			</div>
-		</div>
+		{% endif %}
 
 		<hr>
 
@@ -957,11 +933,7 @@
 
 		<!-- Footer -->
 		<footer>
-			<p>
-				<b>© Copyright @ 2024 par
-					<span style="color: #d7df22;">Cabinet PAGOS</span>
-					| tous droits réservés.</b>
-			</p>
+			<p><b>© Copyright @ 2024 par <span style="color: #d7df22;">Cabinet PAGOS</span> | tous droits réservés.</b></p>
 		</footer>
 
 		<!-- JS de Bootstrap et dépendances -->
@@ -969,78 +941,82 @@
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
 		<script>
 			document.addEventListener('DOMContentLoaded', function () {
-// Code de gestion des notifications ici
+				// Code de gestion des notifications ici
 
-// Gestion de l'affichage des notifications
-document.getElementById('notificationIcon').addEventListener('click', function () {
-var notificationList = document.getElementById('notificationList');
-notificationList.style.display = notificationList.style.display === 'none' || notificationList.style.display === '' ? 'block' : 'none'; // Toggle
-});
-});
+				// Gestion de l'affichage des notifications
+				document.getElementById('notificationIcon').addEventListener('click', function() {
+					var notificationList = document.getElementById('notificationList');
+					notificationList.style.display = notificationList.style.display === 'none' || notificationList.style.display === '' ? 'block' : 'none'; // Toggle
+				});
+			});
 
-function consulterNotification(notificationId) { // Rediriger vers la page de consultation de la notification
-window.location.href = `/notification/${notificationId}`; // Remplacez par l'URL réelle
-}
+			function consulterNotification(notificationId) {
+				// Rediriger vers la page de consultation de la notification
+				window.location.href = `/notification/${notificationId}`; // Remplacez par l'URL réelle
+			}
 		</script>
 		<script>
 			document.querySelectorAll('.mark-as-read').forEach(button => {
-button.addEventListener('click', function () {
-const notificationId = this.getAttribute('data-id');
+				button.addEventListener('click', function() {
+					const notificationId = this.getAttribute('data-id');
 
-fetch(`/mark-as-read/${notificationId}`, {
-method: 'POST',
-headers: {
-'Content-Type': 'application/json',
-'X-Requested-With': 'XMLHttpRequest'
-}
-}).then(response => {
-if (!response.ok) {
-throw new Error('Erreur lors de la mise à jour de la notification');
-}
-return response.json();
-}).then(data => {
-if (data.status === 'success') { // Masquer la notification
-const notificationElement = document.getElementById(`notification-${notificationId}`);
-if (notificationElement) {
-notificationElement.style.display = 'none'; // Masque la notification
-}
+					fetch(`/mark-as-read/${notificationId}`, {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+							'X-Requested-With': 'XMLHttpRequest'
+						}
+					})
+					.then(response => {
+						if (!response.ok) {
+							throw new Error('Erreur lors de la mise à jour de la notification');
+						}
+						return response.json();
+					})
+					.then(data => {
+						if (data.status === 'success') {
+							// Masquer la notification
+							const notificationElement = document.getElementById(`notification-${notificationId}`);
+							if (notificationElement) {
+								notificationElement.style.display = 'none'; // Masque la notification
+							}
 
-// Mettre à jour le compteur de notifications
-const countElement = document.querySelector('.notification-count');
-const currentCount = parseInt(countElement.textContent, 10);
-countElement.textContent = currentCount - 1;
-// Décrementer le compteur
+							// Mettre à jour le compteur de notifications
+							const countElement = document.querySelector('.notification-count');
+							const currentCount = parseInt(countElement.textContent, 10);
+							countElement.textContent = currentCount - 1; // Décrementer le compteur
 
-// Vérifiez les notifications du client
-checkClientNotifications();
-} else {
-console.error(data);
-}
-}).catch(error => console.error('Erreur:', error));
-});
-});
+							// Vérifiez les notifications du client
+							checkClientNotifications();
+						} else {
+							console.error(data);
+						}
+					})
+					.catch(error => console.error('Erreur:', error));
+				});
+			});
 
-function checkClientNotifications() {
-const clients = document.querySelectorAll('.client-notification');
-let hasVisibleNotifications = false;
+			function checkClientNotifications() {
+				const clients = document.querySelectorAll('.client-notification');
+				let hasVisibleNotifications = false;
 
-clients.forEach(client => {
-const notifications = client.querySelectorAll('li[id^="notification-"]'); // Sélectionner les notifications
-const visibleNotifications = Array.from(notifications).filter(notification => notification.style.display !== 'none');
+				clients.forEach(client => {
+					const notifications = client.querySelectorAll('li[id^="notification-"]'); // Sélectionner les notifications
+					const visibleNotifications = Array.from(notifications).filter(notification => notification.style.display !== 'none');
 
-if (visibleNotifications.length === 0) {
-client.style.display = 'none'; // Masquer le client si aucune notification n'est visible
-} else {
-hasVisibleNotifications = true; // Il y a encore des notifications visibles
-}
-});
+					if (visibleNotifications.length === 0) {
+						client.style.display = 'none'; // Masquer le client si aucune notification n'est visible
+					} else {
+						hasVisibleNotifications = true; // Il y a encore des notifications visibles
+					}
+				});
 
-// Afficher le message si aucune notification visible
-const notificationList = document.getElementById('notificationList');
-if (! hasVisibleNotifications) {
-notificationList.innerHTML = '<li>Aucune notification disponible</li>'; // Afficher le message
-}
-}
+				// Afficher le message si aucune notification visible
+				const notificationList = document.getElementById('notificationList');
+				if (!hasVisibleNotifications) {
+					notificationList.innerHTML = '<li>Aucune notification disponible</li>'; // Afficher le message
+				}
+			}
 		</script>
 	</body>
 </html>

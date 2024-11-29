@@ -4,9 +4,9 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="icon" href="\img\logoPagosImg02.png" type="image/x-icon">
-
-		<title>Liste des utilisateurs</title>
 		
+		<title>Liste des utilisateurs</title>
+
 		<!-- Bootstrap CSS -->
 		<link
 		href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -14,52 +14,219 @@
 		<!-- FontAwesome (pour les icônes) -->
 		<link
 		href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-
+		
 		<!-- Custom CSS -->
 		<style>
 			body {
 				font-family: 'Helvetica', Arial, sans-serif;
 			}
-			/* Navbar */
+			
+			/* Style global de la navbar */
 			.navbar-custom {
-				background-color: #818285;
-				border-style: none;
+				background-color: #818285; /* Couleur de fond principale */
+				padding: 10px 20px; /* Espacement autour de la navbar */
 			}
 
-			.navbar-custom .nav-link {
-				color: #ffffff;
-				font-size: 19px;
-			}
-
-			.navbar-custom .nav-link:hover {
-				color: #000000;
-			}
-
-			.img-navbar {
-				width: 100%;
+			/* Logo dans la navbar */
+			.navbar-custom .navbar-brand img {
+				width: auto;
 				height: 80px;
 			}
 
-			.navbar-toggler-icon {
-				color: white;
+			/* Boutons et liens de la navbar */
+			.navbar-custom .navbar-nav .nav-link {
+				color: #fff; /* Couleur du texte des liens */
+				font-weight: bold;
+				text-transform: uppercase; /* Mettre en majuscules */
+				padding: 10px 15px;
+				transition: color 0.3s ease; /* Transition pour le changement de couleur */
 			}
 
-			.dropdown-menu {
-				background-color: #818285;
+			.navbar-custom .navbar-nav .nav-link:hover {
+				color: #000000; /* Couleur au survol */
 			}
 
-			.dropdown-menu .dropdown-header {
-				color: #ffffff;
-				font-size: 16px;
+			.navbar-custom .navbar-nav .nav-item.active .nav-link {
+				color: #000000; /* Couleur pour l'élément actif */
 			}
 
-			.dropdown-menu .dropdown-item {
-				color: #ff0000;
+			/* Dropdown (menu déroulant) */
+			.navbar-custom .navbar-nav .nav-item.dropdown .nav-link {
+				color: #fff; /* Couleur du lien de la dropdown */
+				border-bottom: 2px solid transparent; /* Ajouter une bordure discrète */
+				padding-bottom: 5px;
 			}
 
-			.dropdown-menu .dropdown-item:hover {
-				background-color: #818285;
-				color: #ffffff;
+			.navbar-custom .navbar-nav .nav-item.dropdown:hover .nav-link {
+				color: #000000; /* Couleur de la dropdown au survol */
+				border-bottom: 2px solid #000000; /* Bordure colorée au survol */
+			}
+
+			.navbar-custom .navbar-nav .nav-item .dropdown-menu {
+				background-color: #818285; /* Fond de la dropdown */
+				border: none; /* Enlever les bordures */
+				padding: 10px 0; /* Espacement intérieur */
+			}
+
+			.navbar-custom .navbar-nav .nav-item .dropdown-item {
+				color: #fff; /* Couleur des éléments de la dropdown */
+				padding: 10px 20px;
+				transition: background-color 0.3s ease; /* Transition pour la couleur de fond */
+			}
+
+			.navbar-custom .navbar-nav .nav-item .dropdown-item:hover {
+				background-color: #000000; /* Couleur de fond au survol */
+				color: #fff; /* Couleur du texte au survol */
+			}
+
+			/* Style pour le nom de l'utilisateur */
+			.user-name {
+				color: #000;
+				font-size: 1rem;
+				margin-top: 0.4rem;
+			}
+
+			/* Logo client adaptable pour formats carré et rectangulaire */
+			.client-logo {
+				max-height: 40px;
+				max-width: 60px; /* Taille max pour gérer les logos rectangulaires */
+				object-fit: contain;
+				border-radius: 8px;
+				padding: 2px;
+				background-color: #fff;
+				transition: transform 0.2s ease;
+			}
+
+			.client-logo:hover {
+				transform: scale(1.1);
+			}
+
+			/* Icône de déconnexion */
+			.logout-icon {
+				font-size: 1.5rem;
+				color: #000;
+				transition: color 0.3s ease, transform 0.3s ease;
+			}
+
+			.logout-icon:hover {
+				color: #818285;
+				transform: scale(1.1);
+			}
+
+			/* Notifications */
+			.notification-container {
+				position: relative; /* Pour permettre le positionnement de la liste de notifications */
+				margin-right: 15px; /* Espacement à droite pour ne pas être collé aux éléments adjacents */
+				display: flex; /* Utilisation de flex pour aligner les éléments */
+    			align-items: center; /* Alignement vertical centré */
+			}
+
+			#notificationIcon {
+				font-size: 24px; /* Taille de l'icône de notification */
+				color: white; /* Couleur de l'icône */
+				position: relative; /* Pour positionner le compteur */
+				cursor: pointer; /* Change le curseur lors du survol */
+			}
+
+			.notification-count {
+				position: absolute; /* Positionnement absolu par rapport à l'icône */
+				top: 0px; /* Ajuste la position verticale */
+				right: -2px; /* Ajuste la position horizontale */
+				background-color: red; /* Couleur d'arrière-plan pour le compteur */
+				color: white; /* Couleur du texte */
+				border-radius: 50%; /* Arrondi pour un style circulaire */
+				padding: 3px 7px; /* Espacement intérieur */
+				font-size: 12px; /* Taille du texte */
+				font-weight: bold; /* Gras pour le compteur */
+			}
+
+			.notifications {
+				border: 2px solid #000; /* Bordure autour de la liste de notifications */
+				background-color: #fff; /* Couleur d'arrière-plan */
+				position: absolute; /* Positionnement absolu */
+				z-index: 1000; /* S'assurer qu'il est au-dessus des autres éléments */
+				width: 600px;
+				top: -210px; /* Ajustez selon vos besoins */
+				right: 0; /* Aligne le conteneur à droite */
+				margin-top: 250px; /* Espacement au-dessus de la liste */
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre pour le conteneur */
+				padding: 2px; /* Espacement intérieur */
+			}
+
+			.notifications ul {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+			}
+
+			.notifications li {
+				padding: 10px;
+				border-bottom: 1px solid #ccc; /* Bordure en bas */
+				font-size: 12px; /* Taille de police réduite */
+			}
+
+			/* Supprime la bordure du dernier élément */
+			.notifications li:last-child {
+				border-bottom: none; 
+			}
+
+			/* Header de notification */
+			.notification-header {
+				display: flex; /* Utilise flexbox pour aligner les éléments */
+				justify-content: space-between; /* Espace entre le nom et la date */
+				align-items: center; /* Centrage vertical */
+			}
+
+			/* Style de la date de création */
+			.creation-date {
+				font-size: 0.9em; /* Taille de police plus petite pour la date */
+				color: #666; /* Couleur de texte grise pour la date */
+			}
+
+			/* Corps de la notification */
+			.notification-body {
+				margin-bottom: 10px; /* Ajoute un espace entre le corps et les boutons */
+			}
+
+			/* Boutons de notification */
+			.notification-buttons {
+				display: flex; /* Utilise flexbox pour aligner les boutons */
+				justify-content: flex-end; /* Aligne les boutons à droite */
+				gap: 10px; /* Espace entre les boutons */
+			}
+
+			.notification-buttons button {
+				padding: 5px 10px; /* Espacement intérieur des boutons */
+				margin: 0 2px; /* Espacement horizontal entre les boutons */
+				cursor: pointer; /* Curseur pointer pour les boutons */
+				border: none; /* Pas de bordure */
+				border-radius: 5px; /* Coins arrondis */
+				background-color: #007bff; /* Couleur d'arrière-plan des boutons */
+				color: white; /* Couleur du texte des boutons */
+				transition: background-color 0.3s; /* Transition pour l'effet de survol */
+			}
+
+			.notification-buttons button:hover {
+				background-color: #0056b3; /* Couleur au survol des boutons */
+			}
+
+			.d-none {
+				display: none;
+			}
+
+			/* BOUTON DE MAINTENANCE */
+			.maintenance-button {
+				font-weight: bold;
+				padding: 15px 30px;
+				border-radius: 5px;
+				background-color: #c82333; /* Couleur rouge */
+				color: white; /* Couleur du texte */
+				border: none; /* Pas de bordure */
+				transition: background-color 0.3s; /* Transition pour un effet au survol */
+			}
+
+			.maintenance-button:hover {
+				background-color: #a71d2a; /* Couleur au survol */
 			}
 
 			/* Container pour les utilisateurs */
@@ -68,8 +235,8 @@
 				border: 2px solid #000;
 				padding: 30px;
 				margin: 20px auto;
-				width: 95%;
-				max-width: 1200px;
+				width: 1300px;
+				max-width: 1300px;
 				background-color: #fff;
 				border-radius: 50px;
 				box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
@@ -88,32 +255,29 @@
 			.user-table {
 				width: 100%;
 				border-collapse: collapse;
-				margin: 20px 0;
+				margin: 20px auto; /* Centre le tableau */
 				font-size: 16px;
-				text-align: left;
+				text-align: center; /* Centre le texte dans le tableau */
 				background-color: #fff;
 				box-shadow: 0 0 10px 1px #000;
 				border-radius: 10px;
 				overflow: hidden;
 			}
 
-			/* En-tête de la table */
 			.user-table thead {
-				background-color: #d7df22; /* Couleur d'en-tête */
-				border-bottom: 1px solid #000; /* Bordure plus épaisse sous l'en-tête */
-				padding: 15px; /* Épaisseur de la bande d'en-tête */
+				background-color: #d7df22;
+				border-bottom: 1px solid #000;
 			}
 
 			.user-table thead th {
-				font-size: 1.3rem; /* Légèrement plus grand que le texte des valeurs */
+				font-size: 1.3rem;
 				color: #fff;
 				font-weight: bold;
 				text-align: center;
-				padding: 15px; /* Espacement interne pour plus d'épaisseur */
+				padding: 15px;
 			}
 
-			/* Corps de la table */
-			.user-table th, 
+			.user-table th,
 			.user-table td {
 				padding: 12px 15px;
 				text-align: center;
@@ -129,10 +293,9 @@
 			}
 
 			.user-table tbody tr:hover {
-				background-color: #f1f1f1;
+				background-color: #e2e6ea;
 			}
 
-			/* Actions (réinitialisation du mot de passe) */
 			.reset-password-form {
 				display: flex;
 				align-items: center;
@@ -146,7 +309,6 @@
 				width: 200px;
 			}
 
-			/* Message lorsqu'aucun utilisateur n'est trouvé */
 			.no-users-message {
 				text-align: center;
 				color: #999;
@@ -154,25 +316,73 @@
 				font-size: 16px;
 			}
 
-			/* Button Styles */
-			tbody .btn-secondary {
-				background-color: #fff;
-				color: #000;
-				border: 1px solid black;
-				padding: 10px 20px; /* Espacement interne du bouton */
-				font-size: 16px; /* Taille de la police */
+			/* Styles pour les boutons Accès et Action */
+			.access-form button {
+				width: 150px;
+				padding: 10px 15px;
+				font-size: 16px;
 				border-radius: 5px;
-				transition: all 0.3s ease; /* Transition pour les effets de survol */
+				transition: background-color 0.3s ease, transform 0.2s ease;
+				border: none;
 			}
 
-			tbody .btn-secondary:hover {
-				background-color: #6c757d; /* Couleur de fond au survol */
-				color: #fff; /* Couleur du texte au survol */
-				transform: translateY(-3px); /* Effet de levée au survol */
-				border-color: #6c757d; /* Couleur de bordure au survol */
+			.access-form button:hover {
+				transform: translateY(-3px);
 			}
 
-			/* Footer */
+			.d-flex {
+				display: flex;
+				justify-content: flex-start;
+				align-items: center;
+				gap: 15px; /* Espacement entre les boutons */
+			}
+
+			.btn-secondary {
+				background-color: #f8f9fa;
+				color: #000;
+				border: 1px solid #000;
+				font-size: 16px;
+				padding: 10px;
+				border-radius: 5px;
+				transition: background-color 0.3s ease, transform 0.2s ease;
+				border: 1px solid #ddd;
+			}
+
+			.btn-secondary:hover {
+				background-color: #6c757d;
+				color: #fff;
+				border-color: #6c757d;
+				transform: translateY(-3px);
+			}
+
+			.btn-danger {
+				background-color: #dc3545;
+				color: #fff;
+				font-size: 16px;
+				padding: 10px 20px;
+				border-radius: 5px;
+				transition: background-color 0.3s ease, transform 0.2s ease;
+			}
+
+			.reset-password-form button {
+				background-color: #FFA500; /* Couleur orange */
+				color: #fff; /* Texte en blanc */
+				border: none; /* Supprime la bordure */
+				padding: 10px 15px; /* Ajuste le padding selon tes besoins */
+				border-radius: 5px; /* Bordure arrondie */
+				transition: background-color 0.3s ease, transform 0.2s ease; /* Animation au survol */
+			}
+
+			.reset-password-form button:hover {
+				background-color: #FF8C00; /* Couleur orange foncé au survol */
+				transform: translateY(-3px); /* Effet de survol */
+			}
+			
+			.btn-danger:hover {
+				background-color: #bd2130;
+				transform: translateY(-3px);
+			}
+
 			footer {
 				text-align: center;
 				padding: 20px 0;
@@ -184,13 +394,15 @@
 				color: #333;
 			}
 
-			/* Responsive pour la table */
-			@media (max-width: 768px) {
+			@media(max-width: 768px) {
 				.user-table thead {
 					display: none;
 				}
 
-				.user-table, .user-table tbody, .user-table tr, .user-table td {
+				.user-table,
+				.user-table tbody,
+				.user-table tr,
+				.user-table td {
 					display: block;
 					width: 100%;
 				}
@@ -213,87 +425,183 @@
 					font-weight: bold;
 					text-transform: uppercase;
 				}
+
+				.modal {
+					display: none;
+					position: fixed;
+					z-index: 1;
+					left: 0;
+					top: 0;
+					width: 100%;
+					height: 100%;
+					background-color: rgba(0, 0, 0, 0.5);
+					justify-content: center;
+					align-items: center;
+				}
+
+				.modal-content {
+					background-color: white;
+					padding: 20px;
+					border-radius: 8px;
+					width: 300px;
+					text-align: center;
+				}
+
+				.modal-content button {
+					margin: 5px;
+					padding: 10px;
+					border: none;
+					border-radius: 4px;
+					cursor: pointer;
+				}
+
+				.btn-yes {
+					background-color: #4CAF50;
+					color: white;
+				}
+
+				.btn-no {
+					background-color: #f44336;
+					color: white;
+				}
 			}
 		</style>
 	</head>
 	<body>
 		<nav class="navbar navbar-expand-lg navbar-custom">
 			<div class="container-fluid">
-				<a class="navbar-brand" href="{{ path('app_homeclient') }}">
-					<img class="img-navbar" src="img/logoPagosImg04.png" alt="Logo" height="40">
+				<!-- Logo -->
+				<a class="navbar-brand" href="{{ path('app_logout') }}">
+					<img class="img-navbar" src="/img/logoPagosImg04.png" alt="Logo" height="40">
 				</a>
+
+				<!-- Bouton pour mobiles -->
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon">
-						<i class="fas fa-bars"></i>
-					</span>
+					<span class="navbar-toggler-icon"></span>
 				</button>
+
+				<!-- Liens du menu -->
 				<div class="collapse navbar-collapse" id="navbarColor01">
 					<ul class="navbar-nav me-auto">
 						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_homeclient') }}">
+							<a class="nav-link nav-link-custom" href="{{ path('app_homeadmin') }}">
 								<b>Accueil</b>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_taches') }}">
+							<a class="nav-link nav-link-custom" href="{{ path('app_tachesadmin') }}">
 								<b>Tâches</b>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_creertaches') }}">
-								<b>Créer une tâche</b>
+							<a class="nav-link nav-link-custom" href="{{ path('app_clientsdepagosadmin') }}">
+								<b>Clients de Pagos</b>
 							</a>
 						</li>
 
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle nav-link-custom" href="#" id="gestionDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								<b>Administration</b>
+							</a>
+							<ul class="dropdown-menu" aria-labelledby="gestionDropdown">
+								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_gestionuser') }}" style="background-color: #000"><b>Gestion utilisateur</b></a></li>
+								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_importexport') }}"><b>Imports / Exports</b></a></li>
+								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_register') }}"><b>Créer un utilisateur</b></a></li>
+								<li><a class="dropdown-item dropdown-item-custom" href="{{ path('app_createclientadmin') }}"><b>Créer un Client</b></a></li>
+							</ul>
+						</li>
+					</ul>
+
+					<!-- Liens côté droit -->
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item nav-link nav-link-custom user-name">
+							<b>{{ app.user.nom }} {{ app.user.prenom }}</b>
+						</li>
+
+						<!-- Icône de notification -->
 						{% set allowed_ids = ['e4e080b3758761bd01758f5fcfed03d9'] %}
 						{% if app.user.idclient and app.user.idclient.getId() in allowed_ids %}
-							<li class="nav-item">
-								<a class="nav-link" href="{{ path('app_clientsdepagos') }}">
-									<b>Clients de Pagos</b>
+							<li class="nav-item notification-container">
+								<a class="nav-link" href="#" style="color: #ffffff; text-align: center;">
+									<i class="fas fa-bell" style="font-size: 1.5em; color: white;" id="notificationIcon"></i>
+									<span class="notification-count">{{ notifications|filter(notification => notification.visible == 1)|length }}</span>
 								</a>
-								
+								<div id="notificationList" class="notifications" style="display: none;">
+									<ul>
+										{% set visibleNotifications = notifications|filter(notification => notification.visible == 1) %}
+										{% if visibleNotifications is empty %}
+											<li>Aucune notification</li>
+										{% else %}
+											{% set notificationsByClient = {} %}
+											
+											{# Regrouper les notifications par client #}
+											{% for notification in visibleNotifications %}
+												{% set clientName = notification.getClient.getRaisonSociale() %}
+												{% if notificationsByClient[clientName] is not defined %}
+													{% set notificationsByClient = notificationsByClient|merge({(clientName): []}) %}
+												{% endif %}
+												{% set notificationsByClient = notificationsByClient|merge({(clientName): notificationsByClient[clientName] | merge([notification])}) %}
+											{% endfor %}
+
+											{# Affichage des notifications regroupées par client #}
+											{% for client, clientNotifications in notificationsByClient %}
+												{% if clientNotifications|length > 0 %}
+													<li class="client-notification" data-client="{{ client }}">
+														<div class="client-notification-header" style="border-bottom: 2px solid #007bff; margin-bottom: 10px; padding-bottom: 5px;">
+															<b>{{ client }}</b>
+														</div>
+														<ul style="list-style: none; padding-left: 0; border-left: 2px dashed #ccc; padding-left: 10px;">
+															{% for notification in clientNotifications %}
+																<li id="notification-{{ notification.id }}" style="margin-bottom: 15px; padding: 10px; border: 1px solid #e0e0e0; border-radius: 5px; background-color: #f9f9f9;">
+																	<div class="notification-header">
+																		<span class="creation-date">{{ notification.getDateCreation() | date('d/m/y H:i:s') }}</span>
+																	</div>
+																	<div class="notification-body">
+																		{{ notification.getTitreWebtask() }} ({{ notification.getLibelleWebtask() }})<br>
+																		{{ notification.getMessage() }}
+																	</div>
+																	<div class="notification-buttons">
+																		<button class="mark-as-read" data-id="{{ notification.id }}">Lu</button>
+																		<button onclick="window.location.href='{{ path('app_consultertachesadmin', { 'id': notification.codeWebtask }) }}'">Consulter</button>
+																	</div>
+																</li>
+															{% endfor %}
+														</ul>
+													</li>
+													<hr style="border-top: 2px solid #007bff; margin: 10px 0;"> {# Séparation entre clients #}
+												{% endif %}
+											{% endfor %}
+										{% endif %}
+									</ul>
+								</div>
 							</li>
-							
-							
 						{% endif %}
 
-
-					</ul>
-					<ul class="navbar-nav ms-auto">
-    <li class="nav-item">
-        <a class="nav-link" href="#" style="color: #ffffff; text-align: center;">
-            <b>{{ app.user.nom }} {{ app.user.prenom }}</b>
-        </a>
-    </li>
-
-					<ul
-						class="navbar-nav ms-auto">
-						<!-- Dropdown for User Icon -->
-						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#" id="navbarUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-								<i class="fas fa-user-circle" style="font-size: 1.5em; color: white;"></i>
+						<!-- Logo client et déconnexion -->
+						<li class="nav-item d-flex align-items-center">
+							<img src="data:image/png;base64,{{ logo }}" alt="Logo du client" class="client-logo me-2" />
+							<a class="nav-link logout-icon" href="{{ path('app_logout') }}" title="Se déconnecter">
+								<i class="fas fa-sign-out-alt"></i>
 							</a>
-							<ul
-								class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown">
-								<!-- User's Name -->
-								<li>
-									
-								</li>
-								<li><hr class="dropdown-divider"></li>
-								<!-- Logout Button -->
-								<li>
-									<a class="dropdown-item" href="{{ path('app_logout') }}">
-										<b>
-											<i class="fas fa-sign-out-alt"></i>
-											Se déconnecter</b>
-									</a>
-								</li>
-							</ul>
 						</li>
 					</ul>
 				</div>
 			</div>
 		</nav>
+
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success">{{ message }}</div>
+		{% endfor %}
+
+		<!-- Conteneur pour le bouton de maintenance -->
+		<div class="text-center my-4">
+			<h2 class="mb-3">Gestion de la Maintenance</h2>
+			<form id="toggle-maintenance" method="post">
+				<button type="submit" class="btn btn-danger btn-lg maintenance-button">
+					Activer/Désactiver la Maintenance
+				</button>
+			</form>
+		</div>
 
 		<div class="user-list-container">
 			<h1 class="user-list-title">LISTE DES UTILISATEURS</h1>
@@ -308,7 +616,8 @@
 							<th>NOM</th>
 							<th>PRÉNOM</th>
 							<th>EMAIL</th>
-							<th>ACTION</th>
+							<th>ACCÈS</th>
+							<th>ACTIONS</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -317,35 +626,106 @@
 								<td style="background-color: {{ user.color }}; color: #000000;">
 									<b>{{ user.idclient ? user.idclient.raisonSociale : 'Aucun client associé' }}</b>
 								</td>
-								<td>{{ user.nom }}</td>
+								<td>
+									<b>{{ user.nom }}</b>
+									<span class="last-login-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ user.lastLogin ? user.lastLogin|date('d/m/Y H:i') : 'Jamais' }}">
+										<i class="fas fa-clock"></i>
+									</span>
+								</td>
 								<td>{{ user.prenom }}</td>
 								<td>{{ user.email }}</td>
-								<td>
-									<!-- Bouton pour ouvrir le modal de réinitialisation -->
-									<button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#resetPasswordModal{{ user.id }}">RÉINITIALISER</button>
-								</td>
-							</tr>
 
-							<!-- Modal for Password Reset -->
-							<div class="modal fade" id="resetPasswordModal{{ user.id }}" tabindex="-1" aria-labelledby="resetPasswordModalLabel{{ user.id }}" aria-hidden="true">
-								<div class="modal-dialog modal-lg"> <!-- Utilisation de modal-lg pour une taille plus grande -->
-									<div class="modal-content">
-										<div class="modal-header">
-											<h5 class="modal-title" id="resetPasswordModalLabel{{ user.id }}">Réinitialiser le mot de passe pour l'utilisateur {{ user.nom }} {{ user.prenom }}</h5>
-											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-										</div>
-										<div class="modal-body">
-											<form action="{{ path('app_reset_password', { id: user.id }) }}" method="POST">
-												<div class="mb-3">
-													<label for="new_password" class="form-label">Nouveau mot de passe</label>
-													<input type="password" name="new_password" class="form-control" id="new_password_{{ user.id }}" required placeholder="Renseigner le nouveau mot de passe">
-												</div>
-												<button type="submit" class="btn btn-secondary">RÉINITIALISER</button>
+								<td>
+									<!-- Formulaire pour le contrôle d'accès -->
+									<form id="access-form-{{ user.id }}" action="{{ path('app_update_access', { id: user.id }) }}" method="POST" class="form-inline access-form" onsubmit="saveScrollPosition()">
+										<input type="hidden" name="webtaskOuvertureContact" value="{{ user.webtaskOuvertureContact == 0 ? 1 : 0 }}">
+										<button id="access-button-{{ user.id }}" type="submit" class="btn {{ user.webtaskOuvertureContact == 0 ? 'btn-danger' : 'btn-success' }}">
+											{{ user.webtaskOuvertureContact == 0 ? 'Accès Refusé' : 'Accès Autorisé' }}
+										</button>
+									</form>
+								</td>
+
+								<td>
+									<div class="d-flex">
+										<div class="role-selection mb-2">
+											<form action="{{ path('app_update_user_role', { id: user.id, role: 'lecteur' }) }}" method="post">
+												<button type="submit" class="btn {% if user.roleWX == 'lecteur' %}btn-success{% else %}btn-info{% endif %} mb-1">
+													<i class="fas fa-eye"></i> Lecteur
+													{% if user.roleWX == 'lecteur' %}<span class="badge bg-success">(Actif)</span>{% endif %}
+												</button>
 											</form>
+											<form action="{{ path('app_update_user_role', { id: user.id, role: 'createur' }) }}" method="post">
+												<button type="submit" class="btn {% if user.roleWX == 'createur' %}btn-success{% else %}btn-primary{% endif %}">
+													<i class="fas fa-pencil-alt"></i> Créateur
+													{% if user.roleWX == 'createur' %}<span class="badge bg-success">(Actif)</span>{% endif %}
+												</button>
+											</form>
+										</div>
+
+										<div class="reset-password-form">
+											<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#resetModal{{ user.id }}">
+												<i class="fas fa-sync"></i> <i class="fas fa-key"></i> Réinitialiser le mot de passe
+											</button>
+										</div>
+
+										{% if user.canBeDeleted %}
+											<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ user.id }}">
+												<i class="fas fa-trash-alt"></i>
+											</button>
+										{% else %}
+											<button type="button" class="btn btn-danger" style="cursor: not-allowed; color: white;" disabled>
+												<i class="fas fa-trash-alt"></i>
+											</button>
+										{% endif %}
+									</div>
+								</td>
+								
+
+								<!-- Modal pour confirmation de suppression -->
+								<div class="modal fade" id="deleteModal{{ user.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ user.id }}" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="deleteModalLabel{{ user.id }}">Confirmation de suppression</h5>
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<div class="modal-body">
+												Êtes-vous sûr de vouloir supprimer l'utilisateur <b>{{ user.nom }} {{ user.prenom }}</b> ?
+												{% if app.session.flashBag.has('warning') %}
+													<div class="alert alert-warning mt-3">
+														<strong>Attention :</strong>
+														{{ app.session.flashBag.get('warning')[0] }}
+													</div>
+												{% endif %}
+											</div>
+											<div class="modal-footer">
+												<form action="{{ path('app_delete_user', { id: user.id }) }}" method="POST">
+													<button type="submit" class="btn btn-danger">Supprimer</button>
+												</form>
+												<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
+
+								<!-- Modal pour réinitialiser le mot de passe -->
+								<div class="modal fade" id="resetModal{{ user.id }}" tabindex="-1" aria-labelledby="resetModalLabel{{ user.id }}" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="resetModalLabel{{ user.id }}">Réinitialisation du mot de passe</h5>
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<div class="modal-body">
+												<form action="{{ path('app_reset_password', {'id': user.id}) }}" method="post" class="reset-password-form">
+													<input type="password" name="new_password" class="new-password-input" placeholder="Nouveau mot de passe" required>
+													<button type="submit" class="btn btn-primary">Réinitialiser</button>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</tr>
 						{% endfor %}
 					</tbody>
 				</table>
@@ -357,8 +737,128 @@
 			<p><b>© Copyright @ 2024 par <span style="color: #d7df22;">Cabinet PAGOS</span> | tous droits réservés.</b></p>
 		</footer>
 
-		<!-- Scripts -->
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+		<!-- JS de Bootstrap et dépendances -->
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+		<!-- JavaScript pour gérer l'activation/désactivation des accès -->
+		<script>
+			// Mémoriser la position de défilement avant soumission du formulaire
+			function saveScrollPosition() {
+			const scrollPosition = window.scrollY;
+			sessionStorage.setItem('scrollPosition', scrollPosition);
+			}
+
+			// Restaurer la position de défilement après rechargement
+			function restoreScrollPosition() {
+			const scrollPosition = sessionStorage.getItem('scrollPosition');
+			if (scrollPosition !== null) {
+			window.scrollTo(0, scrollPosition);
+			sessionStorage.removeItem('scrollPosition'); // Supprimer la position après restauration
+			}
+			}
+
+			// Restaurer la position de défilement quand la page est chargée
+			window.addEventListener('load', restoreScrollPosition);
+		</script>
+		<script type="text/javascript">
+			document.getElementById('toggle-maintenance').onsubmit = function(event) {
+				event.preventDefault();
+
+				fetch('{{ path('toggle_maintenance') }}', {
+					method: 'POST'
+				})
+				.then(response => response.json())
+				.then(data => {
+					if (data.maintenance) {
+						alert('Maintenance activée');
+					} else {
+						alert('Maintenance désactivée');
+					}
+				});
+			};
+
+			$(function () {
+				$('[data-bs-toggle="tooltip"]').tooltip();
+			});
+		</script>
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				// Code de gestion des notifications ici
+
+				// Gestion de l'affichage des notifications
+				document.getElementById('notificationIcon').addEventListener('click', function() {
+					var notificationList = document.getElementById('notificationList');
+					notificationList.style.display = notificationList.style.display === 'none' || notificationList.style.display === '' ? 'block' : 'none'; // Toggle
+				});
+			});
+
+			function consulterNotification(notificationId) {
+				// Rediriger vers la page de consultation de la notification
+				window.location.href = `/notification/${notificationId}`; // Remplacez par l'URL réelle
+			}
+		</script>
+		<script>
+			document.querySelectorAll('.mark-as-read').forEach(button => {
+				button.addEventListener('click', function() {
+					const notificationId = this.getAttribute('data-id');
+
+					fetch(`/mark-as-read/${notificationId}`, {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+							'X-Requested-With': 'XMLHttpRequest'
+						}
+					})
+					.then(response => {
+						if (!response.ok) {
+							throw new Error('Erreur lors de la mise à jour de la notification');
+						}
+						return response.json();
+					})
+					.then(data => {
+						if (data.status === 'success') {
+							// Masquer la notification
+							const notificationElement = document.getElementById(`notification-${notificationId}`);
+							if (notificationElement) {
+								notificationElement.style.display = 'none'; // Masque la notification
+							}
+
+							// Mettre à jour le compteur de notifications
+							const countElement = document.querySelector('.notification-count');
+							const currentCount = parseInt(countElement.textContent, 10);
+							countElement.textContent = currentCount - 1; // Décrementer le compteur
+
+							// Vérifiez les notifications du client
+							checkClientNotifications();
+						} else {
+							console.error(data);
+						}
+					})
+					.catch(error => console.error('Erreur:', error));
+				});
+			});
+
+			function checkClientNotifications() {
+				const clients = document.querySelectorAll('.client-notification');
+				let hasVisibleNotifications = false;
+
+				clients.forEach(client => {
+					const notifications = client.querySelectorAll('li[id^="notification-"]'); // Sélectionner les notifications
+					const visibleNotifications = Array.from(notifications).filter(notification => notification.style.display !== 'none');
+
+					if (visibleNotifications.length === 0) {
+						client.style.display = 'none'; // Masquer le client si aucune notification n'est visible
+					} else {
+						hasVisibleNotifications = true; // Il y a encore des notifications visibles
+					}
+				});
+
+				// Afficher le message si aucune notification visible
+				const notificationList = document.getElementById('notificationList');
+				if (!hasVisibleNotifications) {
+					notificationList.innerHTML = '<li>Aucune notification disponible</li>'; // Afficher le message
+				}
+			}
+		</script>
 	</body>
 </html>

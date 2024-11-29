@@ -100,6 +100,19 @@ class ForumController extends AbstractController
         $form = $this->createForm(ForumType::class, $forum);
         $form->handleRequest($request);
 
+         // Récupérer l'ID du client associé à l'utilisateur connecté
+         $idclient = $user->getIdclient(); 
+
+         // Vérifier si un client est associé à l'utilisateur
+         if (!$idclient) {
+             throw $this->createNotFoundException('Aucun client associé à cet utilisateur.');
+         }
+
+        $logo = null;
+        if ($idclient->getLogo()) {
+            $logo = base64_encode(stream_get_contents($idclient->getLogo()));
+        }
+
         // Traitement de la soumission
         if ($form->isSubmitted() && $form->isValid()) {
             $em->flush(); // Sauvegarder les modifications dans la base de données
@@ -109,6 +122,8 @@ class ForumController extends AbstractController
         return $this->render('Admin/forum_edit.html.twig', [
             'form' => $form->createView(),
             'forum' => $forum,
+            'logo' => $logo,
+
         ]);
     }
 

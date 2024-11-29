@@ -65,6 +65,12 @@ class ConsulterTachesAdminController extends AbstractController
         if ($idclient->getLogo()) {
             $logo = base64_encode(stream_get_contents($idclient->getLogo()));
         }
+
+        // Récupérer les notifications visibles de l'utilisateur connecté
+        $notifications = $notificationRepository->findBy([
+            'user' => $user->getId(),
+            'visible' => true
+        ]);
         
         $id = $request->query->get('id');
         $webtask = $this->webTaskRepository->findOneBy(['code' => $id]);
@@ -265,12 +271,6 @@ class ConsulterTachesAdminController extends AbstractController
         $mappedTag = $this->mapTag($webtask->getTag());
         $tagClass = $this->getTagClass($webtask->getTag());
         $mappedAvancement = $this->mapAvancementDeLaTache($webtask->getAvancementdelatache());
-
-        // Récupérer les notifications visibles de l'utilisateur connecté
-        $notifications = $notificationRepository->findBy([
-            'user' => $user->getId(),
-            'visible' => true
-        ]);
     
         return $this->render('Admin/consultertaches.html.twig', [
             'webtask' => $webtask,
