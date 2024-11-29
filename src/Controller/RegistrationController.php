@@ -90,18 +90,9 @@ class RegistrationController extends AbstractController
         
         // Récupérer les notifications visibles de l'utilisateur connecté
         $notifications = $notificationRepository->findBy([
-            'user' => $user->getId(),
+            'user' => $utilisateur->getId(),
             'visible' => true
         ]);
-
-        // Créer un tableau pour lier codeWebtask à id
-        $idWebtaskMap = [];
-        foreach ($notifications as $notification) {
-            $idWebtask = $this->webTaskRepository->findIdByCodeWebtask($notification->getCodeWebtask());
-            if ($idWebtask !== null) {
-                $idWebtaskMap[$notification->getCodeWebtask()] = $idWebtask;
-            }
-        }
 
         // Créer un tableau pour lier codeWebtask à id
         $idWebtaskMap = [];
@@ -117,7 +108,6 @@ class RegistrationController extends AbstractController
             'clients' => $clients,
             'logo' => $logo,
             'notifications' => $notifications,
-            'idWebtaskMap' => $idWebtaskMap,
         ]);
     }
 

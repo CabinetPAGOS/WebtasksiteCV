@@ -91,9 +91,6 @@ class ForumController extends AbstractController
             'notifications' => $notifications,
             'logo' => $logo,
             'idWebtaskMap' => $idWebtaskMap,
-
-
-
         ]);
     }
 
@@ -147,9 +144,6 @@ class ForumController extends AbstractController
             'logo' => $logo,
             'idWebtaskMap' => $idWebtaskMap,
             'notifications' => $notifications,
-
-
-
         ]);
     }
 
@@ -236,62 +230,27 @@ class ForumController extends AbstractController
     #[Route('/notifications', name: 'get_notifications', methods: ['GET'])]
     public function getNotifications(): JsonResponse
     {
-        // Récupérer l'utilisateur connecté
-        $user = $this->getUser();
-
-        // Vérifier si l'utilisateur est connecté
-        if (!$user) {
-            return $this->json([
-                'count' => 0,
-                'notifications' => [],
-                'message' => 'Utilisateur non connecté',
-            ], Response::HTTP_UNAUTHORIZED);
-        }
-
-        // Récupérer l'ID de l'utilisateur
-        $userId = $user->getId();
-
-        // Récupérer les notifications visibles pour l'utilisateur connecté
-        $notifications = $this->notificationRepository->createQueryBuilder('n')
-            ->where('n.visible = :visible')
-            ->andWhere('n.user = :userId')
-            ->setParameter('visible', true)
-            ->setParameter('userId', $userId)
-            ->getQuery()
-            ->getResult();
+        // Récupérer les notifications visibles
+        $notifications = $this->notificationRepository->findVisibleNotifications();
 
         return $this->json([
-            'count' => count($notifications),
-            'notifications' => $notifications,
+            'count' => count($notifications), // Compte le nombre de notifications
+            'notifications' => $notifications, // Renvoie les notifications
         ]);
     }
 
     #[Route('/mark-as-read/{id}', name: 'app_mark_as_read', methods: ['POST'])]
     public function markAsRead($id): JsonResponse
     {
-        
-
-        $user = $this->getUser();
-        if (!$user) {
-            return new JsonResponse(['status' => 'unauthorized'], 401);
-        }
-
         // Récupérer la notification par son ID
-        $notification = $this->notificationRepository->find($id);
+        $notification = $this->notificationRepository->find($id); // Utiliser le repository injecté
 
-        // Vérifier si la notification existe
         if (!$notification) {
             return new JsonResponse(['status' => 'not_found'], 404);
         }
 
-        // Vérifier que la notification appartient bien à l'utilisateur connecté
-        if ($notification->getUser()->getId() !== $user->getId()) {
-            return new JsonResponse(['status' => 'forbidden'], 403);
-        }
-        
-
-        // Marquer la notification comme lue
-        $notification->setVisible(false);  // ou setIsRead(true) si vous ajoutez ce champ
+        // Mettre à jour le champ visible à 0
+        $notification->setVisible(0); // Assurez-vous que vous avez une méthode pour cela
 
         // Enregistrer les modifications
         $this->entityManager->persist($notification);
