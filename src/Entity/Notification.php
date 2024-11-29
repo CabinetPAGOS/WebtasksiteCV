@@ -25,18 +25,18 @@ class Notification
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $libelleWebtask = null;
 
-    #[ORM\ManyToOne(targetEntity: Client::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Client $client = null;
-
-    #[ORM\Column(length: 255, nullable: true)] // champ titreWebtask
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $titreWebtask = null;
 
-    #[ORM\Column(length: 255, nullable: true)] // Ajoutez cette ligne pour codeWebtask
-    private ?string $codeWebtask = null; // Ajoutez cette ligne
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $codeWebtask = null;
+
+    #[ORM\ManyToOne(targetEntity: Client::class)]
+    #[ORM\JoinColumn(name: "client_id", referencedColumnName: "id", nullable: false)]
+    private ?Client $client = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id", nullable: false)]
     private ?User $user = null;
 
     // Getters et Setters
@@ -55,17 +55,6 @@ class Notification
     {
         $this->message = $message;
 
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
         return $this;
     }
 
@@ -114,6 +103,17 @@ class Notification
     {
         $this->client = $client;
 
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
         return $this;
     }
 

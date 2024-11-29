@@ -217,7 +217,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this; // Permet le chaînage
     }
 
-    public function GetDepartEntreprise(): ?string
+    public function getDepartEntreprise(): ?string
     {
         return $this->depart_entreprise;
     }

@@ -244,13 +244,15 @@ class HomeAdminController extends AbstractController
             return new JsonResponse(['status' => 'not_found'], 404);
         }
 
+        dd($notification->getUser(), $user->getId());
+
         // Vérifier que la notification appartient à l'utilisateur connecté
-        if ($notification->getUser() !== $user->getId()) {
+        if ($notification->getUser() !== $this->getUser()->getId()) {
             return new JsonResponse(['status' => 'forbidden'], 403);
         }
 
-        // Mettre à jour le champ visible à 0
-        $notification->setVisible(false); // Assurez-vous que cette méthode existe dans l'entité Notification
+        // Mettre à jour le champ "visible" à false pour marquer la notification comme lue
+        $notification->setVisible(false);
 
         // Enregistrer les modifications
         $this->entityManager->persist($notification);

@@ -10,32 +10,29 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20241128080151 extends AbstractMigration
+final class Version20241129081757 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Création de la table Notification';
+        return 'Création de la table notification avec les relations vers client et user';
     }
 
     public function up(Schema $schema): void
     {
         $this->addSql('CREATE TABLE notification (
             id INT AUTO_INCREMENT NOT NULL,
-            client_id INT NOT NULL,
-            user_id INT NOT NULL,
+            client_id VARCHAR(50) NOT NULL,
+            user_id VARCHAR(255) NOT NULL,
             message VARCHAR(255) DEFAULT NULL,
             date_creation DATETIME DEFAULT NULL,
             visible TINYINT(1) DEFAULT NULL,
             libelle_webtask VARCHAR(255) DEFAULT NULL,
             titre_webtask VARCHAR(255) DEFAULT NULL,
             code_webtask VARCHAR(255) DEFAULT NULL,
-            INDEX IDX_1C5EDE44A76ED395 (client_id),
-            INDEX IDX_1C5EDE44A76ED395 (user_id),
-            PRIMARY KEY(id)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci');
-
-        $this->addSql('ALTER TABLE notification ADD CONSTRAINT FK_1C5EDE44A76ED395 FOREIGN KEY (client_id) REFERENCES client (id)');
-        $this->addSql('ALTER TABLE notification ADD CONSTRAINT FK_1C5EDE44A76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
+            PRIMARY KEY(id),
+            CONSTRAINT FK_NOTIFICATION_CLIENT FOREIGN KEY (client_id) REFERENCES client (id),
+            CONSTRAINT FK_NOTIFICATION_USER FOREIGN KEY (user_id) REFERENCES user (id)
+        ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
     }
 
     public function down(Schema $schema): void

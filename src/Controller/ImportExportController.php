@@ -591,7 +591,7 @@ class ImportExportController extends AbstractController
         }
 
         // Mettre à jour le champ visible à 0
-        $notification->setVisible(false); // Assurez-vous que cette méthode existe dans l'entité Notification
+        $notification->setVisible(false);
 
         // Enregistrer les modifications
         $this->entityManager->persist($notification);

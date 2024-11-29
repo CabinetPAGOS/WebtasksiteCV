@@ -285,8 +285,46 @@ class HomeController extends AbstractController
     }
 
     #[Route('/client/forum/{id}', name: 'app_forum', methods: ['GET'])]
-    public function forum($id): Response
+    public function forum($id, Request $request, WebtaskRepository $webtaskRepository, NotificationRepository $notificationRepository): Response
     {
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
+        // Vérifiez si l'utilisateur est connecté
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $idclient = $user->getIdclient();
+
+        // Vérifier si un client est associé à l'utilisateur
+        if (!$idclient) {
+            throw $this->createNotFoundException('Aucun client associé à cet utilisateur.');
+        }
+
+        // Récupérer le logo du client
+        $logo = null;
+        if ($idclient->getLogo()) {
+            $logo = base64_encode(stream_get_contents($idclient->getLogo()));
+        }
+
+        // Récupérer l'ID du client depuis les paramètres d'URL
+        $clientId = $request->query->get('id');
+
+        $notifications = $notificationRepository->findBy([
+            'user' => $user->getId(),
+            'visible' => true
+        ]);
+
+        // Créer un tableau pour lier codeWebtask à id
+        $idWebtaskMap = [];
+        foreach ($notifications as $notification) {
+            $idWebtask = $webtaskRepository->findIdByCodeWebtask($notification->getCodeWebtask());
+            if ($idWebtask !== null) {
+                $idWebtaskMap[$notification->getCodeWebtask()] = $idWebtask;
+            }
+        }
+
         // Récupérer le client par son ID
         $client = $this->clientRepository->find($id);
 
@@ -301,26 +339,15 @@ class HomeController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        // Vérifier si le client est trouvé (ceci est généralement déjà garanti grâce à la route)
-        if (!$client) {
-            throw $this->createNotFoundException('Client non trouvé');
-        }
-
-        // Récupérer le logo du client
-        $logo = null;
-        if ($client->getLogo()) {
-            $logo = base64_encode(stream_get_contents($client->getLogo()));
-        }
-
-
         return $this->render('Client/forum.html.twig', [
             'forums' => $forums,
             'client' => $client,
-            'logo' => $logo, // Passer le logo du client encodé en base64
-
-
+            'logo' => $logo,
+            'notifications' => $notifications,
+            'idWebtaskMap' => $idWebtaskMap,
         ]);
     }
+
     private function mapTag(?string $tag): string
     {
         $tags = [
