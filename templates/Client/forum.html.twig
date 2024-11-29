@@ -223,66 +223,6 @@
 				max-width: 1400px;
 			}
 
-			.custom-rectangle {
-				position: relative;
-				border: 2px solid #000;
-				padding: 25px;
-				margin: 20px;
-				width: 100%;
-				max-width: 515px;
-				background-color: #fff;
-				border-radius: 50px;
-				box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-			}
-
-			.custom-rectangle h2 {
-				text-align: center;
-				color: #000000;
-				padding: 10px;
-				border-radius: 5px;
-				white-space: nowrap;
-				margin-bottom: 20px;
-				background-color: #d7df22;
-				font-size: 20px;
-			}
-
-			.custom-rectangle h3,
-			.custom-rectangle h4,
-			.custom-rectangle h5 {
-				font-size: 15px;
-			}
-
-			.custom-rectangle h4 {
-				margin-bottom: 15px;
-			}
-
-			h1 {
-				text-align: center;
-				color: #000000;
-			}
-
-			.custom-rectangle .btn-group {
-				width: 100%;
-			}
-
-			.custom-rectangle .btn-secondary {
-				border: 1px solid black;
-				margin-right: 10px;
-				background-color: #fff;
-				color: #000;
-				border-radius: 0;
-			}
-
-			.custom-rectangle .btn-secondary:last-child {
-				margin-right: 0;
-			}
-
-			.custom-rectangle hr {
-				margin: 20px 0;
-				opacity: 1;
-				border: 2px solid #000;
-			}
-
 			hr {
 				margin: 20px 0;
 				opacity: 1;
@@ -293,308 +233,63 @@
 				border-radius: 0;
 			}
 
-			/* Logo */
-			.logo-circle {
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				width: 500px;
-				height: 250px;
-				background-color: #fff; /* Fond blanc */
-				border-radius: 50%; /* Forme circulaire */
-				margin: 20px; /* Marges pour espacer des blocs */
-				box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Ombre pour le relief */
+			/* Hero Section */
+			.hero-section {
+				background: linear-gradient(to right, #6c757d, #343a40);
+				padding: 60px 0;
+				color: #fff;
 			}
 
-			.client-logo-central {
-				max-width: 70%; /* Limiter la largeur du logo */
-				max-height: 70%; /* Limiter la hauteur du logo */
-				object-fit: contain; /* Garder le ratio du logo */
-			}
-
-			/* Task Container */
-			.task-container {
-				max-height: 300px;
-				overflow-y: auto;
-				padding: 10px 0;
-				width: 100%;
-			}
-
-			.task {
+			.hero-section h2 {
+				font-size: 2.5rem;
+				font-weight: 700;
 				margin-bottom: 20px;
-				position: relative;
 			}
 
-			.total-taches {
-				position: absolute;
-				bottom: 10px;
-				right: 20px;
-			}
-
-			/* Button Styles */
-			.btn-secondary {
-				background-color: #818285; /* Couleur de fond du bouton */
-				color: #fff; /* Couleur du texte du bouton */
-				border: 2px solid #000; /* Bordure du bouton */
-				padding: 10px 20px; /* Espacement interne du bouton */
-				font-size: 16px; /* Taille de la police */
-				border-radius: 50px; /* Bordures arrondies */
-				transition: all 0.3s ease; /* Transition pour les effets de survol */
-			}
-
-			.btn-secondary:hover {
-				background-color: #6c757d; /* Couleur de fond au survol */
-				color: #fff; /* Couleur du texte au survol */
-				transform: translateY(-3px); /* Effet de levée au survol */
-				border-color: #6c757d; /* Couleur de bordure au survol */
-			}
-
-			/* Center Button */
-			.center-button {
-				display: flex;
-				justify-content: center; /* Centre les boutons */
-				gap: 15px; /* Espace entre les boutons */
-				margin: 20px;
-			}
-
-			.center-button .btn-secondary {
-				background-color: #fff;
-				color: #000;
-				border: 1px solid black;
-				margin-right: 10px;
-				padding: 10px 20px; /* Espacement interne du bouton */
-				font-size: 16px; /* Taille de la police */
-				border-radius: 5px;
-				transition: all 0.3s ease; /* Transition pour les effets de survol */
-			}
-
-			.center-button .btn-secondary:hover {
-				background-color: #6c757d; /* Couleur de fond au survol */
-				color: #fff; /* Couleur du texte au survol */
-				transform: translateY(-3px); /* Effet de levée au survol */
-				border-color: #6c757d; /* Couleur de bordure au survol */
-			}
-
-			/* Info Icon Hover */
-			.info-icon {
-				cursor: pointer;
-				color: #007bff;
-				margin-left: 5px;
-				font-size: 14px;
-				position: relative;
-			}
-
-			.description {
-				display: none;
-				background-color: rgba(255, 255, 255, 0.9);
-				color: #000;
-				border: 1px solid #000;
-				padding: 10px;
-				border-radius: 8px;
-				z-index: 10;
-				max-width: 500px;
-				width: auto;
-				word-wrap: break-word;
-				position: absolute;
-				left: 50%; /* Centrer la description */
-				transform: translateX(-50%); /* Assurer que la description reste bien centrée */
-				top: 100%;
-				white-space: normal;
-				box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-				transition: opacity 0.3s ease;
-				opacity: 0;
-				pointer-events: none;
-				overflow-wrap: break-word;
-			}
-
-			.info-icon:hover .description {
-				display: block;
-				opacity: 1;
-				pointer-events: auto;
-			}
-
-			/* BLOC STATISTIQUE */
-			.custom-rectangle-statistic {
-				position: relative;
-				border: 2px solid #000;
-				padding: 25px;
-				margin: 20px;
-				width: 100%;
-				max-width: 515px;
-				background-color: #fff;
-				border-radius: 50px;
-				box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-			}
-
-			.icon-grid {
-				display: grid;
-				grid-template-columns: repeat(2, 1fr); /* Deux colonnes */
-				gap: 10px; /* Espacement entre les icônes */
-			}
-
-			.icon-container {
-				display: flex;
-				flex-direction: column; /* Affiche le contenu en colonne */
-				align-items: center; /* Centre horizontalement */
-			}
-
-			.icon-container a {
-				text-decoration: none; /* Enlève la ligne soulignée */
-				color: inherit; /* Maintient la couleur originale du texte ou de l'icône */
-			}
-
-			.black-block {
-				background-color: black;
-				padding: 15px;
-				border-radius: 10px;
-				display: flex;
-				flex-direction: column; /* Affiche le contenu en colonne */
-				justify-content: center;
-				align-items: center;
-				width: 80px; /* Largeur des icônes */
-			}
-
-			.green-block {
-				background-color: green;
-				padding: 15px;
-				border-radius: 10px;
-				display: flex;
-				flex-direction: column; /* Affiche le contenu en colonne */
-				justify-content: center;
-				align-items: center;
-				width: 80px; /* Largeur des icônes */
-			}
-
-			.red-block {
-				background-color: red;
-				padding: 15px;
-				border-radius: 10px;
-				display: flex;
-				flex-direction: column; /* Affiche le contenu en colonne */
-				justify-content: center;
-				align-items: center;
-				width: 80px; /* Largeur des icônes */
-			}
-
-			.iconeTheme {
-				font-size: 60px;
-				color: #FF0000;
-			}
-
-			.light-circle-npc {
-				position: absolute;
-				top: 20px; /* Ajustez cette valeur en fonction de la position de la lumière supérieure */
-				width: 15px;
-				height: 15px;
-				background-color: #FF0000;
-				border-radius: 50%;
-				box-shadow: inset 0 0 0 2px #000000;
-			}
-
-			.light-circle-pc {
-				position: absolute;
-				top: 36px; /* Ajustez cette valeur en fonction de la position de la lumière supérieure */
-				width: 15px;
-				height: 15px;
-				background-color: #FFA500;
-				border-radius: 50%;
-				box-shadow: inset 0 0 0 2px #000000;
-			}
-
-			.light-circle-t {
-				position: absolute;
-				top: 52px; /* Ajustez cette valeur en fonction de la position de la lumière supérieure */
-				width: 15px;
-				height: 15px;
-				background-color: #008000;
-				border-radius: 50%;
-				box-shadow: inset 0 0 0 2px #000000;
-			}
-
-			.status-text h5 {
+			.hero-section p {
+				font-size: 1.1rem;
+				font-weight: 400;
+				color: #f1f1f1;
 				margin-top: 10px;
-				font-weight: bold;
-				text-align: center;
-				color: black;
-				font-size: 15px;
 			}
 
-			.statistic-value {
-				background-color: red;
-				color: white;
-				font-size: 13px;
-				padding: 2px;
-				position: absolute;
-				top: -5px;
-				right: -20px;
-				height: 25px;
-				width: 40px;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				border-radius: 5px;
-				border: 2px solid #FFF;
+			/* Forum Entries */
+			.container.mt-5 {
+				margin-top: 50px;
 			}
 
-			/* WEBTASK STYLE */
-			.container-task {
-				display: flex;
-				flex-wrap: wrap; /* Permet plusieurs colonnes */
-				justify-content: center; /* Centre le contenu */
-				margin: 20px;
-			}
-
-			/* Custom Rectangle */
-			.custom-task {
-				position: relative;
-				border: 2px solid #000;
-				padding: 25px;
-				margin: 20px;
-				width: 100%;
-				max-width: 430px; /* Réduit la largeur maximale */
+			.forum-entry {
 				background-color: #fff;
-				box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-				overflow: hidden; /* Empêche le débordement du texte */
-			}
-
-			.custom-task h2 {
-				text-align: center;
-				color: #000000;
-				padding: 10px;
-				border-radius: 5px;
-				background-color: #d7df22;
-				font-size: 18px; /* Réduit la taille de la police du titre */
-				white-space: normal; /* Permet le retour à la ligne */
+				padding: 20px;
+				border-radius: 10px;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 				margin-bottom: 20px;
-				overflow: visible; /* Permet d'afficher le texte complet */
-				text-overflow: clip; /* Ne coupe pas le texte avec des points de suspension */
-				display: block; /* Assure que le texte utilise text-overflow */
 			}
 
-			/* Button Styles */
-			.container-task .btn-secondary {
-				background-color: #fff;
-				color: #000;
-				border: 1px solid black;
-				margin-right: 10px;
-				padding: 10px 20px; /* Espacement interne du bouton */
-				font-size: 16px; /* Taille de la police */
-				border-radius: 5px;
-				transition: all 0.3s ease; /* Transition pour les effets de survol */
+			.forum-entry p {
+				font-size: 1rem;
+				color: #555;
+				margin-bottom: 10px;
 			}
 
-			.container-task .btn-secondary:hover {
-				background-color: #6c757d; /* Couleur de fond au survol */
-				color: #fff; /* Couleur du texte au survol */
-				transform: translateY(-3px); /* Effet de levée au survol */
-				border-color: #6c757d; /* Couleur de bordure au survol */
+			.forum-entry pre {
+				font-family: 'Poppins', sans-serif;
+				white-space: pre-wrap;
+				word-wrap: break-word;
+				font-size: 1rem;
+				color: #333;
 			}
 
-			.container-task .btn-group {
-				display: flex;
-				justify-content: center; /* Centre les boutons */
-				gap: 15px; /* Espace entre les boutons */
+			.forum-entry hr {
+				border: 1px solid #e0e0e0;
 				margin-top: 20px;
+			}
+
+			.no-content {
+				color: #888;
+				font-style: italic;
+				text-align: center;
+				font-size: 1.2rem;
 			}
 
 			/* Footer */
@@ -741,8 +436,6 @@
 			</div>
 		</nav>
 
-		<br>
-
 		<!-- Hero Section -->
 		<div class="hero-section text-center">
 			<h2>Forum du Client :
@@ -777,9 +470,6 @@
 		<!-- JS de Bootstrap et dépendances -->
 		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
-
-		<!-- JS Bootstrap -->
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 		<script>
 			// Exemple d'initialisation manuelle pour le dropdown
 			document.querySelectorAll('.dropdown-toggle').forEach(function (dropdownToggle) {
@@ -790,20 +480,20 @@
 			});
 		</script>
 		<script>
-				document.addEventListener('DOMContentLoaded', function () {
+			document.addEventListener('DOMContentLoaded', function () {
 				// Code de gestion des notifications ici
 
-					// Gestion de l'affichage des notifications
-					document.getElementById('notificationIcon').addEventListener('click', function() {
-						var notificationList = document.getElementById('notificationList');
-						notificationList.style.display = notificationList.style.display === 'none' || notificationList.style.display === '' ? 'block' : 'none'; // Toggle
-					});
+				// Gestion de l'affichage des notifications
+				document.getElementById('notificationIcon').addEventListener('click', function() {
+					var notificationList = document.getElementById('notificationList');
+					notificationList.style.display = notificationList.style.display === 'none' || notificationList.style.display === '' ? 'block' : 'none'; // Toggle
 				});
+			});
 
-				function consulterNotification(notificationId) {
-					// Rediriger vers la page de consultation de la notification
-					window.location.href = `/notification/${notificationId}`; // Remplacez par l'URL réelle
-				}
+			function consulterNotification(notificationId) {
+				// Rediriger vers la page de consultation de la notification
+				window.location.href = `/notification/${notificationId}`; // Remplacez par l'URL réelle
+			}
 		</script>
 		<script>
 			document.querySelectorAll('.mark-as-read').forEach(button => {

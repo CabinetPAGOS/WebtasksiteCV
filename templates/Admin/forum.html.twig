@@ -20,137 +20,108 @@
 			body {
 				font-family: 'Helvetica', Arial, sans-serif;
 			}
-			
-			/* Style global de la navbar */
+
+			/* Navbar */
 			.navbar-custom {
-				background-color: #818285; /* Couleur de fond principale */
-				padding: 10px 20px; /* Espacement autour de la navbar */
+				background-color: #818285;
+				border-style: none;
 			}
 
-			/* Logo dans la navbar */
-			.navbar-custom .navbar-brand img {
-				width: auto;
+			.navbar-custom .nav-link {
+				color: #ffffff;
+				font-size: 19px;
+			}
+
+			.navbar-custom .nav-link:hover {
+				color: #000000;
+			}
+
+			.img-navbar {
+				width: 100%;
 				height: 80px;
 			}
 
-			/* Boutons et liens de la navbar */
-			.navbar-custom .navbar-nav .nav-link {
-				color: #fff; /* Couleur du texte des liens */
-				font-weight: bold;
-				text-transform: uppercase; /* Mettre en majuscules */
-				padding: 10px 15px;
-				transition: color 0.3s ease; /* Transition pour le changement de couleur */
+			.navbar-toggler-icon {
+				color: white;
 			}
 
-			.navbar-custom .navbar-nav .nav-link:hover {
-				color: #000000; /* Couleur au survol */
+			.dropdown-menu {
+				background-color: #818285;
 			}
 
-			.navbar-custom .navbar-nav .nav-item.active .nav-link {
-				color: #000000; /* Couleur pour l'élément actif */
+			.dropdown-menu .dropdown-header {
+				color: #ffffff;
+				font-size: 16px;
 			}
 
-			/* Dropdown (menu déroulant) */
-			.navbar-custom .navbar-nav .nav-item.dropdown .nav-link {
-				color: #fff; /* Couleur du lien de la dropdown */
-				border-bottom: 2px solid transparent; /* Ajouter une bordure discrète */
-				padding-bottom: 5px;
+			.dropdown-menu .dropdown-item {
+				color: #ff0000;
 			}
 
-			.navbar-custom .navbar-nav .nav-item.dropdown:hover .nav-link {
-				color: #000000; /* Couleur de la dropdown au survol */
-				border-bottom: 2px solid #000000; /* Bordure colorée au survol */
+			.dropdown-menu .dropdown-item:hover {
+				background-color: #818285;
+				color: #ffffff;
 			}
 
-			.navbar-custom .navbar-nav .nav-item .dropdown-menu {
-				background-color: #818285; /* Fond de la dropdown */
-				border: none; /* Enlever les bordures */
-				padding: 10px 0; /* Espacement intérieur */
+			/* Navbar Dropdown */
+			.navbar .nav-item .dropdown-menu {
+				min-width: 200px;
 			}
 
-			.navbar-custom .navbar-nav .nav-item .dropdown-item {
-				color: #fff; /* Couleur des éléments de la dropdown */
-				padding: 10px 20px;
-				transition: background-color 0.3s ease; /* Transition pour la couleur de fond */
-			}
-
-			.navbar-custom .navbar-nav .nav-item .dropdown-item:hover {
-				background-color: #000000; /* Couleur de fond au survol */
-				color: #fff; /* Couleur du texte au survol */
-			}
-
-			/* Style pour le nom de l'utilisateur */
-			.user-name {
-				color: #000;
-				font-size: 1rem;
-				margin-top: 0.4rem;
-			}
-
-			/* Logo client adaptable pour formats carré et rectangulaire */
-			.client-logo {
-				max-height: 40px;
-				max-width: 60px; /* Taille max pour gérer les logos rectangulaires */
-				object-fit: contain;
-				border-radius: 8px;
-				padding: 2px;
-				background-color: #fff;
-				transition: transform 0.2s ease;
-			}
-
-			.client-logo:hover {
-				transform: scale(1.1);
-			}
-
-			/* Icône de déconnexion */
-			.logout-icon {
-				font-size: 1.5rem;
-				color: #000;
-				transition: color 0.3s ease, transform 0.3s ease;
-			}
-
-			.logout-icon:hover {
-				color: #818285;
-				transform: scale(1.1);
+			/* Badge Notification */
+			.navbar .badge {
+				position: absolute;
+				top: -5px;
+				right: -10px;
+				font-size: 0.75rem;
 			}
 
 			/* Notifications */
 			.notification-container {
-				position: relative; /* Pour permettre le positionnement de la liste de notifications */
-				margin-right: 15px; /* Espacement à droite pour ne pas être collé aux éléments adjacents */
-				display: flex; /* Utilisation de flex pour aligner les éléments */
-    			align-items: center; /* Alignement vertical centré */
+				position: relative;
+				margin-right: 15px;
+				display: flex;
+				align-items: center;
 			}
 
 			#notificationIcon {
-				font-size: 24px; /* Taille de l'icône de notification */
-				color: white; /* Couleur de l'icône */
-				position: relative; /* Pour positionner le compteur */
-				cursor: pointer; /* Change le curseur lors du survol */
+				font-size: 24px;
+				color: white;
+				position: relative;
+				cursor: pointer;
 			}
 
 			.notification-count {
-				position: absolute; /* Positionnement absolu par rapport à l'icône */
-				top: 0px; /* Ajuste la position verticale */
-				right: -2px; /* Ajuste la position horizontale */
-				background-color: red; /* Couleur d'arrière-plan pour le compteur */
-				color: white; /* Couleur du texte */
-				border-radius: 50%; /* Arrondi pour un style circulaire */
-				padding: 3px 7px; /* Espacement intérieur */
-				font-size: 12px; /* Taille du texte */
-				font-weight: bold; /* Gras pour le compteur */
+				position: absolute;
+				top: -5px;
+				right: -7px;
+				background-color: red;
+				color: white;
+				border-radius: 50%;
+				padding: 3px 7px;
+				font-size: 12px;
+				font-weight: bold;
 			}
 
 			.notifications {
-				border: 2px solid #000; /* Bordure autour de la liste de notifications */
-				background-color: #fff; /* Couleur d'arrière-plan */
-				position: absolute; /* Positionnement absolu */
-				z-index: 1000; /* S'assurer qu'il est au-dessus des autres éléments */
+				border: 2px solid #000;
+				background-color: #fff;
+				position: absolute;
+				z-index: 1000;
 				width: 600px;
-				top: -210px; /* Ajustez selon vos besoins */
-				right: 0; /* Aligne le conteneur à droite */
-				margin-top: 250px; /* Espacement au-dessus de la liste */
-				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre pour le conteneur */
-				padding: 2px; /* Espacement intérieur */
+				top: -210px;
+				right: 0;
+				margin-top: 250px;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+				padding: 2px;
+				display: none;
+				opacity: 0;
+				transition: opacity 0.3s ease-in-out;
+			}
+
+			.notifications.show {
+				display: block;
+				opacity: 1;
 			}
 
 			.notifications ul {
@@ -161,440 +132,158 @@
 
 			.notifications li {
 				padding: 10px;
-				border-bottom: 1px solid #ccc; /* Bordure en bas */
-				font-size: 12px; /* Taille de police réduite */
+				border-bottom: 1px solid #ccc;
+				font-size: 12px;
 			}
 
-			/* Supprime la bordure du dernier élément */
 			.notifications li:last-child {
-				border-bottom: none; 
+				border-bottom: none;
 			}
 
-			/* Header de notification */
 			.notification-header {
-				display: flex; /* Utilise flexbox pour aligner les éléments */
-				justify-content: space-between; /* Espace entre le nom et la date */
-				align-items: center; /* Centrage vertical */
-			}
-
-			/* Style de la date de création */
-			.creation-date {
-				font-size: 0.9em; /* Taille de police plus petite pour la date */
-				color: #666; /* Couleur de texte grise pour la date */
-			}
-
-			/* Corps de la notification */
-			.notification-body {
-				margin-bottom: 10px; /* Ajoute un espace entre le corps et les boutons */
-			}
-
-			/* Boutons de notification */
-			.notification-buttons {
-				display: flex; /* Utilise flexbox pour aligner les boutons */
-				justify-content: flex-end; /* Aligne les boutons à droite */
-				gap: 10px; /* Espace entre les boutons */
-			}
-
-			.notification-buttons button {
-				padding: 5px 10px; /* Espacement intérieur des boutons */
-				margin: 0 2px; /* Espacement horizontal entre les boutons */
-				cursor: pointer; /* Curseur pointer pour les boutons */
-				border: none; /* Pas de bordure */
-				border-radius: 5px; /* Coins arrondis */
-				background-color: #007bff; /* Couleur d'arrière-plan des boutons */
-				color: white; /* Couleur du texte des boutons */
-				transition: background-color 0.3s; /* Transition pour l'effet de survol */
-			}
-
-			.notification-buttons button:hover {
-				background-color: #0056b3; /* Couleur au survol des boutons */
-			}
-
-			.d-none {
-				display: none;
-			}
-
-			/* STYLE CONTAINER PRINCIPAL */
-			.container-custom {
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
-				margin: 20px auto;
-				max-width: 1400px;
 			}
 
-			.custom-rectangle {
-				position: relative;
-				border: 2px solid #000;
-				padding: 25px;
-				margin: 20px;
-				width: 100%;
-				max-width: 515px;
-				background-color: #fff;
-				border-radius: 50px;
-				box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+			.creation-date {
+				font-size: 0.9em;
+				color: #666;
 			}
 
-			.custom-rectangle h2 {
-				text-align: center;
-				color: #000000;
-				padding: 10px;
+			.notification-body {
+				margin-bottom: 10px;
+			}
+
+			.notification-buttons {
+				display: flex;
+				justify-content: flex-end;
+				gap: 10px;
+			}
+
+			.notification-buttons button {
+				padding: 5px 10px;
+				margin: 0 2px;
+				cursor: pointer;
+				border: none;
 				border-radius: 5px;
-				white-space: nowrap;
-				margin-bottom: 20px;
-				background-color: #d7df22;
-				font-size: 20px;
+				background-color: #007bff;
+				color: white;
+				transition: background-color 0.3s;
 			}
 
-			.custom-rectangle h3,
-			.custom-rectangle h4,
-			.custom-rectangle h5 {
-				font-size: 15px;
+			.notification-buttons button:hover {
+				background-color: #0056b3;
 			}
 
-			.custom-rectangle h4 {
+			/* Container principal */
+			.container-forum {
+				max-width: 900px;
+				margin: 0 auto;
+				padding: 20px;
+				background-color: #f9f9f9;
+				border: 1px solid #ddd;
+				border-radius: 10px;
+				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			}
+
+			/* Titre principal */
+			.container-forum h2 {
+				font-size: 1.8rem;
+				font-weight: bold;
+				color: #333;
+			}
+
+			/* Sous-titre pour l'ajout de chat */
+			.container-forum h4 {
+				font-size: 1.4rem;
+				color: #555;
 				margin-bottom: 15px;
 			}
 
-			h1 {
-				text-align: center;
-				color: #000000;
-			}
-
-			.custom-rectangle .btn-group {
-				width: 100%;
-			}
-
-			.custom-rectangle .btn-secondary {
-				border: 1px solid black;
-				margin-right: 10px;
-				background-color: #fff;
-				color: #000;
-				border-radius: 0;
-			}
-
-			.custom-rectangle .btn-secondary:last-child {
-				margin-right: 0;
-			}
-
-			.custom-rectangle hr {
-				margin: 20px 0;
-				opacity: 1;
-				border: 2px solid #000;
-			}
-
-			hr {
-				margin: 20px 0;
-				opacity: 1;
-				border: 2px solid #000;
-			}
-
-			.bottom-rectangle {
-				border-radius: 0;
-			}
-
-			/* Logo */
-			.logo-circle {
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				width: 500px;
-				height: 250px;
-				background-color: #fff; /* Fond blanc */
-				border-radius: 50%; /* Forme circulaire */
-				margin: 20px; /* Marges pour espacer des blocs */
-				box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Ombre pour le relief */
-			}
-
-			.client-logo-central {
-				max-width: 70%; /* Limiter la largeur du logo */
-				max-height: 70%; /* Limiter la hauteur du logo */
-				object-fit: contain; /* Garder le ratio du logo */
-			}
-
-			/* Task Container */
-			.task-container {
-				max-height: 300px;
-				overflow-y: auto;
-				padding: 10px 0;
-				width: 100%;
-			}
-
-			.task {
-				margin-bottom: 20px;
-				position: relative;
-			}
-
-			.total-taches {
-				position: absolute;
-				bottom: 10px;
-				right: 20px;
-			}
-
-			/* Button Styles */
-			.btn-secondary {
-				background-color: #818285; /* Couleur de fond du bouton */
-				color: #fff; /* Couleur du texte du bouton */
-				border: 2px solid #000; /* Bordure du bouton */
-				padding: 10px 20px; /* Espacement interne du bouton */
-				font-size: 16px; /* Taille de la police */
-				border-radius: 50px; /* Bordures arrondies */
-				transition: all 0.3s ease; /* Transition pour les effets de survol */
-			}
-
-			.btn-secondary:hover {
-				background-color: #6c757d; /* Couleur de fond au survol */
-				color: #fff; /* Couleur du texte au survol */
-				transform: translateY(-3px); /* Effet de levée au survol */
-				border-color: #6c757d; /* Couleur de bordure au survol */
-			}
-
-			/* Center Button */
-			.center-button {
-				display: flex;
-				justify-content: center; /* Centre les boutons */
-				gap: 15px; /* Espace entre les boutons */
-				margin: 20px;
-			}
-
-			.center-button .btn-secondary {
-				background-color: #fff;
-				color: #000;
-				border: 1px solid black;
-				margin-right: 10px;
-				padding: 10px 20px; /* Espacement interne du bouton */
-				font-size: 16px; /* Taille de la police */
-				border-radius: 5px;
-				transition: all 0.3s ease; /* Transition pour les effets de survol */
-			}
-
-			.center-button .btn-secondary:hover {
-				background-color: #6c757d; /* Couleur de fond au survol */
-				color: #fff; /* Couleur du texte au survol */
-				transform: translateY(-3px); /* Effet de levée au survol */
-				border-color: #6c757d; /* Couleur de bordure au survol */
-			}
-
-			/* Info Icon Hover */
-			.info-icon {
-				cursor: pointer;
-				color: #007bff;
-				margin-left: 5px;
-				font-size: 14px;
-				position: relative;
-			}
-
-			.description {
-				display: none;
-				background-color: rgba(255, 255, 255, 0.9);
-				color: #000;
-				border: 1px solid #000;
-				padding: 10px;
-				border-radius: 8px;
-				z-index: 10;
-				max-width: 500px;
-				width: auto;
-				word-wrap: break-word;
-				position: absolute;
-				left: 50%; /* Centrer la description */
-				transform: translateX(-50%); /* Assurer que la description reste bien centrée */
-				top: 100%;
-				white-space: normal;
-				box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-				transition: opacity 0.3s ease;
-				opacity: 0;
-				pointer-events: none;
-				overflow-wrap: break-word;
-			}
-
-			.info-icon:hover .description {
-				display: block;
-				opacity: 1;
-				pointer-events: auto;
-			}
-
-			/* BLOC STATISTIQUE */
-			.custom-rectangle-statistic {
-				position: relative;
-				border: 2px solid #000;
-				padding: 25px;
-				margin: 20px;
-				width: 100%;
-				max-width: 515px;
-				background-color: #fff;
-				border-radius: 50px;
-				box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-			}
-
-			.icon-grid {
-				display: grid;
-				grid-template-columns: repeat(2, 1fr); /* Deux colonnes */
-				gap: 10px; /* Espacement entre les icônes */
-			}
-
-			.icon-container {
-				display: flex;
-				flex-direction: column; /* Affiche le contenu en colonne */
-				align-items: center; /* Centre horizontalement */
-			}
-
-			.icon-container a {
-				text-decoration: none; /* Enlève la ligne soulignée */
-				color: inherit;        /* Maintient la couleur originale du texte ou de l'icône */
-			}
-
-			.black-block {
-				background-color: black;
-				padding: 15px;
-				border-radius: 10px;
-				display: flex;
-				flex-direction: column; /* Affiche le contenu en colonne */
-				justify-content: center;
-				align-items: center;
-				width: 80px; /* Largeur des icônes */
-			}
-
-			.green-block {
-				background-color: green;
-				padding: 15px;
-				border-radius: 10px;
-				display: flex;
-				flex-direction: column; /* Affiche le contenu en colonne */
-				justify-content: center;
-				align-items: center;
-				width: 80px; /* Largeur des icônes */
-			}
-
-			.red-block {
-				background-color: red;
-				padding: 15px;
-				border-radius: 10px;
-				display: flex;
-				flex-direction: column; /* Affiche le contenu en colonne */
-				justify-content: center;
-				align-items: center;
-				width: 80px; /* Largeur des icônes */
-			}
-
-			.iconeTheme {
-				font-size: 60px;
-				color: #FF0000;
-			}
-
-			.light-circle-npc {
-				position: absolute;
-				top: 20px; /* Ajustez cette valeur en fonction de la position de la lumière supérieure */
-				width: 15px;
-				height: 15px;
-				background-color: #FF0000;
-				border-radius: 50%;
-				box-shadow: inset 0 0 0 2px #000000;
-			}
-
-			.light-circle-pc {
-				position: absolute;
-				top: 36px; /* Ajustez cette valeur en fonction de la position de la lumière supérieure */
-				width: 15px;
-				height: 15px;
-				background-color: #FFA500;
-				border-radius: 50%;
-				box-shadow: inset 0 0 0 2px #000000;
-			}
-
-			.light-circle-t {
-				position: absolute;
-				top: 52px; /* Ajustez cette valeur en fonction de la position de la lumière supérieure */
-				width: 15px;
-				height: 15px;
-				background-color: #008000;
-				border-radius: 50%;
-				box-shadow: inset 0 0 0 2px #000000;
-			}
-
-			.status-text h5 {
-				margin-top: 10px;
-				font-weight: bold;
-				text-align: center;
-				color: black;
-				font-size: 15px;
-			}
-
-			.statistic-value {
-				background-color: red;
-				color: white;
-				font-size: 13px;
-				padding: 2px;
-				position: absolute;
-				top: -5px;
-				right: -20px;
-				height: 25px;
-				width: 40px;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				border-radius: 5px;
-				border: 2px solid #FFF;
-			}
-
-			/* WEBTASK STYLE */
-			.container-task {
-				display: flex;
-				flex-wrap: wrap; /* Permet plusieurs colonnes */
-				justify-content: center; /* Centre le contenu */
-				margin: 20px;
-			}
-
-			/* Custom Rectangle */
-			.custom-task {
-				position: relative;
-				border: 2px solid #000;
-				padding: 25px;
-				margin: 20px;
-				width: 100%;
-				max-width: 430px; /* Réduit la largeur maximale */
-				background-color: #fff;
-				box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-				overflow: hidden; /* Empêche le débordement du texte */
-			}
-
-			.custom-task h2 {
-				text-align: center;
-				color: #000000;
-				padding: 10px;
-				border-radius: 5px;
-				background-color: #d7df22;
-				font-size: 18px; /* Réduit la taille de la police du titre */
-				white-space: normal; /* Permet le retour à la ligne */
-				margin-bottom: 20px;
-				overflow: visible; /* Permet d'afficher le texte complet */
-				text-overflow: clip; /* Ne coupe pas le texte avec des points de suspension */
-				display: block; /* Assure que le texte utilise text-overflow */
-			}
-
-			/* Button Styles */
-			.container-task .btn-secondary {
-				background-color: #fff;
-				color: #000;
-				border: 1px solid black;
-				margin-right: 10px;
-				padding: 10px 20px; /* Espacement interne du bouton */
-				font-size: 16px; /* Taille de la police */
-				border-radius: 5px;
-				transition: all 0.3s ease; /* Transition pour les effets de survol */
-			}
-
-			.container-task .btn-secondary:hover {
-				background-color: #6c757d; /* Couleur de fond au survol */
-				color: #fff; /* Couleur du texte au survol */
-				transform: translateY(-3px); /* Effet de levée au survol */
-				border-color: #6c757d; /* Couleur de bordure au survol */
-			}
-
-			.container-task .btn-group {
-				display: flex;
-				justify-content: center; /* Centre les boutons */
-				gap: 15px; /* Espace entre les boutons */
+			/* Zone de contenu du forum */
+			#forum-contents {
 				margin-top: 20px;
+			}
+
+			/* Message "Aucun chat disponible" */
+			.no-content {
+				text-align: center;
+				color: #999;
+				font-style: italic;
+				font-size: 1rem;
+			}
+
+			/* Entrée du forum */
+			.forum-entry {
+				background-color: #ffffff;
+				padding: 15px;
+				border: 1px solid #ddd;
+				border-radius: 8px;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+			}
+
+			.forum-entry p {
+				margin-bottom: 10px;
+				font-size: 1rem;
+				color: #555;
+			}
+
+			.forum-entry pre {
+				background-color: #f5f5f5;
+				padding: 10px;
+				border-radius: 5px;
+				font-size: 0.9rem;
+				white-space: pre-wrap;
+				word-wrap: break-word;
+			}
+
+			/* Boutons Modifier et Supprimer */
+			.forum-entry .btn-outline-secondary {
+				margin-right: 10px;
+			}
+
+			.forum-entry .btn-outline-danger {
+				margin-left: 5px;
+			}
+
+			/* Formulaire d'ajout de résumé */
+			#add-summary {
+				margin-top: 30px;
+			}
+
+			#summary-text {
+				font-size: 1rem;
+				border: 2px solid #ddd;
+				border-radius: 8px;
+				padding: 15px;
+				background-color: #ffffff;
+				resize: none;
+				box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+			}
+
+			#submit-summary {
+				background-color: #007bff;
+				color: white;
+				font-size: 1rem;
+				font-weight: bold;
+				border: none;
+				border-radius: 5px;
+				padding: 10px 20px;
+				transition: background-color 0.3s ease;
+			}
+
+			#submit-summary:hover {
+				background-color: #0056b3;
+				cursor: pointer;
+			}
+
+			/* Ligne de séparation */
+			.forum-entry hr {
+				border: 0;
+				height: 1px;
+				background-color: #ddd;
+				margin: 15px 0;
 			}
 
 			/* Footer */
@@ -609,9 +298,8 @@
 				color: #333;
 			}
 		</style>
-
-
-		<!-- Navbar -->
+	</head>
+	<body>
 		<nav class="navbar navbar-expand-lg navbar-custom">
 			<div
 				class="container-fluid">
@@ -629,43 +317,45 @@
 				<div class="collapse navbar-collapse" id="navbarColor01">
 					<ul class="navbar-nav me-auto">
 						<li class="nav-item">
-							<a class="nav-link nav-link-custom" href="{{ path('app_homeadmin') }}">
+							<a class="nav-link" href="{{ path('app_homeadmin') }}">
 								<b>Accueil</b>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link nav-link-custom" href="{{ path('app_tachesadmin') }}">
+							<a class="nav-link" href="{{ path('app_tachesadmin') }}">
 								<b>Tâches</b>
 							</a>
 						</li>
+
+						<!-- Lien pour Clients de Pagos en dehors du dropdown -->
 						<li class="nav-item">
-							<a class="nav-link nav-link-custom" href="{{ path('app_clientsdepagosadmin') }}">
+							<a class="nav-link" href="{{ path('app_clientsdepagosadmin') }}">
 								<b>Clients de Pagos</b>
 							</a>
 						</li>
 
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle nav-link-custom" href="#" id="gestionDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							<a class="nav-link dropdown-toggle" href="#" id="gestionDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 								<b>Administration</b>
 							</a>
 							<ul class="dropdown-menu" aria-labelledby="gestionDropdown">
 								<li>
-									<a class="dropdown-item dropdown-item-custom" href="{{ path('app_gestionuser') }}">
+									<a class="dropdown-item" href="{{ path('app_gestionuser') }}">
 										<b>Gestion utilisateur</b>
 									</a>
 								</li>
 								<li>
-									<a class="dropdown-item dropdown-item-custom" href="{{ path('app_importexport') }}">
+									<a class="dropdown-item" href="{{ path('app_importexport') }}">
 										<b>Imports / Exports</b>
 									</a>
 								</li>
 								<li>
-									<a class="dropdown-item dropdown-item-custom" href="{{ path('app_register') }}">
+									<a class="dropdown-item" href="{{ path('app_register') }}">
 										<b>Créer un utilisateur</b>
 									</a>
 								</li>
 								<li>
-									<a class="dropdown-item dropdown-item-custom" href="{{ path('app_createclientadmin') }}">
+									<a class="dropdown-item" href="{{ path('app_createclientadmin') }}">
 										<b>Créer un Client</b>
 									</a>
 								</li>
@@ -675,273 +365,110 @@
 
 					<!-- Liens côté droit -->
 					<ul class="navbar-nav ms-auto">
-						<li class="nav-item nav-link nav-link-custom user-name">
-							<b>{{ app.user.nom }}
-								{{ app.user.prenom }}</b>
+						<li class="nav-item">
+							<a class="nav-link" href="#" style="color: #ffffff; text-align: center;">
+								<b>{{ app.user.nom }}
+									{{ app.user.prenom }}</b>
+							</a>
 						</li>
 
-						<!-- Icône de notification -->
-						{% set allowed_ids = ['e4e080b3758761bd01758f5fcfed03d9'] %}
-						{% if app.user.idclient and app.user.idclient.getId() in allowed_ids %}
-							<li class="nav-item notification-container">
-								<a class="nav-link" href="#" style="color: #ffffff; text-align: center;">
-									<i class="fas fa-bell" style="font-size: 1.5em; color: white;" id="notificationIcon"></i>
-									<span class="notification-count">{{ notifications|filter(notification => notification.visible == 1)|length }}</span>
-								</a>
-								<div id="notificationList" class="notifications" style="display: none;">
-									<ul>
-										{% set visibleNotifications = notifications|filter(notification => notification.visible == 1) %}
-										{% if visibleNotifications is empty %}
-											<li>Aucune notification</li>
-										{% else %}
-											{% set notificationsByClient = {} %}
-
-											{# Regrouper les notifications par client #}
-											{% for notification in visibleNotifications %}
-												{% set clientName = notification.getClient.getRaisonSociale() %}
-												{% if notificationsByClient[clientName] is not defined %}
-													{% set notificationsByClient = notificationsByClient|merge({(clientName): []}) %}
-												{% endif %}
-												{% set notificationsByClient = notificationsByClient|merge({(clientName): notificationsByClient[clientName] | merge([notification])}) %}
-											{% endfor %}
-
-											{# Affichage des notifications regroupées par client #}
-											{% for client, clientNotifications in notificationsByClient %}
-												{% if clientNotifications|length > 0 %}
-													<li class="client-notification" data-client="{{ client }}">
-														<div class="client-notification-header" style="border-bottom: 2px solid #007bff; margin-bottom: 10px; padding-bottom: 5px;">
-															<b>{{ client }}</b>
-														</div>
-														<ul style="list-style: none; padding-left: 0; border-left: 2px dashed #ccc; padding-left: 10px;">
-															{% for notification in clientNotifications %}
-																<li id="notification-{{ notification.id }}" style="margin-bottom: 15px; padding: 10px; border: 1px solid #e0e0e0; border-radius: 5px; background-color: #f9f9f9;">
-																	<div class="notification-header">
-																		<span class="creation-date">{{ notification.getDateCreation() | date('d/m/y H:i:s') }}</span>
-																	</div>
-																	<div class="notification-body">
-																		{{ notification.getTitreWebtask() }}
-																		({{ notification.getLibelleWebtask() }})<br>
-																		{{ notification.getMessage() }}
-																	</div>
-																	<div class="notification-buttons">
-																		<button class="mark-as-read" data-id="{{ notification.id }}">Lu</button>
-																		{% set idWebtask = idWebtaskMap[notification.codeWebtask] %}
-																		<button onclick="window.location.href='{{ path('app_consultertachesadmin', { 'id': notification.codeWebtask }) }}'">Consulter</button>
-																	</div>
-																</li>
-															{% endfor %}
-														</ul>
-													</li>
-													<hr
-													style="border-top: 2px solid #007bff; margin: 10px 0;">
-												{# Séparation entre clients #}
-												{% endif %}
-											{% endfor %}
-										{% endif %}
-									</ul>
-								</div>
-							</li>
-						{% endif %}
-
-						<!-- Logo client et déconnexion -->
-						<li class="nav-item d-flex align-items-center">
-							<img src="data:image/png;base64,{{ logo }}" alt="Logo du client" class="client-logo me-2"/>
-							<a class="nav-link logout-icon" href="{{ path('app_logout') }}" title="Se déconnecter">
-								<i class="fas fa-sign-out-alt"></i>
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="navbarUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								<i class="fas fa-user-circle" style="font-size: 1.5em; color: white;"></i>
 							</a>
+							<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown">
+								<li><hr class="dropdown-divider"></li>
+								<li>
+									<a class="dropdown-item" href="{{ path('app_logout') }}">
+										<b>
+											<i class="fas fa-sign-out-alt"></i>
+											Se déconnecter
+										</b>
+									</a>
+								</li>
+							</ul>
 						</li>
 					</ul>
 				</div>
 			</div>
 		</nav>
 
+		<div class="container-forum mt-4">
+			<h2 class="mb-4">Forum du Client : <strong>{{ client.raisonSociale }}</strong></h2>
 
-		<body>
-			<div class="container mt-4">
-				<h2 class="mb-4">Forum du Client :
-					<strong>{{ client.raisonSociale }}</strong>
-				</h2>
-
-				<!-- Affichage des résumés existants -->
-				<div id="forum-contents">
-					{% if forums is empty %}
-						<p class="no-content">Aucun Chat disponible pour ce client.</p>
-					{% else %}
-						{% for forum in forums %}
-							<div class="forum-entry mb-4">
-								<p>
-									<strong>Date :</strong>
-									{{ forum.date|date('d/m/Y H:i') }}</p>
-
-								<pre class="forum-content">{{ forum.content }}</pre>
-								<a href="{{ path('app_adminforum_edit', {id: forum.id}) }}" class="btn btn-outline-secondary btn-sm">Modifier</a>
-								<form action="{{ path('app_adminforum_delete', {id: forum.id}) }}" method="POST" style="display:inline;">
-									<button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce Chat ?');">Supprimer</button>
-								</form>
-								<hr>
-
-								
-							</div>
-						{% endfor %}
-					{% endif %}
-				</div>
-
-				<!-- Formulaire d'ajout de résumé -->
-				<div id="add-summary" class="mt-5">
-					<h4>Ajouter un nouveau Chat :</h4>
-					<textarea id="summary-text" rows="6" placeholder="Entrez votre résumé ici..." class="form-control mb-3"></textarea>
-					<button id="submit-summary" class="btn btn-primary btn-lg">Envoyer le Chat</button>
-				</div>
+			<!-- Affichage des résumés existants -->
+			<div id="forum-contents">
+				{% if forums is empty %}
+					<p class="no-content">Aucun Chat disponible pour ce client.</p>
+				{% else %}
+					{% for forum in forums %}
+						<div class="forum-entry mb-4">
+							<p><strong>Date :</strong> {{ forum.date|date('d/m/Y H:i') }}</p>
+							<pre class="forum-content">{{ forum.content }}</pre>
+							<a href="{{ path('app_adminforum_edit', {id: forum.id}) }}" class="btn btn-outline-secondary btn-sm">Modifier</a>
+							<form action="{{ path('app_adminforum_delete', {id: forum.id}) }}" method="POST" style="display:inline;">
+								<button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce Chat ?');">Supprimer</button>
+							</form>
+							<hr>
+						</div>
+					{% endfor %}
+				{% endif %}
 			</div>
 
-			<!-- Chargement de Bootstrap -->
-			<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+			<!-- Formulaire d'ajout de résumé -->
+			<div id="add-summary" class="mt-5">
+				<h4>Ajouter un nouveau Chat :</h4>
+				<textarea id="summary-text" rows="6" placeholder="Entrez votre résumé ici..." class="form-control mb-3"></textarea>
+				<button id="submit-summary" class="btn btn-primary btn-lg">Envoyer le Chat</button>
+			</div>
+		</div>
 
-			<script>
-				document.getElementById('submit-summary').addEventListener('click', function () {
-const summaryText = document.getElementById('summary-text').value;
-const clientId = '{{ client.id }}'; // Assurez-vous que client_id est bien disponible
+		<br>
 
-if (summaryText) {
-fetch(`/client/${clientId}/forum`, {
-method: 'POST',
-headers: {
-'Content-Type': 'application/json'
-},
-body: JSON.stringify(
-{content: summaryText}
-)
-}).then(response => response.json()).then(data => {
-if (data.content && data.date) { // Ajout du résumé à la liste affichée
-const newEntry = document.createElement('div');
-newEntry.classList.add('forum-entry', 'mb-4');
-newEntry.innerHTML = `<p><strong>Date :</strong> ${
-new Date(data.date).toLocaleString()
-}</p>
-                                              <pre class="forum-content">${
-data.content
-}</pre>
-                                              <hr>`;
-document.getElementById('forum-contents').appendChild(newEntry);
-document.getElementById('summary-text').value = ''; // Réinitialise le champ texte
-} else {
-alert('Erreur lors de l\'ajout du résumé.');
-}
-}).catch(error => alert('Erreur : ' + error.message));
-} else {
-alert('Veuillez entrer un résumé avant de l\'envoyer.');
-}
-});
-			</script>
+		<!-- Footer -->
+		<footer>
+			<p><b>© Copyright @ 2024 par <span style="color: #d7df22;">Cabinet PAGOS</span> | tous droits réservés.</b></p>
+		</footer>
 
-			<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Code de gestion des notifications ici
+		<!-- JS de Bootstrap et dépendances -->
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+		<script>
+			document.getElementById('submit-summary').addEventListener('click', function () {
+				const summaryText = document.getElementById('summary-text').value;
+				const clientId = '{{ client.id }}'; // Assurez-vous que client_id est bien disponible
 
-        // Gestion de l'affichage des notifications
-        document.getElementById('notificationIcon').addEventListener('click', function() {
-            var notificationList = document.getElementById('notificationList');
-            notificationList.style.display = notificationList.style.display === 'none' || notificationList.style.display === '' ? 'block' : 'none'; // Toggle
-        });
-    });
-
-    function consulterNotification(notificationId) {
-        // Rediriger vers la page de consultation de la notification
-        window.location.href = '/notification/' + notificationId; // Remplacez par l'URL réelle
-    }
-</script>
-
-<script>
-   document.querySelectorAll('.mark-as-read').forEach(function(button) {
-    button.addEventListener('click', function() {
-        const notificationId = this.getAttribute('data-id');
-
-        // Générer l'URL correcte pour la route "app_mark_as_read"
-        const url = '/mark-as-read/' + notificationId;
-
-        // Créer une nouvelle instance de XMLHttpRequest
-        const xhr = new XMLHttpRequest();
-        
-        // Ouvrir la requête en POST
-        xhr.open('POST', url, true);
-
-        // Définir les headers
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-        xhr.setRequestHeader('X-CSRF-Token', '{{ csrf_token('app_mark_as_read') }}');
-
-        // Définir la fonction de callback pour la réponse
-        xhr.onload = function() {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                try {
-                    const data = JSON.parse(xhr.responseText);
-                    if (data.status === 'success') {
-                        // Masquer la notification
-                        const notificationElement = document.getElementById('notification-' + notificationId);
-                        if (notificationElement) {
-                            notificationElement.style.display = 'none'; // Masquer la notification
-                        }
-
-                        // Mettre à jour le compteur de notifications
-                        const countElement = document.querySelector('.notification-count');
-                        const currentCount = parseInt(countElement.textContent, 10);
-                        countElement.textContent = currentCount - 1; // Décrementer le compteur
-
-                        // Vérifiez les notifications du client
-                        checkClientNotifications();
-                    } else {
-                        console.error(data); // Afficher des erreurs supplémentaires
-                    }
-                } catch (error) {
-                    console.error('Erreur lors de la réponse JSON:', error.message);
-                }
-            } else {
-                try {
-                    const data = JSON.parse(xhr.responseText);
-                    throw new Error(data.status || 'Erreur lors de la mise à jour de la notification');
-                } catch (error) {
-                    console.error('Erreur:', error.message);
-                    alert('Erreur lors de la mise à jour de la notification. ' + error.message); // Afficher un message d'erreur à l'utilisateur
-                }
-            }
-        };
-
-        // Définir la fonction de callback en cas d'erreur
-        xhr.onerror = function() {
-            console.error('Erreur de connexion');
-            alert('Erreur lors de la mise à jour de la notification.');
-        };
-
-        // Envoyer la requête avec les données
-        xhr.send(JSON.stringify({ notification_id: notificationId }));
-    });
-});
-
-
-    function checkClientNotifications() {
-        const clients = document.querySelectorAll('.client-notification');
-        let hasVisibleNotifications = false;
-
-        clients.forEach(function(client) {
-            const notifications = client.querySelectorAll('li[id^="notification-"]'); // Sélectionner les notifications
-            const visibleNotifications = Array.from(notifications).filter(function(notification) {
-                return notification.style.display !== 'none';
-            });
-
-            if (visibleNotifications.length === 0) {
-                client.style.display = 'none'; // Masquer le client si aucune notification n'est visible
-            } else {
-                hasVisibleNotifications = true; // Il y a encore des notifications visibles
-            }
-        });
-
-        // Afficher le message si aucune notification visible
-        const notificationList = document.getElementById('notificationList');
-        if (!hasVisibleNotifications) {
-            notificationList.innerHTML = '<li>Aucune notification disponible</li>'; // Afficher le message
-        }
-    }
-</script>
-		</body>
-	</head>
+				if (summaryText) {
+					fetch(`/client/${clientId}/forum`, {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify({
+							content: summaryText
+						})
+					})
+						.then(response => response.json())
+						.then(data => {
+							if (data.content && data.date) { // Ajout du résumé à la liste affichée
+								const newEntry = document.createElement('div');
+								newEntry.classList.add('forum-entry', 'mb-4');
+								newEntry.innerHTML = `
+									<p><strong>Date :</strong> ${new Date(data.date).toLocaleString()}</p>
+									<pre class="forum-content">${data.content}</pre>
+									<hr>
+								`;
+								document.getElementById('forum-contents').appendChild(newEntry);
+								document.getElementById('summary-text').value = ''; // Réinitialise le champ texte
+							} else {
+								alert('Erreur lors de l\'ajout du résumé.');
+							}
+						})
+						.catch(error => alert('Erreur : ' + error.message));
+				} else {
+					alert('Veuillez entrer un résumé avant de l\'envoyer.');
+				}
+			});
+		</script>
+	</body>
 </html>

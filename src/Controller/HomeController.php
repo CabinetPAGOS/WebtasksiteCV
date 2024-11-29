@@ -6,9 +6,9 @@ use App\Entity\Client;
 use App\Entity\Forum;
 use App\Repository\ClientRepository;
 use App\Repository\ForumRepository;
-use App\Repository\NotificationRepository;
 use App\Repository\SettingsRepository;
 use App\Repository\WebtaskRepository;
+use App\Repository\NotificationRepository;
 use App\Services\TextTransformer;
 use App\Services\VersionService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,36 +22,36 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomeController extends AbstractController
 {
     private $webTaskRepository;
+    private $notificationRepository;
     private $versionService;
     private $textTransformer;
     private $entityManager;
-    private $notificationRepository;
     private $settingsRepository;
     private $clientRepository;
     private $forumRepository;
 
     public function __construct(
         WebtaskRepository $webTaskRepository,
+        NotificationRepository $notificationRepository,
         VersionService $versionService,
         TextTransformer $textTransformer,
         EntityManagerInterface $entityManager,
-        NotificationRepository $notificationRepository,
         SettingsRepository $settingsRepository,
         ForumRepository $forumRepository,
         ClientRepository $clientRepository
     ) {
         $this->webTaskRepository = $webTaskRepository;
+        $this->notificationRepository = $notificationRepository;
         $this->versionService = $versionService;
         $this->textTransformer = $textTransformer;
         $this->entityManager = $entityManager;
-        $this->notificationRepository = $notificationRepository;
         $this->settingsRepository = $settingsRepository;
         $this->forumRepository = $forumRepository;
         $this->clientRepository = $clientRepository;
     }
 
     #[Route('/home', name: 'app_homeclient')]
-    public function base(WebtaskRepository $webtaskRepository, SessionInterface $session, NotificationRepository $notificationRepository): Response
+    public function base(SessionInterface $session, WebtaskRepository $webtaskRepository, NotificationRepository $notificationRepository): Response
     {
         // Récupérer l'utilisateur connecté
         $user = $this->getUser();
@@ -65,7 +65,7 @@ class HomeController extends AbstractController
         $webtasks = $webtaskRepository->findBy(['Piloteid' => $user]);
 
         // Vérifier si l'utilisateur est le pilote de l'une des webtasks
-        $isPilote = count($webtasks) > 0;
+        $isPilote = count($webtasks) > 0; // Si l'utilisateur est le pilote d'au moins une webtask
 
         // Récupérer l'ID du client associé à l'utilisateur connecté
         $idclient = $user->getIdclient();
@@ -87,7 +87,7 @@ class HomeController extends AbstractController
         if ($client->getLogo()) {
             $logo = base64_encode(stream_get_contents($client->getLogo()));
         }
-        
+
         // Récupérer les Webtasks associées à cet ID client
         $webtasks = $this->webTaskRepository->findBy(['idclient' => $idclient]);
 
@@ -180,15 +180,15 @@ class HomeController extends AbstractController
 
         $lastModifiedStopClientWebtasks = array_slice($lastModifiedStopClientWebtasks, 0, 3);
 
+        // Vérifier le mode maintenance
+        $settings = $this->settingsRepository->find(1);
+        $maintenanceMode = $settings ? $settings->getMaintenanceMode() : false;
+
         // Récupérer les notifications visibles de l'utilisateur connecté
         $notifications = $notificationRepository->findBy([
             'user' => $user->getId(),
             'visible' => true
         ]);
-
-        // Vérifier le mode maintenance
-        $settings = $this->settingsRepository->find(1);
-        $maintenanceMode = $settings ? $settings->getMaintenanceMode() : false;
 
         // Créer un tableau pour lier codeWebtask à id
         $idWebtaskMap = [];
@@ -210,72 +210,39 @@ class HomeController extends AbstractController
             'stopClient' => $stopClient,
             'totalTaches' => $totalTaches,
             'lastModifiedStopClientWebtasks' => $lastModifiedStopClientWebtasks,
-            'notifications' => $notifications,
-            'idWebtaskMap' => $idWebtaskMap,
             'maintenance_mode' => $maintenanceMode,
             'logo' => $logo,
-            'client' => $client,
+            'notifications' => $notifications,
+            'idWebtaskMap' => $idWebtaskMap,
             'isPilote' => $isPilote,
+            'client' => $client,
         ]);
     }
 
     #[Route('/notifications', name: 'get_notifications', methods: ['GET'])]
     public function getNotifications(): JsonResponse
     {
-        // Récupérer l'utilisateur connecté
-        $user = $this->getUser();
-
-        // Vérifier si l'utilisateur est connecté
-        if (!$user) {
-            return $this->json([
-                'count' => 0,
-                'notifications' => [],
-                'message' => 'Utilisateur non connecté',
-            ], Response::HTTP_UNAUTHORIZED);
-        }
-
-        // Récupérer l'ID de l'utilisateur
-        $userId = $user->getId();
-
-        // Récupérer les notifications visibles pour l'utilisateur connecté
-        $notifications = $this->notificationRepository->createQueryBuilder('n')
-            ->where('n.visible = :visible')
-            ->andWhere('n.user = :userId')
-            ->setParameter('visible', true)
-            ->setParameter('userId', $userId)
-            ->getQuery()
-            ->getResult();
+        // Récupérer les notifications visibles
+        $notifications = $this->notificationRepository->findVisibleNotifications();
 
         return $this->json([
-            'count' => count($notifications),
-            'notifications' => $notifications,
+            'count' => count($notifications), // Compte le nombre de notifications
+            'notifications' => $notifications, // Renvoie les notifications
         ]);
     }
 
     #[Route('/mark-as-read/{id}', name: 'app_mark_as_read', methods: ['POST'])]
     public function markAsRead($id): JsonResponse
     {
-        // Récupérer l'utilisateur connecté
-        $user = $this->getUser();
-
-        if (!$user) {
-            return new JsonResponse(['status' => 'unauthorized'], 401);
-        }
-
         // Récupérer la notification par son ID
-        $notification = $this->notificationRepository->find($id);
+        $notification = $this->notificationRepository->find($id); // Utiliser le repository injecté
 
         if (!$notification) {
             return new JsonResponse(['status' => 'not_found'], 404);
         }
 
-        // Vérifier que la notification appartient à l'utilisateur connecté
-        if ($notification->getUser() !== $user->getId()) {
-            return new JsonResponse(['status' => 'forbidden'], 403);
-        }
-
         // Mettre à jour le champ visible à 0
-        $notification->setVisible(false); // Assurez-vous que cette méthode existe dans l'entité Notification
+        $notification->setVisible(0); // Assurez-vous que vous avez une méthode pour cela
 
         // Enregistrer les modifications
         $this->entityManager->persist($notification);
@@ -285,46 +252,8 @@ class HomeController extends AbstractController
     }
 
     #[Route('/client/forum/{id}', name: 'app_forum', methods: ['GET'])]
-    public function forum($id, Request $request, WebtaskRepository $webtaskRepository, NotificationRepository $notificationRepository): Response
+    public function forum($id, WebtaskRepository $webtaskRepository, NotificationRepository $notificationRepository): Response
     {
-        // Récupérer l'utilisateur connecté
-        $user = $this->getUser();
-
-        // Vérifiez si l'utilisateur est connecté
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
-        }
-
-        $idclient = $user->getIdclient();
-
-        // Vérifier si un client est associé à l'utilisateur
-        if (!$idclient) {
-            throw $this->createNotFoundException('Aucun client associé à cet utilisateur.');
-        }
-
-        // Récupérer le logo du client
-        $logo = null;
-        if ($idclient->getLogo()) {
-            $logo = base64_encode(stream_get_contents($idclient->getLogo()));
-        }
-
-        // Récupérer l'ID du client depuis les paramètres d'URL
-        $clientId = $request->query->get('id');
-
-        $notifications = $notificationRepository->findBy([
-            'user' => $user->getId(),
-            'visible' => true
-        ]);
-
-        // Créer un tableau pour lier codeWebtask à id
-        $idWebtaskMap = [];
-        foreach ($notifications as $notification) {
-            $idWebtask = $webtaskRepository->findIdByCodeWebtask($notification->getCodeWebtask());
-            if ($idWebtask !== null) {
-                $idWebtaskMap[$notification->getCodeWebtask()] = $idWebtask;
-            }
-        }
-
         // Récupérer le client par son ID
         $client = $this->clientRepository->find($id);
 
@@ -339,10 +268,36 @@ class HomeController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
+        // Vérifier si le client est trouvé (ceci est généralement déjà garanti grâce à la route)
+        if (!$client) {
+            throw $this->createNotFoundException('Client non trouvé');
+        }
+
+        // Récupérer le logo du client
+        $logo = null;
+        if ($client->getLogo()) {
+            $logo = base64_encode(stream_get_contents($client->getLogo()));
+        }
+
+        // Récupérer les notifications visibles de l'utilisateur connecté
+        $notifications = $notificationRepository->findBy([
+            'user' => $user->getId(),
+            'visible' => true
+        ]);
+
+        // Créer un tableau pour lier codeWebtask à id
+        $idWebtaskMap = [];
+        foreach ($notifications as $notification) {
+            $idWebtask = $this->webTaskRepository->findIdByCodeWebtask($notification->getCodeWebtask());
+            if ($idWebtask !== null) {
+                $idWebtaskMap[$notification->getCodeWebtask()] = $idWebtask;
+            }
+        }
+
         return $this->render('Client/forum.html.twig', [
             'forums' => $forums,
             'client' => $client,
-            'logo' => $logo,
+            'logo' => $logo, 
             'notifications' => $notifications,
             'idWebtaskMap' => $idWebtaskMap,
         ]);

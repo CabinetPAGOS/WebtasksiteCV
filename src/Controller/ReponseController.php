@@ -14,22 +14,33 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\ClientRepository;
 use App\Entity\User;
 use App\Entity\Client;
+use App\Repository\WebtaskRepository;
+use App\Repository\NotificationRepository;
 
 class ReponseController extends AbstractController
 {
+    private $webTaskRepository;
+    private $notificationRepository;
     private $textTransformer;
     private $versionService;
     private $clientRepository;
 
-    public function __construct(TextTransformer $textTransformer, VersionService $versionService, ClientRepository $clientRepository)
-    {
+    public function __construct(
+        TextTransformer $textTransformer, 
+        VersionService $versionService, 
+        ClientRepository $clientRepository,
+        WebtaskRepository $webTaskRepository,
+        NotificationRepository $notificationRepository
+    ) {
         $this->textTransformer = $textTransformer;
         $this->versionService = $versionService;
         $this->clientRepository = $clientRepository;
+        $this->webTaskRepository = $webTaskRepository;
+        $this->notificationRepository = $notificationRepository;
     }
 
     #[Route('/reponsetaches/{id}', name: 'app_reponsetaches')]
-    public function Reponse($id, Request $request, EntityManagerInterface $entityManager): Response
+    public function Reponse($id, Request $request, EntityManagerInterface $entityManager, WebtaskRepository $webtaskRepository, NotificationRepository $notificationRepository): Response
     {
         // Récupérer l'utilisateur connecté
         $user = $this->getUser();
@@ -226,15 +237,64 @@ class ReponseController extends AbstractController
         $tagClass = $this->getTagClass($tache->getTag());
         $mappedAvancement = $this->mapAvancementDeLaTache($tache->getAvancementdelatache());
 
+        // Récupérer les notifications visibles de l'utilisateur connecté
+        $notifications = $notificationRepository->findBy([
+            'user' => $user->getId(),
+            'visible' => true
+        ]);
+
+        // Créer un tableau pour lier codeWebtask à id
+        $idWebtaskMap = [];
+        foreach ($notifications as $notification) {
+            $idWebtask = $this->webTaskRepository->findIdByCodeWebtask($notification->getCodeWebtask());
+            if ($idWebtask !== null) {
+                $idWebtaskMap[$notification->getCodeWebtask()] = $idWebtask;
+            }
+        }
+
         return $this->render('Client/reponsetaches.html.twig', [
             'webtask' => $tache,
             'mappedTag' => $mappedTag,
             'tagClass' => $tagClass,
             'mappedAvancement' => $mappedAvancement,
             'googleDriveLink' => $googleDriveLink,
+            'client' => $client,
             'logo' => $logo,
-
+            'notifications' => $notifications,
+            'idWebtaskMap' => $idWebtaskMap,
         ]);
+    }
+
+    #[Route('/notifications', name: 'get_notifications', methods: ['GET'])]
+    public function getNotifications(): JsonResponse
+    {
+        // Récupérer les notifications visibles
+        $notifications = $this->notificationRepository->findVisibleNotifications();
+
+        return $this->json([
+            'count' => count($notifications), // Compte le nombre de notifications
+            'notifications' => $notifications, // Renvoie les notifications
+        ]);
+    }
+
+    #[Route('/mark-as-read/{id}', name: 'app_mark_as_read', methods: ['POST'])]
+    public function markAsRead($id): JsonResponse
+    {
+        // Récupérer la notification par son ID
+        $notification = $this->notificationRepository->find($id); // Utiliser le repository injecté
+
+        if (!$notification) {
+            return new JsonResponse(['status' => 'not_found'], 404);
+        }
+
+        // Mettre à jour le champ visible à 0
+        $notification->setVisible(0); // Assurez-vous que vous avez une méthode pour cela
+
+        // Enregistrer les modifications
+        $this->entityManager->persist($notification);
+        $this->entityManager->flush();
+
+        return new JsonResponse(['status' => 'success']);
     }
 
     private function mapTag(?int $tag): string

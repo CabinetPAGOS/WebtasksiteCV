@@ -20,7 +20,7 @@
 			body {
 				font-family: 'Helvetica', Arial, sans-serif;
 			}
-
+			
 			/* Style global de la navbar */
 			.navbar-custom {
 				background-color: #818285; /* Couleur de fond principale */
@@ -118,7 +118,7 @@
 				position: relative; /* Pour permettre le positionnement de la liste de notifications */
 				margin-right: 15px; /* Espacement à droite pour ne pas être collé aux éléments adjacents */
 				display: flex; /* Utilisation de flex pour aligner les éléments */
-				align-items: center; /* Alignement vertical centré */
+    			align-items: center; /* Alignement vertical centré */
 			}
 
 			#notificationIcon {
@@ -130,7 +130,7 @@
 
 			.notification-count {
 				position: absolute; /* Positionnement absolu par rapport à l'icône */
-				top: 0; /* Ajuste la position verticale */
+				top: 0px; /* Ajuste la position verticale */
 				right: -2px; /* Ajuste la position horizontale */
 				background-color: red; /* Couleur d'arrière-plan pour le compteur */
 				color: white; /* Couleur du texte */
@@ -167,7 +167,7 @@
 
 			/* Supprime la bordure du dernier élément */
 			.notifications li:last-child {
-				border-bottom: none;
+				border-bottom: none; 
 			}
 
 			/* Header de notification */
@@ -447,74 +447,6 @@
 				margin: 15px 0;
 			}
 
-			/* Conteneur principal pour les documents */
-			#documents {
-				background-color: #f9f9f9; /* Fond gris clair pour un aspect doux */
-				border-radius: 12px; /* Coins arrondis pour un look moderne */
-				padding: 25px; /* Espacement interne accru pour un look aéré */
-				margin-top: 10px; /* Marges supérieures */
-				box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Ombre plus marquée pour profondeur */
-			}
-
-			/* Éléments de chaque document */
-			.document-item {
-				display: flex; /* Utilisation de flexbox pour l'alignement */
-				align-items: center; /* Alignement vertical centré */
-				padding: 12px 15px; /* Espacement interne */
-				transition: background-color 0.3s ease, transform 0.2s ease; /* Transition douce pour l'effet de survol */
-				border-radius: 8px; /* Coins arrondis */
-				border: 1px solid transparent; /* Bordure transparente par défaut */
-				margin-bottom: 10px; /* Marges entre les éléments */
-			}
-			
-			/* Couleur de fond au survol */
-			.document-item:hover {
-				background-color: #e7f3ff; /* Fond bleu clair au survol */
-				transform: translateY(-2px); /* Légère élévation au survol */
-				border: 1px solid #007bff; /* Bordure bleue au survol */
-			}
-
-			/* Styles pour les titres */
-			.document-item span {
-				flex-grow: 1; /* Prendre l'espace disponible */
-				color: #333; /* Couleur de texte sombre */
-				margin-left: 15px; /* Espace entre l'icône et le titre */
-				font-weight: 400; /* Poids de la police normal pour supprimer le gras */
-			}
-
-			/* Styles pour l'icône */
-			.document-item a {
-				color: #007bff; /* Couleur du lien (bleu) */
-				text-decoration: none; /* Supprime le soulignement */
-				display: flex; /* Aligner l'icône */
-				align-items: center; /* Centrer verticalement */
-			}
-
-			/* Effet de survol sur l'icône */
-			.document-item a:hover {
-				color: #0056b3; /* Couleur plus foncée au survol */
-			}
-
-			/* Styles pour l'icône */
-			.document-item i {
-				font-size: 28px; /* Taille de l'icône plus grande pour plus d'impact */
-				margin-right: 15px; /* Espace à droite de l'icône */
-				transition: transform 0.3s; /* Transition douce pour l'effet de survol */
-			}
-
-			/* Effet de zoom sur l'icône au survol */
-			.document-item a:hover i {
-				transform: scale(1.2); /* Légère augmentation de la taille de l'icône */
-			}
-
-			.comment-green {
-				color: #00B050;
-			}
-
-			.comment-black {
-				color: #black;
-			}
-
 			.comment-client,
 			.comment-internal {
 				background-color: #fff;
@@ -562,6 +494,65 @@
 			footer p {
 				color: #333;
 			}
+			/* Conteneur principal pour les documents */
+			#documents {
+				background-color: #f9f9f9; /* Fond gris clair pour un aspect doux */
+				border-radius: 12px; /* Coins arrondis pour un look moderne */
+				padding: 25px; /* Espacement interne accru pour un look aéré */
+				margin-top: 10px; /* Marges supérieures */
+				box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Ombre plus marquée pour profondeur */
+			}
+			/* Éléments de chaque document */
+			.document-item {
+				display: flex; /* Utilisation de flexbox pour l'alignement */
+				align-items: center; /* Alignement vertical centré */
+				padding: 12px 15px; /* Espacement interne */
+				transition: background-color 0.3s ease, transform 0.2s ease; /* Transition douce pour l'effet de survol */
+				border-radius: 8px; /* Coins arrondis */
+				border: 1px solid transparent; /* Bordure transparente par défaut */
+				margin-bottom: 10px; /* Marges entre les éléments */
+			}
+			/* Couleur de fond au survol */
+			.document-item:hover {
+				background-color: #e7f3ff; /* Fond bleu clair au survol */
+				transform: translateY(-2px); /* Légère élévation au survol */
+				border: 1px solid #007bff; /* Bordure bleue au survol */
+			}
+			/* Styles pour les titres */
+			.document-item span {
+				flex-grow: 1; /* Prendre l'espace disponible */
+				color: #333; /* Couleur de texte sombre */
+				margin-left: 15px; /* Espace entre l'icône et le titre */
+				font-weight: 400; /* Poids de la police normal pour supprimer le gras */
+			}
+			/* Styles pour l'icône */
+			.document-item a {
+				color: #007bff; /* Couleur du lien (bleu) */
+				text-decoration: none; /* Supprime le soulignement */
+				display: flex; /* Aligner l'icône */
+				align-items: center; /* Centrer verticalement */
+			}
+			/* Effet de survol sur l'icône */
+			.document-item a:hover {
+				color: #0056b3; /* Couleur plus foncée au survol */
+			}
+			/* Styles pour l'icône */
+			.document-item i {
+				font-size: 28px; /* Taille de l'icône plus grande pour plus d'impact */
+				margin-right: 15px; /* Espace à droite de l'icône */
+				transition: transform 0.3s; /* Transition douce pour l'effet de survol */
+			}
+			/* Effet de zoom sur l'icône au survol */
+			.document-item a:hover i {
+				transform: scale(1.2); /* Légère augmentation de la taille de l'icône */
+			}
+			.comment-green {
+				color: #00B050;
+			}
+
+			.comment-black {
+				color: #black;
+			}
 		</style>
 	</head>
 	<body>
@@ -605,12 +596,10 @@
 						{% endif %}
 					</ul>
 
+					<!-- Liens côté droit -->
 					<ul class="navbar-nav ms-auto">
-						<li class="nav-item">
-							<a class="nav-link" href="#" style="color: #ffffff; text-align: center;">
-								<b>{{ app.user.nom }}
-									{{ app.user.prenom }}</b>
-							</a>
+						<li class="nav-item nav-link nav-link-custom user-name">
+							<b>{{ app.user.nom }} {{ app.user.prenom }}</b>
 						</li>
 
 						<!-- Icône de notification -->
@@ -621,7 +610,7 @@
 							</a>
 							<div id="notificationList" class="notifications" style="display: none;">
 								<ul>
-									{% set visibleNotifications = notifications|filter(notification => notificationUser[notification.id] is not defined or notificationUser[notification.id].isRead == false) %}
+									{% set visibleNotifications = notifications|filter(notification => notification.visible == 1) %}
 									{% if visibleNotifications is empty %}
 										<li>Aucune notification</li>
 									{% else %}
@@ -675,7 +664,7 @@
 
 						<!-- Logo client et déconnexion -->
 						<li class="nav-item d-flex align-items-center">
-							<img src="data:image/png;base64,{{ logo }}" alt="Logo du client" class="client-logo me-2"/>
+							<img src="data:image/png;base64,{{ logo }}" alt="Logo du client" class="client-logo me-2" />
 							<a class="nav-link logout-icon" href="{{ path('app_logout') }}" title="Se déconnecter">
 								<i class="fas fa-sign-out-alt"></i>
 							</a>
@@ -850,10 +839,13 @@
 										<b>📀 : {{ task.baseDeDonnees }}</b>
 									</div>
 
+									<hr class="separator">
+
 									<!-- Commentaire client -->
 									{% if task.commentaire_webtask_client is not empty %}
 										<hr class="separator">
 										<div class="comment-client {% if task.isPagosUser %} comment-green {% else %} comment-black {% endif %}">
+											<b><u>Commentaire client :</u></b>
 											<p>{{ task.commentaire_webtask_client|nl2br }}</p>
 										</div>
 									{% endif %}
@@ -882,9 +874,9 @@
 			<p><b>© Copyright @ 2024 par <span style="color: #d7df22;">Cabinet PAGOS</span> | tous droits réservés.</b></p>
 		</footer>
 
-		<!-- Scripts -->
-		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+		<!-- JS de Bootstrap et dépendances -->
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
 		<script>
 			document.addEventListener('DOMContentLoaded', function () {
 				// Code de gestion des notifications ici

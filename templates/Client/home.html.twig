@@ -20,7 +20,7 @@
 			body {
 				font-family: 'Helvetica', Arial, sans-serif;
 			}
-
+			
 			/* Style global de la navbar */
 			.navbar-custom {
 				background-color: #818285; /* Couleur de fond principale */
@@ -118,7 +118,7 @@
 				position: relative; /* Pour permettre le positionnement de la liste de notifications */
 				margin-right: 15px; /* Espacement à droite pour ne pas être collé aux éléments adjacents */
 				display: flex; /* Utilisation de flex pour aligner les éléments */
-				align-items: center; /* Alignement vertical centré */
+    			align-items: center; /* Alignement vertical centré */
 			}
 
 			#notificationIcon {
@@ -130,7 +130,7 @@
 
 			.notification-count {
 				position: absolute; /* Positionnement absolu par rapport à l'icône */
-				top: 0; /* Ajuste la position verticale */
+				top: 0px; /* Ajuste la position verticale */
 				right: -2px; /* Ajuste la position horizontale */
 				background-color: red; /* Couleur d'arrière-plan pour le compteur */
 				color: white; /* Couleur du texte */
@@ -167,7 +167,7 @@
 
 			/* Supprime la bordure du dernier élément */
 			.notifications li:last-child {
-				border-bottom: none;
+				border-bottom: none; 
 			}
 
 			/* Header de notification */
@@ -608,6 +608,20 @@
 			footer p {
 				color: #333;
 			}
+			.navbar .nav-item .dropdown-menu {
+				min-width: 200px; /* Ajustez la largeur du menu déroulant */
+			}
+
+			.navbar .badge {
+				position: absolute;
+				top: -5px;
+				right: -10px;
+				font-size: 0.75rem; /* Taille du texte du badge */
+			}
+			.img-navbar {
+				height: 60px; /* Taille souhaitée pour le logo */
+				width: auto; /* Conserve les proportions du logo */
+			}
 		</style>
 	</head>
 	<body>
@@ -649,7 +663,9 @@
 									<b>Forum</b>
 								</a>
 							</li>
+
 						{% endif %}
+
 
 						{% set allowed_ids = ['e4e080b3758761bd01758f5fcfed03d9'] %}
 						{% if app.user.idclient and app.user.idclient.getId() in allowed_ids %}
@@ -661,12 +677,10 @@
 						{% endif %}
 					</ul>
 
+					<!-- Liens côté droit -->
 					<ul class="navbar-nav ms-auto">
-						<li class="nav-item">
-							<a class="nav-link" href="#" style="color: #ffffff; text-align: center;">
-								<b>{{ app.user.nom }}
-									{{ app.user.prenom }}</b>
-							</a>
+						<li class="nav-item nav-link nav-link-custom user-name">
+							<b>{{ app.user.nom }} {{ app.user.prenom }}</b>
 						</li>
 
 						<!-- Icône de notification -->
@@ -677,7 +691,7 @@
 							</a>
 							<div id="notificationList" class="notifications" style="display: none;">
 								<ul>
-									{% set visibleNotifications = notifications|filter(notification => notificationUser[notification.id] is not defined or notificationUser[notification.id].isRead == false) %}
+									{% set visibleNotifications = notifications|filter(notification => notification.visible == 1) %}
 									{% if visibleNotifications is empty %}
 										<li>Aucune notification</li>
 									{% else %}
@@ -731,7 +745,7 @@
 
 						<!-- Logo client et déconnexion -->
 						<li class="nav-item d-flex align-items-center">
-							<img src="data:image/png;base64,{{ logo }}" alt="Logo du client" class="client-logo me-2"/>
+							<img src="data:image/png;base64,{{ logo }}" alt="Logo du client" class="client-logo me-2" />
 							<a class="nav-link logout-icon" href="{{ path('app_logout') }}" title="Se déconnecter">
 								<i class="fas fa-sign-out-alt"></i>
 							</a>
@@ -747,9 +761,13 @@
 				<div class="custom-rectangle">
 					{% set allowed_ids = ['e4e080b3758761bd01758f5fcfed03d9'] %}
 					{% if app.user.idclient and app.user.idclient.getId() in allowed_ids %}
-						<h2><b>TÂCHES EN ATTENTE</b></h2>
+						<h2>
+							<b>TÂCHES EN ATTENTE</b>
+						</h2>
 					{% else %}
-						<h2><b>TÂCHES EN ATTENTE CLIENT</b></h2>
+						<h2>
+							<b>TÂCHES EN ATTENTE CLIENT</b>
+						</h2>
 					{% endif %}
 					<div id="task-container" class="task-container">
 						{% if webtasks is not empty %}
@@ -757,8 +775,11 @@
 								{% if webtask.etatdelawebtask == 'ON' and webtask.avancementdelatache == '❌ Stop Client ❌' %}
 									<div class="task">
 										<h3>
-											<u><b>WebTask :</b></u>
-											{{ webtask.titre }} ({{ webtask.webtask }})
+											<u>
+												<b>WebTask :</b>
+											</u>
+											{{ webtask.titre }}
+											({{ webtask.webtask }})
 											<span class="info-icon" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="{{ webtask.description|nl2br }}">
 												<i class="fas fa-question-circle"></i>
 											</span>
@@ -790,13 +811,16 @@
 
 				<div class="custom-rectangle-statistic">
 					<div class="icon-grid">
-						<div class="icon-container">
+						<div
+							class="icon-container">
 							<!-- Redirection pour NON PRISE EN COMPTE -->
 							<a href="{{ path('app_taches', {'filter': 'nonPriseEnCompte'}) }}">
 								<div class="black-block" style="position: relative;">
 									<i class="fas fa-traffic-light iconeTheme" style="color: #FF0000;"></i>
 									<div class="light-circle-npc"></div>
-									<div class="statistic-value">{{ nonPrisesEnCompte }}</div>
+									<div class="statistic-value">
+										{{ nonPrisesEnCompte }}
+									</div>
 								</div>
 							</a>
 							<div class="status-text">
@@ -804,12 +828,15 @@
 							</div>
 						</div>
 
-						<div class="icon-container">
+						<div
+							class="icon-container">
 							<!-- Redirection pour STOP CLIENT -->
 							<a href="{{ path('app_taches', {'filter': 'stopClient'}) }}">
 								<div class="green-block" style="position: relative;">
 									<i class="fa-regular fa-face-frown iconeTheme" style="color: #FF0000;"></i>
-									<div class="statistic-value">{{ stopClient }}</div>
+									<div class="statistic-value">
+										{{ stopClient }}
+									</div>
 								</div>
 							</a>
 							<div class="status-text">
@@ -817,13 +844,16 @@
 							</div>
 						</div>
 
-						<div class="icon-container">
+						<div
+							class="icon-container">
 							<!-- Redirection pour PRISE EN COMPTE -->
 							<a href="{{ path('app_taches', {'filter': 'priseEnCompte'}) }}">
 								<div class="black-block" style="position: relative;">
 									<i class="fas fa-traffic-light iconeTheme" style="color: #FFA500;"></i>
 									<div class="light-circle-pc"></div>
-									<div class="statistic-value">{{ totalPriseEnCompteEtAmelioration }}</div>
+									<div class="statistic-value">
+										{{ totalPriseEnCompteEtAmelioration  }}
+									</div>
 								</div>
 							</a>
 							<div class="status-text">
@@ -831,12 +861,15 @@
 							</div>
 						</div>
 
-						<div class="icon-container">
+						<div
+							class="icon-container">
 							<!-- Redirection pour REFUSÉE -->
 							<a href="{{ path('app_taches', {'filter': 'refusee'}) }}">
 								<div class="red-block" style="position: relative;">
 									<i class="fa-solid fa-ban iconeTheme" style="color: #FFFFFF;"></i>
-									<div class="statistic-value">{{ refusee }}</div>
+									<div class="statistic-value">
+										{{ refusee }}
+									</div>
 								</div>
 							</a>
 							<div class="status-text">
@@ -844,13 +877,16 @@
 							</div>
 						</div>
 
-						<div class="icon-container">
+						<div
+							class="icon-container">
 							<!-- Redirection pour TERMINÉE -->
 							<a href="{{ path('app_taches', {'filter': 'terminee'}) }}">
 								<div class="black-block" style="position: relative;">
 									<i class="fas fa-traffic-light iconeTheme" style="color: #008000;"></i>
 									<div class="light-circle-t"></div>
-									<div class="statistic-value"> {{ terminee }}</div>
+									<div class="statistic-value">
+										{{ terminee }}
+									</div>
 								</div>
 							</a>
 							<div class="status-text">
@@ -858,12 +894,15 @@
 							</div>
 						</div>
 
-						<div class="icon-container">
+						<div
+							class="icon-container">
 							<!-- Redirection pour VALIDÉE -->
 							<a href="{{ path('app_taches', {'filter': 'validee'}) }}">
 								<div class="black-block" style="position: relative;">
 									<i class="fa-solid fa-lock-open iconeTheme" style="color: #FFFFFF;"></i>
-									<div class="statistic-value">{{ validee }}</div>
+									<div class="statistic-value">
+										{{ validee }}
+									</div>
 								</div>
 							</a>
 							<div class="status-text">
@@ -878,7 +917,9 @@
 		{% if isPilote %}
 			<hr>
 			<div class="container-task">
-				<h1><b>MES TÂCHES</b></h1>
+				<h1>
+					<b>MES TÂCHES</b>
+				</h1>
 				{% if webtasks is not empty %}
 					<div class="container-task" id="taskContainer">
 						{% for webtask in webtasks %}
@@ -899,7 +940,7 @@
 											<b><u>Date de fin demandée :</u></b> {{ webtask.datefinDemandee }}
 										</li>
 										<li>
-											<b><u>Pilote :</u></b>
+											<b><u>Pilote :</u></b> 
 											{% if webtask.piloteid %}
 												{{ webtask.piloteid.prenom }} {{ webtask.piloteid.nom }}
 											{% else %}
@@ -910,7 +951,6 @@
 									<div class="btn-group" role="group">
 										<button type="button" class="btn btn-secondary consulter rounded" onclick="window.location.href='{{ path('app_consultertaches', { 'id': webtask.code }) }}'">CONSULTER</button>
 										{# <button type="button" class="btn btn-secondary consulter rounded" onclick="window.location.href='{{ path('app_suivitaches', { 'id': webtask.id }) }}'">VOIR LE SUIVI</button> #}
-										{% if app.user.idclient and app.user.idclient.getId() not in allowed_ids %}{% endif %}
 									</div>
 								</div>
 							{% endif %}
@@ -939,6 +979,14 @@
 		<!-- JS de Bootstrap et dépendances -->
 		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+				var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+				return new bootstrap.Tooltip(tooltipTriggerEl);
+				});
+			});
+		</script>
 		<script>
 			document.addEventListener('DOMContentLoaded', function () {
 				// Code de gestion des notifications ici
