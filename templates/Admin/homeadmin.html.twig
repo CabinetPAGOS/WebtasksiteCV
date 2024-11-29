@@ -871,17 +871,13 @@
 		{% if isPilote %}
 			<hr>
 			<div class="container-task">
-				<h1>
-					<b>MES TÂCHES</b>
-				</h1>
+				<h1><b>MES TÂCHES</b></h1>
 				{% if webtasks is not empty %}
 					<div class="container-task" id="taskContainer">
 						{% for webtask in webtasks %}
 							{% if webtask.etatdelawebtask == 'ON' and webtask.piloteid is not null and webtask.piloteid.id == app.user.id %}
 								<div class="custom-task hidden" data-code="{{ webtask.webtask }}" data-titre="{{ webtask.titre }}">
-									<h2>
-										<b>{{ webtask.titre }}</b>
-									</h2>
+									<h2><b>{{ webtask.titre }}</b></h2>
 									<ul>
 										<li>
 											<b><u>WebTask :</u></b> {{ webtask.webtask }}

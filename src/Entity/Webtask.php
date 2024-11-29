@@ -58,14 +58,11 @@ class Webtask
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $lien_drive_3 = null;
 
-    
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $filtre = null;
 
     #[ORM\ManyToOne(inversedBy: 'webtasks')]
     private ?Client $idclient = null;
-
 
     #[ORM\ManyToOne(inversedBy: 'webtasks')]
     private ?Responsable $responsable = null;
@@ -84,6 +81,7 @@ class Webtask
 
     #[ORM\Column(length: 10, nullable: true)]
     private ?string $ordonnele = '';
+
     #[ORM\Column(length: 10, nullable: true)]
     private ?string $archiver = null;
 
@@ -108,8 +106,6 @@ class Webtask
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $baseclient = null;
 
-    
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $idtracabilite = null;
 
@@ -119,8 +115,6 @@ class Webtask
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $etatVersion	 = null;
     
-
-
     public function __construct()
     {
         // Initialiser les champs non obligatoires à des valeurs vides par défaut
@@ -149,11 +143,8 @@ class Webtask
         $this->idtracabilite = '';
         $this->idversion = '';
         $this->etatVersion = '';
-        
-
     }
 
-  
     public function getId(): ?int
     {
         return $this->id;
@@ -252,13 +243,11 @@ class Webtask
 
         return $this;
     }
-
  
     public function getEtatDeLaWebtask(): ?string
-{
-    return $this->etat_de_la_webtask;
-}
-
+    {
+        return $this->etat_de_la_webtask;
+    }
 
     public function setEtatDeLaWebtask(?string $etat_de_la_webtask): static
     {
@@ -315,10 +304,6 @@ class Webtask
         return $this;
     }
 
-
-
-   
-
     public function getFiltre(): ?string
     {
         return $this->filtre;
@@ -342,12 +327,6 @@ class Webtask
 
         return $this;
     }
-
-    
-
-   
-
-    
 
     public function getResponsable(): ?Responsable
     {
@@ -419,10 +398,6 @@ class Webtask
     {
         return $this->ordonnele;
     }
-    
-
-
-
 
     public function getArchiver(): ?string
     {
@@ -544,9 +519,6 @@ class Webtask
         return $this;
     }
 
-
-    
-
     public function getIdversion(): ?string
     {
         return $this->idversion;
@@ -623,6 +595,4 @@ class Webtask
 
         return $this;
     }
-
-    
 }
